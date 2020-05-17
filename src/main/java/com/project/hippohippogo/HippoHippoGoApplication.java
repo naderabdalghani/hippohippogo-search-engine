@@ -1,5 +1,7 @@
 package com.project.hippohippogo;
 
+import com.project.hippohippogo.controllers.CrawlerController;
+import com.project.hippohippogo.repositories.CrawlerRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,7 +9,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class HippoHippoGoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(HippoHippoGoApplication.class, args);
+        CrawlerController C = new CrawlerController();
+        C.insert();
+        //SpringApplication.run(HippoHippoGoApplication.class, args);
     }
 
 }
