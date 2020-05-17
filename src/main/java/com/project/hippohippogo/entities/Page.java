@@ -6,17 +6,17 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "pages")
-public class pages {
+public class Page {
 
     @Id
     private String link;
     private String content;
 
-    public pages() {
+    public Page() {
 
     }
 
-    public pages(String link, String content) {
+    public Page(String link, String content) {
         this.link = link;
         this.content = content;
     }
