@@ -1,17 +1,17 @@
 package com.project.hippohippogo;
 
-import com.project.hippohippogo.controllers.CrawlerController;
-import com.project.hippohippogo.repositories.CrawlerRepository;
+import com.project.hippohippogo.services.CrawlerService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
 public class HippoHippoGoApplication {
 
     public static void main(String[] args) {
-        CrawlerController C = new CrawlerController();
-        C.insert();
-        //SpringApplication.run(HippoHippoGoApplication.class, args);
+        ApplicationContext applicationContext = SpringApplication.run(HippoHippoGoApplication.class, args);
+        CrawlerService crawlerService = applicationContext.getBean(CrawlerService.class);
+        crawlerService.insert();
     }
 
 }
