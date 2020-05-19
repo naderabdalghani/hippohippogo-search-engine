@@ -1,0 +1,34 @@
+.search_bar_button {
+  font-size: 1.5em;
+  -webkit-appearance: none;
+  box-sizing: content-box;
+  font-style: normal;
+  font-weight: normal !important;
+  font-variant: normal;
+  text-transform: none;
+  text-decoration: none !important;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  width: 1em;
+  display: block;
+  cursor: pointer;
+  background: transparent;
+  text-align: center;
+  border: none;
+  height: 1em;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 2px;
+  left: auto;
+  margin: auto;
+  z-index: 2;
+  outline: none;
+  padding: 0 0.5em;
+  line-height: 1;
+  min-width: 21px;
+  color: #aaa;
+  margin-right: 2.5em;
+  visibility: visible;
+  opacity: 0.9;
+}
