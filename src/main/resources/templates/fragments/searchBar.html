@@ -1,43 +1,44 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8"/>
     <title>Search Bar Fragment</title>
-  </head>
-  <body>
-    <div th:fragment="searchBar">
-      <script
-        type="text/javascript"
-        th:src="@{/js/searchBar.js}"
-        th:inline="javascript"
-      ></script>
-      <link rel="stylesheet" th:href="@{/css/searchBar.css}" />
-      <form
-        name="x"
-        id="search_form_homepage"
-        class="search"
-        action="/api/dummy"
-        method="get"
-      >
+</head>
+<body>
+<div th:fragment="searchBar">
+    <link rel="stylesheet" th:href="@{/css/searchBar.css}"/>
+    <form
+            name="x"
+            id="search_form_homepage"
+            class="search"
+            action="/api/dummy"
+            method="get"
+    >
+            <input
+                    name="q"
+                    autocomplete="off"
+                    id="search_form_input_homepage"
+                    class="search__input"
+                    type="text"
+                    autofocus
+            />
+        <i
+                id="search_form_input_clear"
+                class="icon-cross search_bar_button"
+        ></i>
         <input
-          name="q"
-          autocomplete="off"
-          id="search_form_input_homepage"
-          class="search__input"
-          type="text"
-          autofocus
+                name="b"
+                id="search_button_homepage"
+                class="search__button search__button--html"
+                value=""
+                title="Search"
+                alt="Search"
+                type="submit"
         />
-        <i id="search_form_input_clear" class="icon-cross search_bar_button"></i>
-        <input
-          name="b"
-          id="search_button_homepage"
-          class="search__button search__button--html"
-          value=""
-          title="Search"
-          alt="Search"
-          type="submit"
-        />
-      </form>
-    </div>
-  </body>
+    </form>
+    <script type="text/javascript" th:src="@{/js/searchBar.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.autocomplete.js}"></script>
+    <script type="text/javascript" th:src="@{/js/countries.js}"></script>
+</div>
+</body>
 </html>
