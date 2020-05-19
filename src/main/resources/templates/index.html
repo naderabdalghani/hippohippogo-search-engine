@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="UTF-8" />
     <meta
@@ -9,24 +9,25 @@
     <link
       rel="stylesheet"
       media="handheld, all"
-      href="./css/index.css"
+      th:href="@{/css/index.css}"
       type="text/css"
     />
-    <link rel="icon" href="./assets/hippohippogo_logo.ico" type="image/gif">
+    <link rel="icon" th:href="@{/assets/hippohippogo_logo.ico}" type="image/gif">
   </head>
   <body
     class="body--home body--html"
     data-gr-c-s-loaded="true"
     cz-shortcut-listen="true"
   >
-    <div class="header-wrap--home"></div>
+  <div th:insert="fragments/header :: header"></div>
+  <div class="header-wrap--home"></div>
     <div id="content_wrapper_homepage" class="content-wrap--home">
       <div id="content_homepage" class="content--home">
         <div class="logo-wrap--home">
           <img
                   title="HippoHippoGo"
                   class="logo_homepage"
-                  src="assets/hippohippogo_logo_with_text.png" alt="hippohippogo_logo"
+                  th:src="@{/assets/hippohippogo_logo_with_text.png}" alt="hippohippogo_logo"
           />
         </div>
         <div class="search-wrap--home">
