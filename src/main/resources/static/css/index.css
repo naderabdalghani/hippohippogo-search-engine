@@ -888,7 +888,7 @@ html {
   float: none;
   width: 70%;
 }
-@media only screen and (max-width: 590px) {
+/* @media only screen and (max-width: 590px) {
   .search-wrap--home {
     width: 80%;
   }
@@ -900,7 +900,7 @@ html {
   .search-wrap--home {
     width: auto;
   }
-}
+} */
 @media only screen and (max-height: 455px) and (orientation: portrait) {
   .displayable-atb-banner .search-wrap--home {
     padding-top: 0.694em;
