@@ -1,13 +1,18 @@
 package com.project.hippohippogo;
 
+import com.project.hippohippogo.services.Ranker;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+
+import java.security.Provider;
 
 @SpringBootApplication
 public class HippoHippoGoApplication {
-
     public static void main(String[] args) {
-        SpringApplication.run(HippoHippoGoApplication.class, args);
+        ApplicationContext applicationContext = SpringApplication.run(HippoHippoGoApplication.class, args);
+        Ranker ranker = applicationContext.getBean(Ranker.class);
+        ranker.setPageRankTable();
     }
 
 }

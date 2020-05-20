@@ -7,25 +7,30 @@ public class PagesConnection {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private String refered;
-    private String refering;
+    private String referred;
+    private String referring;
 
     public PagesConnection() {
     }
-
-    public void setRefered(String refered) {
-        this.refered = refered;
+    public PagesConnection(int id,String referred,String referring) {
+        this.id = id;
+        this.referred = referred;
+        this.referring = referring;
     }
 
-    public void setRefering(String refering) {
-        this.refering = refering;
+    public void setReferred(String refered) {
+        this.referred = refered;
     }
 
-    public String getRefered() {
-        return refered;
+    public void setReferring(String refering) {
+        this.referring = refering;
     }
 
-    public String getRefering() {
-        return refering;
+    public String getReferred() {
+        return referred;
+    }
+
+    public String getReferring() {
+        return referring;
     }
 }
