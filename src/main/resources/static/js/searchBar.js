@@ -3,7 +3,7 @@ $(function () {
 
     /////////////////////////////////////// Clear Text ///////////////////////////////////////
 
-    const inputField = $('#search_form_input_homepage');
+    const inputField = $('#search_form_input');
     const clearButton = $('#search_form_input_clear');
     clearButton.hide();
     clearButton.on('click', function () {

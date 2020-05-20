@@ -14,17 +14,23 @@
             action="/search"
             method="get"
     >
-        <input
-                name="q"
-                autocomplete="off"
-                id="search_form_input_homepage"
-                class="search__input"
-                type="text"
-                autofocus
-        />
+        <div>
+            <input
+                    name="q"
+                    autocomplete="off"
+                    id="search_form_input"
+                    class="search__input"
+                    type="text"
+                    autofocus
+            />
+        </div>
+        <i
+                id="search_form_voice_input"
+                class="icon-mic search_bar_voice_input_button"
+        ></i>
         <i
                 id="search_form_input_clear"
-                class="icon-cross search_bar_button"
+                class="icon-cross search_bar_clear_text_button"
         ></i>
         <input
                 name="b"
