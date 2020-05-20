@@ -27,7 +27,7 @@ public class DummyController {
 
     @GetMapping("/dummy")
     public String getAllItems(Model model) {
-        var items = (List<DummyItem>) dummyRepository.findAll();
+        List<DummyItem> items = (List<DummyItem>) dummyRepository.findAll();
 //        System.out.print(items);
         model.addAttribute("items", items);
         return "showDummyData";
