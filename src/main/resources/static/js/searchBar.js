@@ -10,6 +10,7 @@ $(function () {
         inputField.val("");
         clearButton.hide();
         inputField.trigger('focus');
+        inputField.autocomplete().clear();
     });
     inputField.on('change keyup paste', function () {
         if (inputField.val() !== "") {
@@ -23,7 +24,8 @@ $(function () {
 
     inputField.autocomplete({
         serviceUrl: '/suggestions',
-        lookupLimit: 8
+        lookupLimit: 8,
+        noCache: true
     });
 });
 /*]]>*/
