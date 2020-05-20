@@ -30,10 +30,15 @@ public class SuggestionsController {
         String re = "^" + query.toLowerCase();
         Pattern pattern = Pattern.compile(re, Pattern.CASE_INSENSITIVE);
 
+        int suggestionsLimit = 8;
+
         for (SearchQuery searchQuery : searchQueries) {
             Matcher matcher = pattern.matcher(searchQuery.getQuery());
             if (matcher.find()) {
                 queriesStrings.add(searchQuery.getQuery());
+                if (queriesStrings.size() > suggestionsLimit) {
+                    break;
+                }
             }
         }
         return new JSONObject().put("query", "Unit").put("suggestions", JSONObject.wrap(queriesStrings)).toString();
