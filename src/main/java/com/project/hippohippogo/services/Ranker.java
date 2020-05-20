@@ -12,7 +12,7 @@ import java.util.*;
 @Service
 public class Ranker {
     private final int pageRankIterations = 20; // Number of iterations on page ranks
-    float d = 0.85f; // Damping factor
+    private final float d = 0.85f; // Damping factor
     private PagesConnectionRepository pagesConnection;
     private PageRankRepository pageRankRepository;
 
