@@ -65,5 +65,21 @@ $(function () {
         searchButton.css("background-color", "#5b9e4d");
     });
 
+    navigator.permissions.query({name: 'microphone'}).then(function (result) {
+        if (result.state === 'denied') {
+            voiceInputDisabled.hide();
+        } else {
+            voiceInputDisabled.css("visibility", "visible");
+            voiceInputDisabled.show();
+        }
+        result.onchange = function () {
+            if (result.state === 'denied') {
+                voiceInputDisabled.css("visibility", "visible");
+                voiceInputDisabled.show();
+            } else {
+                voiceInputDisabled.hide();
+            }
+        };
+    });
 });
 /*]]>*/
