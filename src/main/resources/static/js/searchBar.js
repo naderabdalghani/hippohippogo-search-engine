@@ -3,7 +3,9 @@ $(function () {
 
     const inputField = $('#search_form_input');
     const clearButton = $('#search_form_input_clear');
+    const searchButton = $('#search_button');
     const voiceInputButton = $('#search_form_voice_input');
+    const voiceInputDisabled = $('#search_form_voice_disabled');
 
     /////////////////////////////////////// Clear Text ///////////////////////////////////////
 
@@ -52,5 +54,16 @@ $(function () {
     voiceInputButton.on('mouseup mouseout', function () {
         voiceInputButton.css("color", "#aaa");
     });
+
+    searchButton.on('mousedown', function () {
+        searchButton.css("background-color", "#5b9e4d");
+    });
+    searchButton.on('mouseover', function () {
+        searchButton.css("background-color", "#65af5c");
+    });
+    searchButton.on('mouseup mouseout', function () {
+        searchButton.css("background-color", "#5b9e4d");
+    });
+
 });
 /*]]>*/
