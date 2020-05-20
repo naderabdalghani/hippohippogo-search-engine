@@ -12,11 +12,14 @@ public class PageRank {
     private String page;
     @Column(name="\"rank\"")
     private float rank;
+    @Column(name= "\"out_links\"")
+    private int out_links;
 
     public  PageRank(){}
-    public PageRank(String page,float rank){
+    public PageRank(String page,float rank,int out_links){
         this.setPage(page);
         this.setRank(rank);
+        this.setOut_links(out_links);
     }
 
     public void setPage(String page) {
@@ -33,5 +36,13 @@ public class PageRank {
 
     public String getPage() {
         return page;
+    }
+
+    public void setOut_links(int num_referring_pages) {
+        this.out_links = num_referring_pages;
+    }
+
+    public int getOut_links() {
+        return out_links;
     }
 }
