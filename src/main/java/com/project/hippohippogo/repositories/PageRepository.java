@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CrawlerRepository extends JpaRepository<Page, String> {
+public interface PageRepository extends JpaRepository<Page, Integer> {
 }
