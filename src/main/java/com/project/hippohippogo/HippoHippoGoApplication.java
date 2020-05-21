@@ -10,7 +10,8 @@ public class HippoHippoGoApplication {
     public static void main(String[] args) {
         ApplicationContext applicationContext = SpringApplication.run(HippoHippoGoApplication.class, args);
         Ranker ranker = applicationContext.getBean(Ranker.class);
-        ranker.rankPages();
+        //ranker.rankPages();
+        ranker.getURLs("soccer");
     }
 
 }

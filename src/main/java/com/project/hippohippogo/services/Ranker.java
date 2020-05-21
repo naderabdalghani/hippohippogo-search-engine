@@ -2,11 +2,14 @@ package com.project.hippohippogo.services;
 
 import com.project.hippohippogo.entities.PageRank;
 import com.project.hippohippogo.entities.PagesConnection;
+import com.project.hippohippogo.entities.Words;
 import com.project.hippohippogo.repositories.PageRankRepository;
 import com.project.hippohippogo.repositories.PagesConnectionRepository;
+import com.project.hippohippogo.repositories.WordsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Null;
 import java.util.*;
 
 @Service
@@ -15,6 +18,7 @@ public class Ranker {
     private final float d = 0.85f; // Damping factor
     private PagesConnectionRepository pagesConnection;
     private PageRankRepository pageRankRepository;
+    private WordsRepository wordsRepository;
 
 
     @Autowired
@@ -24,6 +28,11 @@ public class Ranker {
     @Autowired
     public void setPageRankRepository(PageRankRepository pageRankRepository) {
         this.pageRankRepository = pageRankRepository;
+    }
+
+    @Autowired
+    public void setWordsRepository(WordsRepository wordsRepository) {
+        this.wordsRepository = wordsRepository;
     }
 
     // This function is used to set pages rank in its table
@@ -89,5 +98,14 @@ public class Ranker {
 
     }
 
-    
+    // Function to return the web pages URLs to be used as a search result
+    public List<String> getURLs(String query) {
+        List<Integer> docs = wordsRepository.getDocIdContainingWord(query);
+        for (int i : docs) {
+            int x = wordsRepository.getWordCountInDoc(query,i);
+        }
+        List<String> URLs = new ArrayList<>();
+        URLs.add("Aaa");
+        return URLs;
+    }
 }
