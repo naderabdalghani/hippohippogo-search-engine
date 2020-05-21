@@ -12,8 +12,7 @@ public class PagesConnection {
 
     public PagesConnection() {
     }
-    public PagesConnection(int id,String referred,String referring) {
-        this.id = id;
+    public PagesConnection(String referred,String referring) {
         this.referred = referred;
         this.referring = referring;
     }

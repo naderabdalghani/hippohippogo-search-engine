@@ -1,9 +1,10 @@
 package com.project.hippohippogo.services;
 
-import com.project.hippohippogo.entities.Innerlink;
+
 import com.project.hippohippogo.entities.Page;
-import com.project.hippohippogo.repositories.InnerlinkRepository;
+import com.project.hippohippogo.entities.PagesConnection;
 import com.project.hippohippogo.repositories.PageRepository;
+import com.project.hippohippogo.repositories.PagesConnectionRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -25,7 +26,7 @@ import java.util.regex.Pattern;
 @Service
 public class CrawlerService {
     private PageRepository PageRepo;
-    private InnerlinkRepository InnerRepo;
+    private PagesConnectionRepository InnerRepo;
     private String MainSeed;
 
     @Autowired
@@ -34,7 +35,7 @@ public class CrawlerService {
     }
 
     @Autowired
-    public void setInnerRepository(InnerlinkRepository InnerRepo) {
+    public void setInnerRepository(PagesConnectionRepository InnerRepo) {
         this.InnerRepo = InnerRepo;
     }
 
@@ -46,6 +47,8 @@ public class CrawlerService {
         public CrawlerThreaded(String seed) {
             count = 0;
             MainSeed = seed;
+            PageRepo.deleteAll();
+            InnerRepo.deleteAll();
         }
 
         private void insertPageAndContent(String link, String title, String content) {
@@ -56,7 +59,7 @@ public class CrawlerService {
         }
 
         private void insertInnerlink(String Base, String Inner) {
-            Innerlink I = new Innerlink(Base, Inner);
+            PagesConnection I = new PagesConnection(Base, Inner);
             synchronized (InnerRepo) {
                 InnerRepo.save(I);
             }
@@ -111,7 +114,7 @@ public class CrawlerService {
         }
 
         private void CleanAndSetPage(String html, Document doc, String seed) {
-            String content = Jsoup.clean(html, Whitelist.none());
+            String content = doc.text();
             String title = doc.title();
             insertPageAndContent(seed, title, content);
         }
