@@ -100,12 +100,24 @@ public class Ranker {
 
     // Function to return the web pages URLs to be used as a search result
     public List<String> getURLs(String query) {
-        List<Integer> docs = wordsRepository.getDocIdContainingWord(query);
-        for (int i : docs) {
-            int x = wordsRepository.getWordCountInDoc(query,i);
+        int numberOfDocs = 5; // Needs to be replaced with value in table
+        List<String> words = Arrays.asList(query.split(" "));
+        // Key is the doc id and value is the TF-IDF value
+        HashMap<Integer,Double> wordHashMap = new HashMap<Integer,Double>();
+        for (String s : words) {
+            List<Integer> docs = wordsRepository.getDocIdContainingWord(query);
+            double IDF = Math.log(numberOfDocs/docs.size());
+            double TF;
+            for (int i : docs) {
+                int docLength = 100; // Needs to be replaced with value in table
+                int wordCount = wordsRepository.getWordCountInDoc(query,i);
+                TF = (double)wordCount/docLength;
+                TF = TF < 0.5 ? TF : 0; // Handling spam if TF is higher then 0.5 then it's spam and make it equals to 0
+                wordHashMap.put(i,wordHashMap.getOrDefault(i,(double)0)+TF*IDF);
+            }
         }
+
         List<String> URLs = new ArrayList<>();
-        URLs.add("Aaa");
         return URLs;
     }
 }
