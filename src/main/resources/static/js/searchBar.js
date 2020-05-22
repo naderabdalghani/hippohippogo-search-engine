@@ -1,27 +1,33 @@
 /*<![CDATA[*/
 $(function () {
+    const gray = "#aaa";
+    const darkGray = "#616161";
+    const green = "#65af5c";
+    const darkGreen = "#5b9e4d";
+    const red = "#ce2a2a";
+    const darkRed = "#aa2222";
 
     const inputField = $('#search_form_input');
     const clearButton = $('#search_form_input_clear');
     const searchButton = $('#search_button');
     const voiceInputButton = $('#search_form_voice_input');
     const voiceInputDisabled = $('#search_form_voice_disabled');
+    let recording = false;
 
     /////////////////////////////////////// Clear Text ///////////////////////////////////////
 
-    clearButton.hide();
     clearButton.on('click', function () {
         inputField.val("");
-        clearButton.hide();
+        clearButton.css("visibility", "hidden");
         inputField.trigger('focus');
         inputField.autocomplete().clear();
     });
 
     inputField.on('change keyup paste', function () {
-        if (inputField.val() !== "") {
-            clearButton.show();
+        if ((inputField.val() !== "")) {
+            clearButton.css("visibility", "visible");
         } else {
-            clearButton.hide();
+            clearButton.css("visibility", "hidden");
         }
     });
 
@@ -35,6 +41,7 @@ $(function () {
 
     ///////////////////////////////////////// Styling ////////////////////////////////////////
 
+    // clearButton
     clearButton.on('mousedown', function () {
         clearButton.css("color", "red");
     });
@@ -45,32 +52,95 @@ $(function () {
         clearButton.css("color", "#aaa");
     });
 
+    // voiceInputButton
+
+
     voiceInputButton.on('mousedown', function () {
-        voiceInputButton.css("color", "blue");
+        if(!recording) {
+            voiceInputButton.css("color", darkGreen);
+        }
+        else {
+            voiceInputButton.css("color", darkRed);
+        }
     });
     voiceInputButton.on('mouseover', function () {
-        voiceInputButton.css("color", "#616161");
+        if(!recording) {
+            voiceInputButton.css("color", darkGray);
+        }
+        else {
+            voiceInputButton.css("color", red);
+        }
     });
-    voiceInputButton.on('mouseup mouseout', function () {
-        voiceInputButton.css("color", "#aaa");
+    voiceInputButton.on('mouseout', function () {
+        if(!recording) {
+            voiceInputButton.css("color", gray);
+        }
+        else {
+            voiceInputButton.css("color", green);
+        }
+    });
+    voiceInputButton.on('mouseup', function () {
+        if(!recording) {
+            voiceInputButton.css("color", green);
+        }
+        else {
+            voiceInputButton.css("color", gray);
+        }
     });
 
+    clearButton.on("click", function () {
+        if(recording) {
+            recording = false;
+            voiceInputButton.css("color", gray);
+            inputField.removeAttr('readonly');
+        }
+    });
+
+    // searchButton
     searchButton.on('mousedown', function () {
-        searchButton.css("background-color", "#5b9e4d");
+        searchButton.css("background-color", darkGreen);
     });
     searchButton.on('mouseover', function () {
-        searchButton.css("background-color", "#65af5c");
+        searchButton.css("background-color", green);
     });
     searchButton.on('mouseup mouseout', function () {
-        searchButton.css("background-color", "#5b9e4d");
+        searchButton.css("background-color", darkGreen);
     });
+
+    /////////////////////////////////////// Voice Search /////////////////////////////////////
+
+    const handleSuccess = function (stream) {
+        inputField.attr('readonly','readonly');
+        const context = new AudioContext();
+        const source = context.createMediaStreamSource(stream);
+        console.log("end of handleSuccess");
+    };
+
+    voiceInputButton.on("click", function () {
+        if (!recording) {
+            recording = true;
+            clearButton.css("visibility", "visible");
+            console.log("before getUserMedia");
+            navigator.mediaDevices.getUserMedia({audio: true, video: false})
+                .then(handleSuccess);
+            console.log("after getUserMedia");
+        }
+        else {
+            console.log("ended recording, readOnly should be false");
+            recording = false;
+            clearButton.css("visibility", "hidden");
+            inputField.removeAttr('readonly');
+        }
+    })
+
+
 
     navigator.permissions.query({name: 'microphone'}).then(function (result) {
         if (result.state === 'denied') {
-            voiceInputDisabled.hide();
-        } else {
             voiceInputDisabled.css("visibility", "visible");
             voiceInputDisabled.show();
+        } else {
+            voiceInputDisabled.hide();
         }
         result.onchange = function () {
             if (result.state === 'denied') {
