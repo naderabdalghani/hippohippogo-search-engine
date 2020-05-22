@@ -6,10 +6,14 @@ import javax.persistence.*;
 public class Words {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="\"id\"")
     private Long id;
+    @Column(name="\"word\"")
     private String word;
-    private int docid;
-    private int indexofword;
+    @Column(name="\"doc_id\"")
+    private int doc_id;
+    @Column(name="\"index_of_word\"")
+    private int index_of_word;
 
 
     public void setId(Long id) {
@@ -18,18 +22,18 @@ public class Words {
 
     public Words() {
     }
-    public Words(Long id,String word,int docid,int indexofword) {
+    public Words(Long id, String word, int doc_id, int index_of_word) {
         this.word = word;
-        this.docid = docid;
-        this.indexofword = indexofword;
+        this.doc_id = doc_id;
+        this.index_of_word = index_of_word;
     }
 
-    public void setDocid(int docid) {
-        this.docid = docid;
+    public void setDoc_id(int docid) {
+        this.doc_id = docid;
     }
 
-    public void setIndexofword(int indexofword) {
-        this.indexofword = indexofword;
+    public void setIndex_of_word(int indexofword) {
+        this.index_of_word = indexofword;
     }
 
     public void setWord(String word) {
@@ -40,12 +44,12 @@ public class Words {
         return id;
     }
 
-    public int getDocid() {
-        return docid;
+    public int getDoc_id() {
+        return doc_id;
     }
 
-    public int getIndexofword() {
-        return indexofword;
+    public int getIndex_of_word() {
+        return index_of_word;
     }
 
     public String getWord() {
