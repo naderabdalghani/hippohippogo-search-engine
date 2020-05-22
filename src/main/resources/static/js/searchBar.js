@@ -46,56 +46,42 @@ $(function () {
 
     // clearButton
     clearButton.on('mousedown', function () {
-        clearButton.css("color", "red");
+        clearButton.css("color", red);
     });
     clearButton.on('mouseover', function () {
-        clearButton.css("color", "#616161");
+        clearButton.css("color", darkGray);
     });
     clearButton.on('mouseup mouseout', function () {
-        clearButton.css("color", "#aaa");
+        clearButton.css("color", gray);
     });
 
     // voiceInputButton
-
-
     voiceInputButton.on('mousedown', function () {
-        if(!recording) {
+        if (!recording) {
             voiceInputButton.css("color", darkGreen);
-        }
-        else {
+        } else {
             voiceInputButton.css("color", darkRed);
         }
     });
     voiceInputButton.on('mouseover', function () {
-        if(!recording) {
+        if (!recording) {
             voiceInputButton.css("color", darkGray);
-        }
-        else {
+        } else {
             voiceInputButton.css("color", red);
         }
     });
     voiceInputButton.on('mouseout', function () {
-        if(!recording) {
+        if (!recording) {
             voiceInputButton.css("color", gray);
-        }
-        else {
+        } else {
             voiceInputButton.css("color", green);
         }
     });
     voiceInputButton.on('mouseup', function () {
-        if(!recording) {
+        if (!recording) {
             voiceInputButton.css("color", green);
-        }
-        else {
+        } else {
             voiceInputButton.css("color", gray);
-        }
-    });
-
-    clearButton.on("click", function () {
-        if(recording) {
-            recording = false;
-            voiceInputButton.css("color", gray);
-            inputField.removeAttr('readonly');
         }
     });
 
@@ -110,34 +96,76 @@ $(function () {
         searchButton.css("background-color", darkGreen);
     });
 
-    /////////////////////////////////////// Voice Search /////////////////////////////////////
+    /////////////////////////////////////// Voice Input //////////////////////////////////////
+    let voiceInputString = "";
 
-    const handleSuccess = function (stream) {
-        inputField.attr('readonly','readonly');
-        const context = new AudioContext();
-        const source = context.createMediaStreamSource(stream);
-        console.log("end of handleSuccess");
-    };
+    try {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        var recognition = new SpeechRecognition();
+        recognition.continuous = true;
+
+        recognition.onresult = function (event) {
+            const current = event.resultIndex;
+            const transcript = event.results[current][0].transcript;
+
+            voiceInputString += transcript;
+            inputField.val(voiceInputString).trigger("focus");
+        };
+
+        recognition.onstart = function () {
+            recording = true;
+            voiceInputString = inputField.val();
+            if (!voiceInputString.endsWith(" ") && voiceInputString !== "") {
+                voiceInputString = voiceInputString + " ";
+            }
+        }
+
+        recognition.onspeechend = function () {
+            recognition.stop();
+            recording = false;
+            if (inputField.val() === "") {
+                clearButton.css("visibility", "hidden");
+            }
+            voiceInputButton.css("color", gray);
+            inputField.removeAttr('readonly');
+        }
+
+        recognition.onerror = function (event) {
+            console.log("on error", event.error);
+            if(event.error === "not-allowed") {
+                if (inputField.val() === "") {
+                    clearButton.css("visibility", "hidden");
+                }
+                inputField.removeAttr('readonly');
+                inputField.trigger("focus");
+            }
+        }
+    } catch (e) {
+        console.error(e);
+        voiceInputDisabled.css("visibility", "visible");
+        voiceInputDisabled.attr("title", "Voice recognition error");
+        inputField.removeAttr('readonly');
+        voiceInputDisabled.show();
+    }
 
     voiceInputButton.on("click", function () {
         if (!recording) {
-            recording = true;
+            recognition.start();
             clearButton.css("visibility", "visible");
-            console.log("before getUserMedia");
-            navigator.mediaDevices.getUserMedia({audio: true, video: false})
-                .then(handleSuccess);
-            console.log("after getUserMedia");
+            inputField.attr('readonly', 'readonly');
+        } else {
+            recognition.abort();
+            inputField.trigger("focus");
         }
-        else {
-            console.log("ended recording, readOnly should be false");
-            recording = false;
-            clearButton.css("visibility", "hidden");
-            inputField.removeAttr('readonly');
+    });
+
+    clearButton.on("click", function () {
+        if (recording) {
+            recognition.abort();
         }
-    })
+    });
 
-
-
+    // Permission handling
     navigator.permissions.query({name: 'microphone'}).then(function (result) {
         if (result.state === 'denied') {
             voiceInputDisabled.css("visibility", "visible");
