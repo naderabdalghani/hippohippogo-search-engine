@@ -12,7 +12,7 @@ public class Page {
     private String link;
     private String title;
     private String content;
-    private int lenght;
+    private int length;
 
     public Page() {
     }
@@ -36,6 +36,6 @@ public class Page {
     }
 
     public void set_length(int length) {
-        this.lenght = length;
+        this.length = length;
     }
 }
