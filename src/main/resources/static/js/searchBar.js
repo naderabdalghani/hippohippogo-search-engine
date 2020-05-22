@@ -36,7 +36,10 @@ $(function () {
     inputField.autocomplete({
         serviceUrl: '/suggestions',
         lookupLimit: 8,
-        noCache: true
+        noCache: true,
+        onSelect: function (suggestion) {
+            inputField.trigger("focus");
+        }
     });
 
     ///////////////////////////////////////// Styling ////////////////////////////////////////
