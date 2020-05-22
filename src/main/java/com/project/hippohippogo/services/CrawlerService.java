@@ -3,12 +3,11 @@ package com.project.hippohippogo.services;
 
 import com.project.hippohippogo.entities.Page;
 import com.project.hippohippogo.entities.PagesConnection;
-import com.project.hippohippogo.repositories.PageRepository;
+import com.project.hippohippogo.repositories.PagesRepository;
 import com.project.hippohippogo.repositories.PagesConnectionRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,19 +19,18 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.project.hippohippogo.services.RankerService.getString;
 
 @Service
 public class CrawlerService {
-    private PageRepository PageRepo;
+    private PagesRepository PageRepo;
     private PagesConnectionRepository pagesConnectionRepository;
     private String MainSeed;
 
     @Autowired
-    public void setPageRepository(PageRepository PageRepo) {
+    public void setPageRepository(PagesRepository PageRepo) {
         this.PageRepo = PageRepo;
     }
 

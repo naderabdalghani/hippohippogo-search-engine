@@ -4,7 +4,7 @@ import com.project.hippohippogo.entities.Page;
 import com.project.hippohippogo.entities.PageRank;
 import com.project.hippohippogo.entities.PagesConnection;
 import com.project.hippohippogo.repositories.PageRankRepository;
-import com.project.hippohippogo.repositories.PageRepository;
+import com.project.hippohippogo.repositories.PagesRepository;
 import com.project.hippohippogo.repositories.PagesConnectionRepository;
 import com.project.hippohippogo.repositories.WordsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class RankerService {
     private PagesConnectionRepository pagesConnection;
     private PageRankRepository pageRankRepository;
     private WordsRepository wordsRepository;
-    private PageRepository pageRepository;
+    private PagesRepository pagesRepository;
 
 
     @Autowired
@@ -39,8 +39,8 @@ public class RankerService {
     }
 
     @Autowired
-    public void setPageRepository(PageRepository pageRepository) {
-        this.pageRepository = pageRepository;
+    public void setPagesRepository(PagesRepository pagesRepository) {
+        this.pagesRepository = pagesRepository;
     }
 
     // This function is used to set pages rank in its table
@@ -171,7 +171,7 @@ public class RankerService {
 
     // Function to return the web pages URLs to be used as a search result
     public List<Integer> getURLs(String query) {
-        long numberOfDocs = pageRepository.count();
+        long numberOfDocs = pagesRepository.count();
         List<String> words = Arrays.asList(query.split(" "));
         // Key is the doc id and value is the TF-IDF value
         HashMap<Integer,Double> pagesHashMap = new HashMap<Integer,Double>();
@@ -183,7 +183,7 @@ public class RankerService {
             else {
                 double TF;
                 for (int i : docs) {
-                    Optional<Page> document = pageRepository.findById(i);
+                    Optional<Page> document = pagesRepository.findById(i);
                     // Getting page rank element of the page
                     Optional<PageRank> pageRank = pageRankRepository.findById(getBaseURL(document.get().getLink()));
                     int docLength = document.get().getLength();
