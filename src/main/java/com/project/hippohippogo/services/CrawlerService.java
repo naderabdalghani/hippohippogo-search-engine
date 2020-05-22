@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 @Service
 public class CrawlerService {
     private PageRepository PageRepo;
-    private PagesConnectionRepository InnerRepo;
+    private PagesConnectionRepository pagesConnectionRepository;
     private String MainSeed;
 
     @Autowired
@@ -35,8 +35,8 @@ public class CrawlerService {
     }
 
     @Autowired
-    public void setInnerRepository(PagesConnectionRepository InnerRepo) {
-        this.InnerRepo = InnerRepo;
+    public void setInnerRepository(PagesConnectionRepository pagesConnectionRepository) {
+        this.pagesConnectionRepository = pagesConnectionRepository;
     }
 
     public class CrawlerThreaded implements Runnable {
@@ -48,7 +48,7 @@ public class CrawlerService {
             count = 0;
             MainSeed = seed;
             PageRepo.deleteAll();
-            InnerRepo.deleteAll();
+            pagesConnectionRepository.deleteAll();
         }
 
         private void insertPageAndContent(String link, String title, String content) {
@@ -60,8 +60,8 @@ public class CrawlerService {
 
         private void insertInnerlink(String Base, String Inner) {
             PagesConnection I = new PagesConnection(Base, Inner);
-            synchronized (InnerRepo) {
-                InnerRepo.save(I);
+            synchronized (pagesConnectionRepository) {
+                pagesConnectionRepository.save(I);
             }
         }
 
@@ -93,23 +93,42 @@ public class CrawlerService {
 
         private String getBaseURL(String link) {
             //extracting the base link from the link we have
-            Matcher httpsMatcher = Pattern.compile("^https://(.*?)/").matcher(link);
-            Matcher httpsMatcher2 = Pattern.compile("^https://(.*?)").matcher(link);
-            Matcher httpMatcher = Pattern.compile("^http://(.*?)/").matcher(link);
-            Matcher httpMatcher2 = Pattern.compile("^http://(.*?)").matcher(link);
+            Matcher httpsMatcher = Pattern.compile("^https://www.(.*?)/").matcher(link);
+            Matcher httpsMatcher1 = Pattern.compile("^https://www.(.*?)").matcher(link);
+            Matcher httpsMatcher2 = Pattern.compile("^https://(.*?)/").matcher(link);
+            Matcher httpsMatcher3 = Pattern.compile("^https://(.*?)").matcher(link);
+            Matcher httpMatcher = Pattern.compile("^http://www.(.*?)/").matcher(link);
+            Matcher httpMatcher1 = Pattern.compile("^http://www.(.*?)").matcher(link);
+            Matcher httpMatcher2 = Pattern.compile("^http://(.*?)/").matcher(link);
+            Matcher httpMatcher3 = Pattern.compile("^http://(.*?)").matcher(link);
 
             if (httpsMatcher.find()) {
                 return httpsMatcher.group(1);
             }
+            if (httpsMatcher1.find()) {
+                return link.substring(12, link.length());
+            }
             if (httpsMatcher2.find()) {
+                return httpsMatcher2.group(1);
+            }
+            if (httpsMatcher3.find()) {
                 return link.substring(8, link.length());
             }
+
+
             if (httpMatcher.find()) {
                 return httpMatcher.group(1);
             }
+            if (httpMatcher1.find()) {
+                return link.substring(11, link.length());
+            }
             if (httpMatcher2.find()) {
+                return httpMatcher2.group(1);
+            }
+            if (httpMatcher3.find()) {
                 return link.substring(7, link.length());
             }
+
             return link;
         }
 
@@ -135,18 +154,17 @@ public class CrawlerService {
             //start looping on the links and add them to  the queue
             for (Element link : links) {
                 if (count<5000){
-                    count++;
-
                     //fixing and completing the links if there is anything missing in them (like 'https://' in the begining)
                     String linkString = fixLink(link, seed);
 
                     //checking if we have visited the link before
                     if(!VisitedQueue.contains(linkString)) {
+                        count++;
                         LinksQueue.add(linkString);
 
                         String baseSeed = getBaseURL(seed);
                         String baseLink = getBaseURL(linkString);
-                        if (!baseSeed.equals(baseLink)) {
+                        if (!baseSeed.equals(baseLink) && !Pattern.compile("^#").matcher(baseSeed).find() && !Pattern.compile("^#").matcher(baseLink).find()) {
                             insertInnerlink(baseSeed, baseLink);
                         }
                     }
@@ -188,8 +206,8 @@ public class CrawlerService {
     }
 
     public void Crawl() {
-        (new Thread(new CrawlerThreaded("https://www.wikipedia.org/"))).start();
-      //  (new Thread(new CrawlerThreaded("https://www.geeksforgeeks.org/"))).start();
+        //(new Thread(new CrawlerThreaded("https://en.wikipedia.org/wiki/Main_Page"))).start();
+        (new Thread(new CrawlerThreaded("https://www.geeksforgeeks.org/"))).start();
 //        (new Thread(new CrawlerThreaded("https://www.bbc.com/"))).start();
 //        (new Thread(new CrawlerThreaded("https://www.nationalgeographic.com/"))).start();
 //        (new Thread(new CrawlerThreaded("https://www.youtube.com/"))).start();
