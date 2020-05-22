@@ -7,9 +7,12 @@ import javax.persistence.*;
 public class Page {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
     private String link;
     private String title;
     private String content;
+    private int lenght;
 
     public Page() {
     }
@@ -30,5 +33,9 @@ public class Page {
 
     public void set_content(String content) {
         this.content = content;
+    }
+
+    public void set_length(int length) {
+        this.lenght = length;
     }
 }
