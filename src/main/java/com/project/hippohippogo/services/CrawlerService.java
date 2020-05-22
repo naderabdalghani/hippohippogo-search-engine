@@ -53,8 +53,8 @@ public class CrawlerService {
             pagesConnectionRepository.deleteAll();
         }
 
-        private void insertPageAndContent(String link, String title, String content) {
-            Page P = new Page(link, title, content);
+        private void insertPageAndContent(String link, String title, String content, String description) {
+            Page P = new Page(link, title, content, description);
             synchronized (PageRepo){
                 PageRepo.save(P);
             }
@@ -101,7 +101,8 @@ public class CrawlerService {
         private void CleanAndSetPage(String html, Document doc, String seed) {
             String content = doc.text();
             String title = doc.title();
-            insertPageAndContent(seed, title, content);
+            String description = doc.body().text(); // Needs revision
+            insertPageAndContent(seed, title, content, description);
         }
 
         private void getLinks(String seed) throws IOException {
