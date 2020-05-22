@@ -1,7 +1,7 @@
 package com.project.hippohippogo;
 
 import com.project.hippohippogo.services.CrawlerService;
-import com.project.hippohippogo.services.Ranker;
+import com.project.hippohippogo.services.RankerService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -12,9 +12,9 @@ public class HippoHippoGoApplication {
         ApplicationContext applicationContext = SpringApplication.run(HippoHippoGoApplication.class, args);
         CrawlerService crawlerService = applicationContext.getBean(CrawlerService.class);
         crawlerService.Crawl();
-        Ranker ranker = applicationContext.getBean(Ranker.class);
-        //ranker.rankPages();
-        ranker.getURLs("soccer");
+        RankerService rankerService = applicationContext.getBean(RankerService.class);
+        rankerService.rankPages();
+        rankerService.getURLs("football soccer");
     }
 
 }

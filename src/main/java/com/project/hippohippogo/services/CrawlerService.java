@@ -23,6 +23,8 @@ import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.project.hippohippogo.services.RankerService.getString;
+
 @Service
 public class CrawlerService {
     private PageRepository PageRepo;
@@ -93,43 +95,7 @@ public class CrawlerService {
 
         private String getBaseURL(String link) {
             //extracting the base link from the link we have
-            Matcher httpsMatcher = Pattern.compile("^https://www.(.*?)/").matcher(link);
-            Matcher httpsMatcher1 = Pattern.compile("^https://www.(.*?)").matcher(link);
-            Matcher httpsMatcher2 = Pattern.compile("^https://(.*?)/").matcher(link);
-            Matcher httpsMatcher3 = Pattern.compile("^https://(.*?)").matcher(link);
-            Matcher httpMatcher = Pattern.compile("^http://www.(.*?)/").matcher(link);
-            Matcher httpMatcher1 = Pattern.compile("^http://www.(.*?)").matcher(link);
-            Matcher httpMatcher2 = Pattern.compile("^http://(.*?)/").matcher(link);
-            Matcher httpMatcher3 = Pattern.compile("^http://(.*?)").matcher(link);
-
-            if (httpsMatcher.find()) {
-                return httpsMatcher.group(1);
-            }
-            if (httpsMatcher1.find()) {
-                return link.substring(12, link.length());
-            }
-            if (httpsMatcher2.find()) {
-                return httpsMatcher2.group(1);
-            }
-            if (httpsMatcher3.find()) {
-                return link.substring(8, link.length());
-            }
-
-
-            if (httpMatcher.find()) {
-                return httpMatcher.group(1);
-            }
-            if (httpMatcher1.find()) {
-                return link.substring(11, link.length());
-            }
-            if (httpMatcher2.find()) {
-                return httpMatcher2.group(1);
-            }
-            if (httpMatcher3.find()) {
-                return link.substring(7, link.length());
-            }
-
-            return link;
+            return getString(link);
         }
 
         private void CleanAndSetPage(String html, Document doc, String seed) {
@@ -206,8 +172,10 @@ public class CrawlerService {
     }
 
     public void Crawl() {
-        //(new Thread(new CrawlerThreaded("https://en.wikipedia.org/wiki/Main_Page"))).start();
-        (new Thread(new CrawlerThreaded("https://www.geeksforgeeks.org/"))).start();
+        PageRepo.deleteAll();
+        pagesConnectionRepository.deleteAll();
+        (new Thread(new CrawlerThreaded("https://en.wikipedia.org/wiki/Main_Page"))).start();
+        //(new Thread(new CrawlerThreaded("https://www.geeksforgeeks.org/"))).start();
 //        (new Thread(new CrawlerThreaded("https://www.bbc.com/"))).start();
 //        (new Thread(new CrawlerThreaded("https://www.nationalgeographic.com/"))).start();
 //        (new Thread(new CrawlerThreaded("https://www.youtube.com/"))).start();

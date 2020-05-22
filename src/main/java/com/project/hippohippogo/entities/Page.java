@@ -38,4 +38,12 @@ public class Page {
     public void set_length(int length) {
         this.length = length;
     }
+
+    public int getLength() {
+        return length;
+    }
+
+    public String getLink() {
+        return link;
+    }
 }
