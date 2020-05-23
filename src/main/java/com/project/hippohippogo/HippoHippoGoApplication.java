@@ -13,8 +13,9 @@ public class HippoHippoGoApplication {
     public static void main(String[] args) {
         ApplicationContext applicationContext = SpringApplication.run(HippoHippoGoApplication.class, args);
         CrawlerService crawlerService = applicationContext.getBean(CrawlerService.class);
-        RankerService rankerService = applicationContext.getBean(RankerService.class);
-        List<Integer> pagesIDs = rankerService.getURLs("football soccer");
+        crawlerService.Crawl();
+        //RankerService rankerService = applicationContext.getBean(RankerService.class);
+        //List<Integer> pagesIDs = rankerService.getURLs("football soccer");
     }
 
     private void initialize(CrawlerService crawlerService,RankerService rankerService) {

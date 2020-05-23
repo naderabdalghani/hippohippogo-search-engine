@@ -12,13 +12,8 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Scanner;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.LinkedList;
@@ -47,11 +42,14 @@ public class CrawlerService {
         Queue<String> LinksQueue = new LinkedList<>();
         Queue<String> VisitedQueue = new LinkedList<>();
         Integer count;
+        Integer till = 100;
         private String MainSeed;
+        int status;
 
-        public CrawlerThreaded(String seed) {
+        public CrawlerThreaded(String seed, int status) {
             count = 0;
             MainSeed = seed;
+            this.status = status;
         }
 
         private void insertPageAndContent(String link, String title, String content, String description) {
@@ -103,6 +101,9 @@ public class CrawlerService {
             String content = doc.text();
             String title = doc.title();
             String description = doc.body().text(); // Needs revision
+            if(description.length() > 400) {
+                description = description.substring(0,400);
+            }
             insertPageAndContent(seed, title, content, description);
         }
 
@@ -121,7 +122,7 @@ public class CrawlerService {
             Elements links = doc.select("a[href]");     //selecting the links in the page to get them and recrawl them
             //start looping on the links and add them to  the queue
             for (Element link : links) {
-                if (count<5000){
+                if (count < till){
                     //fixing and completing the links if there is anything missing in them (like 'https://' in the begining)
                     String linkString = fixLink(link, seed);
 
@@ -146,23 +147,23 @@ public class CrawlerService {
         }
 
         private void SaveState() {
-            SaveVisited();
             SaveQueue();
             FileWriter write = null;
             try {
-                write = new FileWriter("count" + getName() + ".txt");
+                write = new FileWriter("state/count" + Thread.currentThread().getName() + ".txt");
             } catch (IOException e) {
                 e.printStackTrace();
             }
             PrintWriter print_line = new PrintWriter(write);
             print_line.print(count);
             print_line.close();
+            SaveStatusOne();
         }
 
         private void SaveQueue() {
             FileWriter write = null;
             try {
-                write = new FileWriter("queue" + getName()  + ".txt");
+                write = new FileWriter("state/queue" + Thread.currentThread().getName()  + ".txt");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -173,25 +174,32 @@ public class CrawlerService {
             print_line.close();
         }
 
-        private void SaveVisited() {
-            FileWriter write = null;
-            try {
-                write = new FileWriter("visited" + getName() + ".txt");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            PrintWriter print_line = new PrintWriter(write);
-            VisitedQueue.forEach(link -> {
+        private void AppendVisited(String link) {
+            //try to open the file to append
+            try (FileWriter f = new FileWriter("state/visited" + Thread.currentThread().getName() + ".txt", true);
+                 BufferedWriter b = new BufferedWriter(f);
+                 PrintWriter p = new PrintWriter(b);) {
+                p.println(link);
+            } catch (IOException i) {
+                //if open the file failed then create new one then append to it afterwords
+                FileWriter write = null;
+                try {
+                    System.out.println(Thread.currentThread().getName() + "saved visited");
+                    write = new FileWriter("state/visited" + Thread.currentThread().getName() + ".txt");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                PrintWriter print_line = new PrintWriter(write);
                 print_line.println(link);
-            });
-            print_line.close();
+                print_line.close();
+            }
         }
 
         private void ReadState() {
             ReadVisited();
             ReadQueue();
             try {
-                File myObj = new File("count" + getName() + ".txt");
+                File myObj = new File("state/count" + Thread.currentThread().getName() + ".txt");
                 Scanner myReader = new Scanner(myObj);
                 String data = myReader.nextLine();
                 count = Integer.parseInt(data);
@@ -204,7 +212,7 @@ public class CrawlerService {
 
         private void ReadQueue() {
             try {
-                File myObj = new File("queue" + getName()  + ".txt");
+                File myObj = new File("state/queue" + Thread.currentThread().getName()  + ".txt");
                 Scanner myReader = new Scanner(myObj);
                 while (myReader.hasNextLine()) {
                     String data = myReader.nextLine();
@@ -219,7 +227,7 @@ public class CrawlerService {
 
         private void ReadVisited() {
             try {
-                File myObj = new File("visited" + getName()  + ".txt");
+                File myObj = new File("state/visited" + Thread.currentThread().getName()  + ".txt");
                 Scanner myReader = new Scanner(myObj);
                 while (myReader.hasNextLine()) {
                     String data = myReader.nextLine();
@@ -232,9 +240,7 @@ public class CrawlerService {
             }
         }
 
-        public void Crawl(String seed) {
-            int status = ReadStatus();
-            System.out.println("status is " + status);
+        public void Crawl(String seed, int status) {
             if(status == 0){
                 try {
                     getLinks(seed);
@@ -252,8 +258,10 @@ public class CrawlerService {
                 try {
                     getLinks(link);
                     VisitedQueue.add(link);
+                    AppendVisited(link);
                     System.out.println(i);
                 } catch (Exception e) {
+                    count--;
                     System.out.println(i.toString()+link);
                     System.out.println(e);
                     System.out.println("i am here");
@@ -263,12 +271,12 @@ public class CrawlerService {
 
         @Override
         public void run() {
-            Crawl(MainSeed);
+            Crawl(MainSeed,status);
         }
     }
 
     private Integer ReadStatus() {
-        File myObj = new File("status.txt");
+        File myObj = new File("state/status.txt");
         Scanner myReader = null;
         try {
             myReader = new Scanner(myObj);
@@ -283,7 +291,7 @@ public class CrawlerService {
     private void SaveStatusZero() {
         FileWriter write = null;
         try {
-            write = new FileWriter("status.txt");
+            write = new FileWriter("state/status.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -295,7 +303,7 @@ public class CrawlerService {
     private void SaveStatusOne() {
         FileWriter write = null;
         try {
-            write = new FileWriter("status.txt");
+            write = new FileWriter("state/status.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -307,16 +315,38 @@ public class CrawlerService {
     public void Crawl() {
         Integer status = ReadStatus();
         if (status == 0) {
-            SaveStatusOne();
             PageRepo.deleteAll();
             pagesConnectionRepository.deleteAll();
         }
-        //(new Thread(new CrawlerThreaded("https://en.wikipedia.org/wiki/Main_Page"))).start();
-        //(new Thread(new CrawlerThreaded("https://www.geeksforgeeks.org/"))).start();
-        new CrawlerThreaded("https://www.geeksforgeeks.org/").Crawl("https://www.geeksforgeeks.org/");
-//        (new Thread(new CrawlerThreaded("https://www.bbc.com/"))).start();
-//        (new Thread(new CrawlerThreaded("https://www.nationalgeographic.com/"))).start();
-//        (new Thread(new CrawlerThreaded("https://www.youtube.com/"))).start();
+
+        Thread t0 = new Thread(new CrawlerThreaded("https://www.geeksforgeeks.org/", status));
+        Thread t1 = new Thread(new CrawlerThreaded("https://www.who.int/",status));
+        Thread t2 = new Thread(new CrawlerThreaded("https://www.bbc.com/",status));
+        Thread t3 = new Thread(new CrawlerThreaded("https://www.quora.com",status));
+        Thread t4 = new Thread(new CrawlerThreaded("https://www.stackoverflow.com",status));
+
+        t0.setName("thread_0");
+        t1.setName("thread_1");
+        t2.setName("thread_2");
+        t3.setName("thread_3");
+        t4.setName("thread_4");
+
+        t0.start();
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+
+        try {
+            t0.join();
+            t1.join();
+            t2.join();
+            t3.join();
+            t4.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         SaveStatusZero();
     }
 
