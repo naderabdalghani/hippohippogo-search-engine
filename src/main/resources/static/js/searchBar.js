@@ -114,6 +114,10 @@ $(function () {
 
         recognition.onstart = function () {
             recording = true;
+            voiceInputButton.removeAttr('disabled');
+            voiceInputButton.css("color", green);
+            clearButton.css("visibility", "visible");
+            inputField.attr('readonly', 'readonly');
             voiceInputString = inputField.val();
             if (!voiceInputString.endsWith(" ") && voiceInputString !== "") {
                 voiceInputString = voiceInputString + " ";
@@ -139,6 +143,17 @@ $(function () {
                 inputField.removeAttr('readonly');
                 inputField.trigger("focus");
             }
+            if (event.error === "aborted") {
+                if (recording) {
+                    recognition.stop();
+                    recording = false;
+                    if (inputField.val() === "") {
+                        clearButton.css("visibility", "hidden");
+                    }
+                    voiceInputButton.css("color", gray);
+                    inputField.removeAttr('readonly');
+                }
+            }
         }
     } catch (e) {
         console.error(e);
@@ -150,9 +165,8 @@ $(function () {
 
     voiceInputButton.on("click", function () {
         if (!recording) {
+            voiceInputButton.attr('disabled','disabled');
             recognition.start();
-            clearButton.css("visibility", "visible");
-            inputField.attr('readonly', 'readonly');
         } else {
             recognition.abort();
             inputField.trigger("focus");
