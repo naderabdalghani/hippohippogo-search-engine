@@ -13,9 +13,13 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.LinkedList;
@@ -27,7 +31,7 @@ import java.util.regex.Pattern;
 public class CrawlerService {
     private PageRepository PageRepo;
     private PagesConnectionRepository pagesConnectionRepository;
-    private String MainSeed;
+
 
     @Autowired
     public void setPageRepository(PageRepository PageRepo) {
@@ -39,16 +43,15 @@ public class CrawlerService {
         this.pagesConnectionRepository = pagesConnectionRepository;
     }
 
-    public class CrawlerThreaded implements Runnable {
+    public class CrawlerThreaded extends Thread {
         Queue<String> LinksQueue = new LinkedList<>();
         Queue<String> VisitedQueue = new LinkedList<>();
         Integer count;
+        private String MainSeed;
 
         public CrawlerThreaded(String seed) {
             count = 0;
             MainSeed = seed;
-            PageRepo.deleteAll();
-            pagesConnectionRepository.deleteAll();
         }
 
         private void insertPageAndContent(String link, String title, String content) {
@@ -177,14 +180,108 @@ public class CrawlerService {
             System.out.println(LinksQueue);
         }
 
-        public void Crawl(String seed) {
+        private void SaveState() {
+            SaveVisited();
+            SaveQueue();
+            FileWriter write = null;
             try {
-                getLinks(seed);
+                write = new FileWriter("count" + getName() + ".txt");
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            PrintWriter print_line = new PrintWriter(write);
+            print_line.print(count);
+            print_line.close();
+        }
+
+        private void SaveQueue() {
+            FileWriter write = null;
+            try {
+                write = new FileWriter("queue" + getName()  + ".txt");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            PrintWriter print_line = new PrintWriter(write);
+            LinksQueue.forEach(link -> {
+                print_line.println(link);
+            });
+            print_line.close();
+        }
+
+        private void SaveVisited() {
+            FileWriter write = null;
+            try {
+                write = new FileWriter("visited" + getName() + ".txt");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            PrintWriter print_line = new PrintWriter(write);
+            VisitedQueue.forEach(link -> {
+                print_line.println(link);
+            });
+            print_line.close();
+        }
+
+        private void ReadState() {
+            ReadVisited();
+            ReadQueue();
+            try {
+                File myObj = new File("count" + getName() + ".txt");
+                Scanner myReader = new Scanner(myObj);
+                String data = myReader.nextLine();
+                count = Integer.parseInt(data);
+                myReader.close();
+            } catch (FileNotFoundException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+            }
+        }
+
+        private void ReadQueue() {
+            try {
+                File myObj = new File("queue" + getName()  + ".txt");
+                Scanner myReader = new Scanner(myObj);
+                while (myReader.hasNextLine()) {
+                    String data = myReader.nextLine();
+                    LinksQueue.add(data);
+                }
+                myReader.close();
+            } catch (FileNotFoundException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+            }
+        }
+
+        private void ReadVisited() {
+            try {
+                File myObj = new File("visited" + getName()  + ".txt");
+                Scanner myReader = new Scanner(myObj);
+                while (myReader.hasNextLine()) {
+                    String data = myReader.nextLine();
+                    VisitedQueue.add(data);
+                }
+                myReader.close();
+            } catch (FileNotFoundException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+            }
+        }
+
+        public void Crawl(String seed) {
+            int status = ReadStatus();
+            System.out.println("status is " + status);
+            if(status == 0){
+                try {
+                    getLinks(seed);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                ReadState();
+            }
             Integer i=0;
             while(!LinksQueue.isEmpty()) {
+                SaveState();
                 String link = LinksQueue.remove();
                 i++;
                 try {
@@ -205,11 +302,58 @@ public class CrawlerService {
         }
     }
 
+    private Integer ReadStatus() {
+        File myObj = new File("status.txt");
+        Scanner myReader = null;
+        try {
+            myReader = new Scanner(myObj);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String data = myReader.nextLine();
+        myReader.close();
+        return Integer.parseInt(data);
+    }
+
+    private void SaveStatusZero() {
+        FileWriter write = null;
+        try {
+            write = new FileWriter("status.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        PrintWriter print_line = new PrintWriter(write);
+        print_line.print(0);
+        print_line.close();
+    }
+
+    private void SaveStatusOne() {
+        FileWriter write = null;
+        try {
+            write = new FileWriter("status.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        PrintWriter print_line = new PrintWriter(write);
+        print_line.print(1);
+        print_line.close();
+    }
+
     public void Crawl() {
+        Integer status = ReadStatus();
+        if (status == 0) {
+            SaveStatusOne();
+            PageRepo.deleteAll();
+            pagesConnectionRepository.deleteAll();
+        }
         //(new Thread(new CrawlerThreaded("https://en.wikipedia.org/wiki/Main_Page"))).start();
-        (new Thread(new CrawlerThreaded("https://www.geeksforgeeks.org/"))).start();
+        //(new Thread(new CrawlerThreaded("https://www.geeksforgeeks.org/"))).start();
+        new CrawlerThreaded("https://www.geeksforgeeks.org/").Crawl("https://www.geeksforgeeks.org/");
 //        (new Thread(new CrawlerThreaded("https://www.bbc.com/"))).start();
 //        (new Thread(new CrawlerThreaded("https://www.nationalgeographic.com/"))).start();
 //        (new Thread(new CrawlerThreaded("https://www.youtube.com/"))).start();
+        SaveStatusZero();
     }
+
+
 }
