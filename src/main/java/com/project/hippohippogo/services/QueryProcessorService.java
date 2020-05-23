@@ -1,5 +1,6 @@
 package com.project.hippohippogo.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.tartarus.snowball.ext.englishStemmer;
 
 import java.io.IOException;
@@ -11,7 +12,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class QueryProcessorService {
-    public static ArrayList<String> preprocessing(String document) throws IOException
+    private RankerService rankerService;
+
+    @Autowired
+    public void setRankerService(RankerService rankerService) {
+        this.rankerService = rankerService;
+    }
+    private String preprocessing(String document) throws IOException
     {
         //Removing nonalphanumeric characters
         document = document.replaceAll("[^a-zA-Z0-9]", " ");
@@ -22,7 +29,6 @@ public class QueryProcessorService {
                         .collect(Collectors.toCollection(ArrayList<String>::new));
         allWords.removeAll(stopwords);
         String result = allWords.stream().collect(Collectors.joining(" "));
-        System.out.println(result);
         //stemming
         englishStemmer stemmer = new englishStemmer();
         ArrayList<String> stemmedWords = new ArrayList<String>();
@@ -31,11 +37,18 @@ public class QueryProcessorService {
             stemmer.stem();
             stemmedWords.add(stemmer.getCurrent());
         }
-        System.out.println(stemmedWords);
         String resultafterstemming = stemmedWords.stream().collect(Collectors.joining(" "));
-        System.out.println(resultafterstemming);
-        return stemmedWords;
+        return resultafterstemming;
     }
 
-    
+    // Function to get search page results
+    public List<Integer> getPageResults(String query) {
+        try {
+            String processedQuery = preprocessing(query);
+            return rankerService.getURLs(processedQuery);
+        } catch (IOException e) {
+            return new ArrayList<Integer>();
+        }
+    }
+
 }
