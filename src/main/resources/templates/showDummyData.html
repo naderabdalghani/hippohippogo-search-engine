@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Dummy Data</title>
+    <title th:text="${title}"></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -13,9 +13,9 @@
         <th>Id</th>
         <th>Name</th>
     </tr>
-    <tr th:each="item : ${items}">
-        <td th:text="${item._id}"></td>
-        <td th:text="${item.name}"></td>
+    <tr th:each="result : ${results}">
+        <td th:text="${result.get_title()}"></td>
+        <td th:text="${result.get_description()}"></td>
     </tr>
 </table>
 </body>
