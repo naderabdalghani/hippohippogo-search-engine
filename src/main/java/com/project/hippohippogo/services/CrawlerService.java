@@ -3,12 +3,11 @@ package com.project.hippohippogo.services;
 
 import com.project.hippohippogo.entities.Page;
 import com.project.hippohippogo.entities.PagesConnection;
-import com.project.hippohippogo.repositories.PageRepository;
+import com.project.hippohippogo.repositories.PagesRepository;
 import com.project.hippohippogo.repositories.PagesConnectionRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,17 +23,18 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.project.hippohippogo.services.RankerService.getString;
 
 @Service
 public class CrawlerService {
-    private PageRepository PageRepo;
+    private PagesRepository PageRepo;
     private PagesConnectionRepository pagesConnectionRepository;
 
 
     @Autowired
-    public void setPageRepository(PageRepository PageRepo) {
+    public void setPageRepository(PagesRepository PageRepo) {
         this.PageRepo = PageRepo;
     }
 
@@ -54,8 +54,8 @@ public class CrawlerService {
             MainSeed = seed;
         }
 
-        private void insertPageAndContent(String link, String title, String content) {
-            Page P = new Page(link, title, content);
+        private void insertPageAndContent(String link, String title, String content, String description) {
+            Page P = new Page(link, title, content, description);
             synchronized (PageRepo){
                 PageRepo.save(P);
             }
@@ -96,49 +96,14 @@ public class CrawlerService {
 
         private String getBaseURL(String link) {
             //extracting the base link from the link we have
-            Matcher httpsMatcher = Pattern.compile("^https://www.(.*?)/").matcher(link);
-            Matcher httpsMatcher1 = Pattern.compile("^https://www.(.*?)").matcher(link);
-            Matcher httpsMatcher2 = Pattern.compile("^https://(.*?)/").matcher(link);
-            Matcher httpsMatcher3 = Pattern.compile("^https://(.*?)").matcher(link);
-            Matcher httpMatcher = Pattern.compile("^http://www.(.*?)/").matcher(link);
-            Matcher httpMatcher1 = Pattern.compile("^http://www.(.*?)").matcher(link);
-            Matcher httpMatcher2 = Pattern.compile("^http://(.*?)/").matcher(link);
-            Matcher httpMatcher3 = Pattern.compile("^http://(.*?)").matcher(link);
-
-            if (httpsMatcher.find()) {
-                return httpsMatcher.group(1);
-            }
-            if (httpsMatcher1.find()) {
-                return link.substring(12, link.length());
-            }
-            if (httpsMatcher2.find()) {
-                return httpsMatcher2.group(1);
-            }
-            if (httpsMatcher3.find()) {
-                return link.substring(8, link.length());
-            }
-
-
-            if (httpMatcher.find()) {
-                return httpMatcher.group(1);
-            }
-            if (httpMatcher1.find()) {
-                return link.substring(11, link.length());
-            }
-            if (httpMatcher2.find()) {
-                return httpMatcher2.group(1);
-            }
-            if (httpMatcher3.find()) {
-                return link.substring(7, link.length());
-            }
-
-            return link;
+            return getString(link);
         }
 
         private void CleanAndSetPage(String html, Document doc, String seed) {
             String content = doc.text();
             String title = doc.title();
-            insertPageAndContent(seed, title, content);
+            String description = doc.body().text(); // Needs revision
+            insertPageAndContent(seed, title, content, description);
         }
 
         private void getLinks(String seed) throws IOException {

@@ -11,7 +11,7 @@ public class PageRank {
     @Column(name="\"page\"")
     private String page;
     @Column(name="\"rank\"")
-    private float rank;
+    private double rank;
     @Column(name= "\"out_links\"")
     private int out_links;
 
@@ -26,11 +26,11 @@ public class PageRank {
         this.page = page;
     }
 
-    public void setRank(float rank) {
+    public void setRank(double rank) {
         this.rank = rank;
     }
 
-    public float getRank() {
+    public double getRank() {
         return rank;
     }
 
