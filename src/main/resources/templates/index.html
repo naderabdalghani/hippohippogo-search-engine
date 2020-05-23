@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="UTF-8" />
     <meta
@@ -9,10 +9,18 @@
     <link
       rel="stylesheet"
       media="handheld, all"
-      href="./css/index.css"
+      th:href="@{/css/index.css}"
       type="text/css"
     />
-    <link rel="icon" href="./assets/hippohippogo_logo.ico" type="image/gif">
+    <link rel="stylesheet" th:href="@{/css/icons.css}" />
+    <link
+      rel="icon"
+      th:href="@{/assets/hippohippogo_logo.ico}"
+      type="image/gif"
+    />
+    <script
+      th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js}"
+    ></script>
   </head>
   <body
     class="body--home body--html"
@@ -26,36 +34,13 @@
           <img
             title="HippoHippoGo"
             class="logo_homepage"
-            src="./assets/hippohippogo_logo.png" alt="hippohippogo_logo"
+            th:src="@{/assets/hippohippogo_logo_with_text.png}"
+            alt="hippohippogo_logo"
+            style="object-fit: contain;"
           />
         </div>
         <div class="search-wrap--home">
-          <form
-            name="x"
-            id="search_form_homepage"
-            class="search"
-            action="/api/dummy"
-            method="get"
-          >
-            <input
-              name="q"
-              autocomplete="off"
-              id="search_form_input_homepage"
-              class="search__input"
-              type="text"
-              autofocus=""
-            />
-
-            <input
-              name="b"
-              id="search_button_homepage"
-              class="search__button search__button--html"
-              value=""
-              title="Search"
-              alt="Search"
-              type="submit"
-            />
-          </form>
+          <div th:insert="fragments/searchBar :: searchBar"></div>
         </div>
         <div id="html-only-notice"></div>
       </div>

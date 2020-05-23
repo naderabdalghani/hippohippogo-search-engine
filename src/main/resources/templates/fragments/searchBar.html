@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Search Bar Fragment</title>
+</head>
+<body>
+<div th:fragment="searchBar">
+    <link rel="stylesheet" th:href="@{/css/searchBar.css}"/>
+    <form
+            name="x"
+            id="search_form_homepage"
+            class="search"
+            action="/search"
+            method="get"
+    >
+        <div style="margin-right: 2em">
+            <input
+                    name="q"
+                    autocomplete="off"
+                    id="search_form_input"
+                    class="search__input"
+                    type="text"
+                    autofocus
+            />
+        </div>
+        <i
+                title="Microphone access blocked"
+                id="search_form_voice_disabled"
+                class="icon-slash search_bar_voice_input_button"
+                style="visibility: hidden; z-index: 99; cursor: default;"
+        ></i>
+        <i
+                id="search_form_voice_input"
+                class="icon-mic search_bar_voice_input_button"
+        ></i>
+        <i
+                id="search_form_input_clear"
+                class="icon-cross search_bar_clear_text_button"
+                style="visibility: hidden;"
+        ></i>
+        <input
+                name="b"
+                id="search_button"
+                class="search__button search__button--html"
+                value=""
+                title="Search"
+                alt="Search"
+                type="submit"
+                style="background-color: #5b9e4d;"
+        />
+    </form>
+    <script type="text/javascript" th:src="@{/js/searchBar.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.autocomplete.js}"></script>
+</div>
+</body>
+</html>

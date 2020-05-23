@@ -12,10 +12,10 @@ public class PagesConnection {
 
     public PagesConnection() {
     }
-    public PagesConnection(int id,String referred,String referring) {
-        this.id = id;
-        this.referred = referred;
-        this.referring = referring;
+
+    public PagesConnection(String referring, String referred) {
+        this.referred = referred;       //Child
+        this.referring = referring;     //Base
     }
 
     public void setReferred(String refered) {

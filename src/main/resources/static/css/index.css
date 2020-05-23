@@ -888,7 +888,7 @@ html {
   float: none;
   width: 70%;
 }
-@media only screen and (max-width: 590px) {
+/* @media only screen and (max-width: 590px) {
   .search-wrap--home {
     width: 80%;
   }
@@ -900,7 +900,7 @@ html {
   .search-wrap--home {
     width: auto;
   }
-}
+} */
 @media only screen and (max-height: 455px) and (orientation: portrait) {
   .displayable-atb-banner .search-wrap--home {
     padding-top: 0.694em;
@@ -3630,24 +3630,6 @@ html:not(.svg) .logo--dax {
 .has-suggestions .search__button--hero {
   border-radius: 0 4px 0 0;
 }
-.search:hover .search__button,
-.search__input:focus ~ .search__button,
-.search--header.has-text.search--hover .search__button,
-.search--header.has-text.search--focus .search__button,
-.search--home.has-text .search__button {
-  background-color: #5b9e4d;
-  color: white;
-}
-.search__button:hover,
-.search__button:focus,
-.search:hover .search__button:focus,
-.search--header.has-text.search--hover .search__button:hover,
-.search--header.has-text.search--focus .search__button:hover,
-.search--home.has-text .search__button:focus,
-.search--home.has-text .search__button:hover {
-  background-color: #66ad57;
-  color: white;
-}
 .search__button:active,
 .search:hover .search__button:active,
 .search--header.has-text.search--hover .search__button:active,
@@ -3657,10 +3639,6 @@ html:not(.svg) .logo--dax {
 .search__button--active {
   background-color: #5b9e4d;
   color: #fff;
-}
-.search__button--hero {
-  background-color: #e37151;
-  color: white;
 }
 .btn,
 .button,
@@ -4188,7 +4166,7 @@ body.body--html,
   font-family: sans-serif;
 }
 .search__button.search__button--html {
-  background-image: url(../assets/loupe_gray.png);
+  background-image: url(../assets/loupe_white.png);
 }
 .search__button.search__button--html:hover,
 .search__button.search__button--html:focus,
