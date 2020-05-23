@@ -6,7 +6,7 @@ import com.project.hippohippogo.entities.SearchQuery;
 import com.project.hippohippogo.repositories.DummyRepository;
 import com.project.hippohippogo.repositories.PagesRepository;
 import com.project.hippohippogo.repositories.QueriesRepository;
-import lombok.var;
+import com.project.hippohippogo.services.QueryProcessorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +24,7 @@ public class SearchController {
     private DummyRepository dummyRepository;
     private QueriesRepository queriesRepository;
     private PagesRepository pagesRepository;
+    private QueryProcessorService queryProcessorService;
 
     @Autowired
     public void setDummyRepository(DummyRepository dummyRepository) {
@@ -38,6 +39,11 @@ public class SearchController {
     @Autowired
     public void setPagesRepository(PagesRepository pagesRepository) {
         this.pagesRepository = pagesRepository;
+    }
+
+    @Autowired
+    public void setQueryProcessorService(QueryProcessorService queryProcessorService) {
+        this.queryProcessorService = queryProcessorService;
     }
 
     @GetMapping("/search")
@@ -61,7 +67,7 @@ public class SearchController {
         // Get Results
         String title = queryString + " at HippoHippoGo";
         // Those are dummy ids. Ids should be received from the ranker service
-        List<Integer> resultsIds = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+        List<Integer> resultsIds = queryProcessorService.getPageResults(queryString);
         Pageable pageable = PageRequest.of(offset, limit);
         List<Page> results = pagesRepository.findAllByIdIn(resultsIds, pageable);
         model.addAttribute("title", title);

@@ -1,6 +1,7 @@
 package com.project.hippohippogo.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.tartarus.snowball.ext.englishStemmer;
 
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Service
 public class QueryProcessorService {
     private RankerService rankerService;
 
