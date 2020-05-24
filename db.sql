@@ -28,6 +28,15 @@ create table pages
     content varchar(5000) null
 );
 
+create table images
+(
+	id int auto_increment,
+	description longtext null,
+	link longtext null,
+	constraint images_pk
+		primary key (id)
+);
+
 create table pages_connection
 (
     id int not null

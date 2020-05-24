@@ -18,11 +18,10 @@ public class Page {
     public Page() {
     }
 
-    public Page(String link, String title, String content, String description) {
+    public Page(String link, String title, String content) {
         set_link(link);
         set_title(title);
         set_content(content);
-        set_description(description);
     }
 
     public void set_link(String link) {
