@@ -184,6 +184,9 @@ $(function () {
         if (result.state === 'denied') {
             voiceInputDisabled.css("visibility", "visible");
             voiceInputDisabled.show();
+            if (recording) {
+                recognition.abort();
+            }
         } else {
             voiceInputDisabled.hide();
         }
@@ -191,6 +194,9 @@ $(function () {
             if (result.state === 'denied') {
                 voiceInputDisabled.css("visibility", "visible");
                 voiceInputDisabled.show();
+                if (recording) {
+                    recognition.abort();
+                }
             } else {
                 voiceInputDisabled.hide();
             }
