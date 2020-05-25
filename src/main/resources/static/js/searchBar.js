@@ -12,7 +12,18 @@ $(function () {
     const searchButton = $('#search_button');
     const voiceInputButton = $('#search_form_voice_input');
     const voiceInputDisabled = $('#search_form_voice_disabled');
+    const searchForm = $('#search_bar');
+
     let recording = false;
+
+    // Handle initial rendering
+    
+    if (inputField.val() === "") {
+        inputField.trigger('focus');
+    }
+    else {
+        clearButton.css("visibility", "visible");
+    }
 
     /////////////////////////////////////// Clear Text ///////////////////////////////////////
 
