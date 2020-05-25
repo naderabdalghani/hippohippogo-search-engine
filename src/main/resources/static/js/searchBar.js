@@ -17,7 +17,7 @@ $(function () {
     let recording = false;
 
     // Handle initial rendering
-    
+
     if (inputField.val() === "") {
         inputField.trigger('focus');
     }
