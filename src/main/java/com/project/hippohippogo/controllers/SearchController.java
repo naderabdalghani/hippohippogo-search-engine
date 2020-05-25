@@ -70,7 +70,7 @@ public class SearchController {
         List<Integer> resultsIds = queryProcessorService.getPageResults(queryString);
         Pageable pageable = PageRequest.of(offset, limit);
         List<Page> results = pagesRepository.findAllByIdIn(resultsIds, pageable);
-        model.addAttribute("title", title);
+        model.addAttribute("query", queryString);
         model.addAttribute("results", results);
         return "showDummyData";
     }
