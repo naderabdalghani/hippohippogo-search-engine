@@ -2839,7 +2839,7 @@ a.is-disabled:hover {
   margin-bottom: 2em;
   margin-top: 0.5em;
   position: relative;
-  padding-bottom: 5em;
+  /*padding-bottom: 5em;*/
 }
 .has-footer .results {
   padding-bottom: 20px;
