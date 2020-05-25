@@ -117,10 +117,15 @@
                         </div>
                     </div>
                     <div id="links" class="results js-results">
-                        <div
-                                class="result results_links_deep highlight_d result--url-above-snippet"
-                                th:each="result : ${results}"
-                        ><div th:replace="fragments/result :: webResult(${result.get_title()}, ${result.getLink()}, ${result.get_description()})"></div></div>
+                        <div th:if="${results.empty}">
+                            <h5>No results found for <b th:text="${query}"></b>.</h5>
+                        </div>
+                        <div th:unless="${results.empty}">
+                            <div
+                                    class="result results_links_deep highlight_d result--url-above-snippet"
+                                    th:each="result : ${results}"
+                            ><div th:replace="fragments/result :: webResult(${result.get_title()}, ${result.getLink()}, ${result.get_description()})"></div></div>
+                        </div>
                     </div>
                     <div th:insert="fragments/loader :: loader" id="web_results_loader" style="display: none"></div>
                 </div>
