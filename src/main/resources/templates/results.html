@@ -122,6 +122,7 @@
                                 th:each="result : ${results}"
                         ><div th:replace="fragments/result :: webResult(${result.get_title()}, ${result.getLink()}, ${result.get_description()})"></div></div>
                     </div>
+                    <div th:insert="fragments/loader :: loader" id="web_results_loader" style="display: none"></div>
                 </div>
             </div>
         </div>

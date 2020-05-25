@@ -18,23 +18,30 @@ function webResult(result) {
 
 $(function () {
     const resultsView = $(".results");
+    const loader = $("#web_results_loader");
     const urlParams = new URLSearchParams(window.location.search);
     const query = urlParams.get('q');
     let offset = parseInt(urlParams.get('offset')) + 1;
     const limit = parseInt(urlParams.get('limit'));
+    let limitReached = false;
 
     $(window).on("scroll", function () {
         if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
-            $.getJSON("http://localhost:8080/search", {
-                q: query,
-                offset: offset,
-                limit: limit
-            },function(results){
-                offset++;
-                $.each(results, function(i, result){
-                    resultsView.append(webResult(result));
+            if (!limitReached) {
+                loader.show();
+                $.getJSON("http://localhost:8080/search", {
+                    q: query,
+                    offset: offset,
+                    limit: limit
+                },function(results){
+                    loader.hide();
+                    limitReached = results.length === 0;
+                    offset++;
+                    $.each(results, function(i, result){
+                        resultsView.append(webResult(result));
+                    });
                 });
-            });
+            }
         }
     });
 });
