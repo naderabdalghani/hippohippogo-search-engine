@@ -5,8 +5,9 @@
     <title>Search Bar Fragment</title>
 </head>
 <body>
-<div th:fragment="searchBar">
+<div th:fragment="searchBar(query)">
     <link rel="stylesheet" th:href="@{/css/searchBar.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons.css}"/>
     <form
             name="x"
             id="search_form_homepage"
@@ -21,7 +22,8 @@
                     id="search_form_input"
                     class="search__input"
                     type="text"
-                    autofocus
+                    th:value="${query}"
+                    spellcheck="false"
             />
         </div>
         <i
