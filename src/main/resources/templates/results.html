@@ -5,7 +5,13 @@
         xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title th:text="${title}"></title>
+    <title th:text="${query + ' at HippoHippoGo'}"></title>
+    <link
+            rel="stylesheet"
+            media="handheld, all"
+            th:href="@{/css/index.css}"
+            type="text/css"
+    />
     <link
             rel="stylesheet"
             th:href="@{/css/results2.css}"
@@ -29,6 +35,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="HandheldFriendly" content="true"/>
     <meta name="apple-mobile-web-app-capable" content="no"/>
+    <script
+            th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js}"
+    ></script>
 </head>
 <body class="body--serp" data-gr-c-s-loaded="true" cz-shortcut-listen="true">
 <div id="spacing_hidden_wrapper">
@@ -45,77 +54,12 @@
             <div class="header__search-wrap">
                 <a
                         tabindex="-1"
-                        href="https://duckduckgo.com/?t=hj"
+                        href="http://localhost:8080/"
                         class="header__logo-wrap js-header-logo"
-                ><span class="header__logo js-logo-ddg">DuckDuckGo</span></a
+                ><span class="header__logo js-logo-ddg">HippoHippoGo</span></a
                 >
-                <div class="header__content header__search">
-                    <form
-                            id="search_form"
-                            class="search--adv search--header js-search-form has-text"
-                            name="x"
-                            action="https:///"
-                            method="GET"
-                    >
-                        <input
-                                type="text"
-                                name="q"
-                                tabindex="1"
-                                autocomplete="off"
-                                id="search_form_input"
-                                class="search__input--adv js-search-input"
-                                value="michael scott"
-                                autocapitalize="off"
-                                autocorrect="off"
-                        /><input
-                            id="search_form_input_clear"
-                            class="search__clear js-search-clear"
-                            type="button"
-                            tabindex="3"
-                            value="X"
-                    /><input
-                            id="search_button"
-                            class="search__button js-search-button"
-                            type="submit"
-                            tabindex="2"
-                            value="S"
-                    /><a
-                            id="search_dropdown"
-                            class="search__dropdown"
-                            href="javascript:;"
-                            tabindex="4"
-                    ></a>
-                        <div
-                                id="search_elements_hidden"
-                                class="search__hidden js-search-hidden"
-                        ></div>
-                        <div class="search__autocomplete">
-                            <div class="acp-wrap js-acp-wrap"></div>
-                            <div class="acp-footer is-hidden js-acp-footer">
-                    <span class="acp-footer__instructions"
-                    >Shortcuts to other sites to search off DuckDuckGo</span
-                    ><span class="acp-footer__link"
-                            ><a
-                                    class="no-visited js-acp-footer-link"
-                                    href="https://duckduckgo.com/bang"
-                            >Learn More</a
-                            ></span
-                            >
-                            </div>
-                        </div>
-                        <div class="search__autocomplete">
-                            <div class="acp-wrap js-acp-wrap"></div>
-                            <div class="acp-footer is-hidden js-acp-footer">
-                    <span class="acp-footer__instructions"
-                    >Shortcuts to other sites to search off DuckDuckGo</span
-                    ><span class="acp-footer__link"
-                            ><a class="no-visited js-acp-footer-link" href="/bang"
-                            >Learn More</a
-                            ></span
-                            >
-                            </div>
-                        </div>
-                    </form>
+                <div class="header__content header__search" id="search_bar">
+                    <div th:replace="fragments/searchBar :: searchBar(${query})"></div>
                 </div>
             </div>
             <div
