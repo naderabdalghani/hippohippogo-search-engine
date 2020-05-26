@@ -71,6 +71,16 @@
             <artifactId>jsoup</artifactId>
             <version>1.13.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.panforge</groupId>
+            <artifactId>robots</artifactId>
+            <version>1.4.4</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/com.github.rholder/snowball-stemmer -->
         <dependency>
             <groupId>com.github.rholder</groupId>
