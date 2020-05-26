@@ -156,5 +156,38 @@ public class IndexerService {
 
 
 
+    public void assignDb (Map<String, ArrayList<Integer>> wordsToDocs, Map<Pair, Vector<Integer>> wordAndDocToIndicies)
+    {
+        /*---------------------------------Assigning to DB---------------------------------*/
+        // Get list of words
+        ArrayList<String> words = new ArrayList<String> (wordsToDocs.keySet());
+        System.out.println(words);
+        for (int i = 0; i < words.size(); i++) {
+            // Get list of docIds the word appeared in them
+            ArrayList<Integer> docs=new ArrayList<Integer>(wordsToDocs.get(words.get(i)));
+            System.out.println(words.get(i));
+            System.out.println(docs);
+            for (int j = 0; j <docs.size() ; j++) {
+                // Pair of the word in that docID Return with list of indicies where the word occur
+                Pair<String, Integer> x = new Pair<>(words.get(i), docs.get(j));
+                System.out.println(x.print());
+                System.out.println(wordAndDocToIndicies.get(x));
+                Vector<Integer> indicies;
+                indicies = new Vector<Integer>(wordAndDocToIndicies.get(x));
+                System.out.println(indicies);
+                for (int k = 0; k <indicies.size() ; k++) {
+                    // Assign to the Database Table "words"
+                    Words word=new Words(words.get(i),docs.get(j),indicies.get(k));
+                    wordsRepository.save(word);
+                }
+            }
+        }
+
+    }
+
+
+
+
+
 }
 
