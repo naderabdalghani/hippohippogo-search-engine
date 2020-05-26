@@ -2,6 +2,7 @@ package com.project.hippohippogo;
 
 import com.project.hippohippogo.services.CrawlerService;
 import com.project.hippohippogo.services.RankerService;
+import com.project.hippohippogo.services.IndexerService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -14,6 +15,9 @@ public class HippoHippoGoApplication {
         ApplicationContext applicationContext = SpringApplication.run(HippoHippoGoApplication.class, args);
         CrawlerService crawlerService = applicationContext.getBean(CrawlerService.class);
         RankerService rankerService = applicationContext.getBean(RankerService.class);
+        List<Integer> pagesIDs = rankerService.getURLs("football soccer");
+        IndexerService a = applicationContext.getBean(IndexerService.class);
+        a.main();
     }
 
     private void initialize(CrawlerService crawlerService,RankerService rankerService) {
