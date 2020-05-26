@@ -7,6 +7,10 @@ import com.project.hippohippogo.entities.image;
 import com.project.hippohippogo.repositories.ImageRepository;
 import com.project.hippohippogo.repositories.PagesRepository;
 import com.project.hippohippogo.repositories.PagesConnectionRepository;
+import crawlercommons.robots.BaseRobotRules;
+import crawlercommons.robots.SimpleRobotRulesParser;
+//import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -15,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
-
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Scanner;
 import java.net.URL;
 import java.net.URLConnection;
@@ -50,16 +51,93 @@ public class CrawlerService {
         this.imageRepository = imageRepository;
     }
 
+    private Integer ReadStatus() {
+        File myObj = new File("state/status.txt");
+        Scanner myReader = null;
+        try {
+            myReader = new Scanner(myObj);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String data = myReader.nextLine();
+        myReader.close();
+        return Integer.parseInt(data);
+    }
+
+    private void SaveStatusZero() {
+        FileWriter write = null;
+        try {
+            write = new FileWriter("state/status.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        PrintWriter print_line = new PrintWriter(write);
+        print_line.print(0);
+        print_line.close();
+    }
+
+    private void SaveStatusOne() {
+        FileWriter write = null;
+        try {
+            write = new FileWriter("state/status.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        PrintWriter print_line = new PrintWriter(write);
+        print_line.print(1);
+        print_line.close();
+    }
+
+    public void Crawl() {
+        Integer status = ReadStatus();
+        if (status == 0) {
+            PageRepo.deleteAll();
+            pagesConnectionRepository.deleteAll();
+            imageRepository.deleteAll();
+        }
+
+        Thread t0 = new Thread(new CrawlerThreaded("https://www.geeksforgeeks.org/", status));
+        Thread t1 = new Thread(new CrawlerThreaded("https://www.who.int/",status));
+        Thread t2 = new Thread(new CrawlerThreaded("https://www.bbc.com/",status));
+        Thread t3 = new Thread(new CrawlerThreaded("https://www.quora.com",status));
+        Thread t4 = new Thread(new CrawlerThreaded("https://www.stackoverflow.com",status));
+
+        t0.setName("thread_0");
+        t1.setName("thread_1");
+        t2.setName("thread_2");
+        t3.setName("thread_3");
+        t4.setName("thread_4");
+
+        t0.start();
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+
+        try {
+            t0.join();
+            t1.join();
+            t2.join();
+            t3.join();
+            t4.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        SaveStatusZero();
+    }
+
     public class CrawlerThreaded extends Thread {
         Queue<String> LinksQueue = new LinkedList<>();
         Queue<String> VisitedQueue = new LinkedList<>();
         Integer count;
-        Integer till = 100;
+        Integer till;
         private String MainSeed;
         int status;
 
         public CrawlerThreaded(String seed, int status) {
             count = 0;
+            till = 100;
             MainSeed = seed;
             this.status = status;
         }
@@ -117,6 +195,7 @@ public class CrawlerService {
 
             getLinks(doc, html, seed);
             getImages(doc, seed);
+            CleanAndSetPage(html, doc, seed);
         }
 
         private String getHtmlPage(String seed) throws IOException {
@@ -135,24 +214,20 @@ public class CrawlerService {
             Elements links = doc.select("a[href]");     //selecting the links in the page to get them and recrawl them
             //start looping on the links and add them to  the queue
             for (Element link : links) {
-                if (count < till){
-                    //fixing and completing the links if there is anything missing in them (like 'https://' in the begining)
-                    String linkString = fixLink(link.attr("href"), seed);
+                //fixing and completing the links if there is anything missing in them (like 'https://' in the begining)
+                String linkString = fixLink(link.attr("href"), seed);
 
-                    //checking if we have visited the link before
-                    if(!VisitedQueue.contains(linkString) && !Pattern.compile("^#").matcher(linkString).find()) {
-                        count++;
-                        LinksQueue.add(linkString);
+                String baseSeed = getBaseURL(seed);
+                String baseLink = getBaseURL(linkString);
+                if (!baseSeed.equals(baseLink) && !Pattern.compile("^#").matcher(baseSeed).find() && !Pattern.compile("^#").matcher(baseLink).find() && !baseLink.equals("")) {
+                    insertInnerlink(baseSeed, baseLink);
+                }
 
-                        String baseSeed = getBaseURL(seed);
-                        String baseLink = getBaseURL(linkString);
-                        if (!baseSeed.equals(baseLink) && !Pattern.compile("^#").matcher(baseSeed).find() && !Pattern.compile("^#").matcher(baseLink).find() && !baseLink.equals("")) {
-                            insertInnerlink(baseSeed, baseLink);
-                        }
-                    }
+                if (count < till && !VisitedQueue.contains(linkString) && !Pattern.compile("^#").matcher(linkString).find() && checkRobots(seed, linkString)) {
+                    count++;
+                    LinksQueue.add(linkString);
                 }
             }
-            CleanAndSetPage(html, doc, seed);
         }
 
         private String getBaseURL(String link) {
@@ -163,6 +238,8 @@ public class CrawlerService {
         private void CleanAndSetPage(String html, Document doc, String seed) {
             String content = doc.text();
             String title = doc.title();
+            Element time = doc.select("pubDate").first();
+            System.out.println("######################################the puplish time of the page" + time.text() + "################################################");
             insertPageAndContent(seed, title, content);
         }
 
@@ -191,6 +268,32 @@ public class CrawlerService {
             else {
                 return link;
             }
+        }
+
+        private boolean checkRobots(String seed, String link) {
+            SimpleRobotRulesParser parser = new SimpleRobotRulesParser();
+            String url = "https://www." + getBaseURL(seed);
+            URLConnection connection = null;
+            byte[] content = null;
+            try {
+                connection = new URL(url).openConnection();
+                content = IOUtils.toByteArray(connection);
+            } catch (IOException e) {
+                //e.printStackTrace();
+                url = "https://" + getBaseURL(seed);
+                try {
+                    connection = new URL(url).openConnection();
+                    content = IOUtils.toByteArray(connection);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    System.out.println("true from the exception");
+                    return true;
+                }
+            }
+
+            BaseRobotRules rules = parser.parseContent(url, content, "text/plain", "*");
+            System.out.println(rules.isAllowed(link) + "from the robots");
+            return rules.isAllowed(link);
         }
 
         private void insertPageAndContent(String link, String title, String content) {
@@ -288,6 +391,7 @@ public class CrawlerService {
         }
 
         private void ReadVisited() {
+            //I could not use the database because of each thread has its own queue and tha database stores the visited for all threads
             try {
                 File myObj = new File("state/visited" + Thread.currentThread().getName()  + ".txt");
                 Scanner myReader = new Scanner(myObj);
@@ -326,81 +430,5 @@ public class CrawlerService {
             writerQueue.print("");
             writerQueue.close();
         }
-    }
-
-    private Integer ReadStatus() {
-        File myObj = new File("state/status.txt");
-        Scanner myReader = null;
-        try {
-            myReader = new Scanner(myObj);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        String data = myReader.nextLine();
-        myReader.close();
-        return Integer.parseInt(data);
-    }
-
-    private void SaveStatusZero() {
-        FileWriter write = null;
-        try {
-            write = new FileWriter("state/status.txt");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        PrintWriter print_line = new PrintWriter(write);
-        print_line.print(0);
-        print_line.close();
-    }
-
-    private void SaveStatusOne() {
-        FileWriter write = null;
-        try {
-            write = new FileWriter("state/status.txt");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        PrintWriter print_line = new PrintWriter(write);
-        print_line.print(1);
-        print_line.close();
-    }
-
-    public void Crawl() {
-        Integer status = ReadStatus();
-        if (status == 0) {
-            PageRepo.deleteAll();
-            pagesConnectionRepository.deleteAll();
-            imageRepository.deleteAll();
-        }
-
-        Thread t0 = new Thread(new CrawlerThreaded("https://www.geeksforgeeks.org/", status));
-        Thread t1 = new Thread(new CrawlerThreaded("https://www.who.int/",status));
-        Thread t2 = new Thread(new CrawlerThreaded("https://www.bbc.com/",status));
-        Thread t3 = new Thread(new CrawlerThreaded("https://www.quora.com",status));
-        Thread t4 = new Thread(new CrawlerThreaded("https://www.stackoverflow.com",status));
-
-        t0.setName("thread_0");
-        t1.setName("thread_1");
-        t2.setName("thread_2");
-        t3.setName("thread_3");
-        t4.setName("thread_4");
-
-        t0.start();
-        t1.start();
-        t2.start();
-        t3.start();
-        t4.start();
-
-        try {
-            t0.join();
-            t1.join();
-            t2.join();
-            t3.join();
-            t4.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        SaveStatusZero();
     }
 }
