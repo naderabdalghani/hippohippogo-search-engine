@@ -824,19 +824,6 @@ html {
   -moz-border-radius: 0;
   border-radius: 0;
 }
-@font-face {
-  font-family: "DDG_ProximaNova";
-  src: url("font/ProximaNova-ExtraBold-webfont.eot");
-  src: url("font/ProximaNova-ExtraBold-webfont.eot?#iefix")
-      format("embedded-opentype"),
-    url("font/ProximaNova-ExtraBold-webfont.woff2") format("woff2"),
-    url("font/ProximaNova-ExtraBold-webfont.woff") format("woff"),
-    url("font/ProximaNova-ExtraBold-webfont.ttf") format("truetype"),
-    url("font/ProximaNova-ExtraBold-webfont.svg#proxima_novaextrabold")
-      format("svg");
-  font-weight: 800;
-  font-style: normal;
-}
 .body--home,
 .site-wrapper--home {
   background: #f7f7f7;
@@ -1746,11 +1733,7 @@ body,
 input,
 select,
 textarea {
-  font-family: "DDG_ProximaNova", "DDG_ProximaNova_UI_0", "DDG_ProximaNova_UI_1",
-    "DDG_ProximaNova_UI_2", "DDG_ProximaNova_UI_3", "DDG_ProximaNova_UI_4",
-    "DDG_ProximaNova_UI_5", "DDG_ProximaNova_UI_6", "Proxima Nova",
-    "Helvetica Neue", "Helvetica", "Segoe UI", "Nimbus Sans L",
-    "Liberation Sans", "Open Sans", FreeSans, Arial, sans-serif;
+  font-family: Arial, sans-serif;
   color: #222;
 }
 h1,
@@ -2856,7 +2839,7 @@ a.is-disabled:hover {
   margin-bottom: 2em;
   margin-top: 0.5em;
   position: relative;
-  padding-bottom: 5em;
+  /*padding-bottom: 5em;*/
 }
 .has-footer .results {
   padding-bottom: 20px;
