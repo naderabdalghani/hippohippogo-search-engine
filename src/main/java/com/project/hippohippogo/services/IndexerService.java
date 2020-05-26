@@ -186,6 +186,64 @@ public class IndexerService {
     }
 
 
+    public void main() {
+        wordsRepository.deleteAll();
+        //ArrayList<String> webpages= new ArrayList<String>();
+
+        // Get Webpages content
+        ArrayList<String> webpages= pagesRepository.getWebPages();
+        // Get Webpages Ids
+        ArrayList<Integer> webpagesIds= pagesRepository.getWebPagesIds();
+
+
+        //String html = "<html><head><title>First parse</title></head>"
+        //      + "<body><p>Parsed? ,,HTML.!? into a doc.   ?  ? /</p></body></html>";
+
+        //String html2 = "<html><head><title>First parse</title></head>"
+        //        + "<body><p>Parsed? ,,HTML.!? into a doc.   ?  ? /</p></body></html>";
+        //webpages.add(html);
+        //webpages.add(html2);
+        // Map each word to list of documents appeared in it
+        Map<String, ArrayList<Integer>> wordsToDocs = new HashMap<String, ArrayList<Integer>>();
+        // Map each pair of  (word,docId) to list of indicies "the place of occurence of the word"
+        Map<Pair, Vector<Integer>> wordAndDocToIndicies = new HashMap<Pair, Vector<Integer>>();
+
+        ArrayList<String> stemmedWords = new ArrayList<String>();
+        // Document doc = Jsoup.parse(html);
+        //System.out.println(doc.text());
+        //String original =doc.text() ;
+
+        // For loop on all the webpages
+        for (int i = 0; i <webpagesIds.size() ; i++)
+        {
+            // Preprocess this webpage
+            try {
+                stemmedWords = preprocessing(webpages.get(i));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // Index this webpage
+            indexing(stemmedWords, wordsToDocs, wordAndDocToIndicies, webpagesIds.get(i));
+        }
+
+        /*System.out.println(wordsToDocs);
+        Iterator iterator = wordAndDocToIndicies.entrySet().iterator();
+        while (iterator.hasNext())
+        {
+            Map.Entry me2 = (Map.Entry) iterator.next();
+            Pair y= (Pair) me2.getKey();
+            Vector z= (Vector) me2.getValue();
+            System.out.println("Key: " + y.print()+ " & Value: " + z);
+        }*/
+
+        // Assign to the DB
+        assignDb(wordsToDocs,wordAndDocToIndicies);
+
+
+
+    }
+
+
 
 
 
