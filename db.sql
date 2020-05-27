@@ -1,11 +1,11 @@
-create schema mydb collate utf8mb4_0900_ai_ci;
+create schema hippohippogo_db collate utf8mb4_0900_ai_ci;
 
-create table hibernate_sequence
+create table hippohippogo_db.hibernate_sequence
 (
     next_val bigint null
 );
 
-create table images
+create table hippohippogo_db.images
 (
     id int auto_increment
         primary key,
@@ -17,7 +17,7 @@ create table images
     date_published date null
 );
 
-create table images_words
+create table hippohippogo_db.images_words
 (
     id int auto_increment
         primary key,
@@ -26,7 +26,7 @@ create table images_words
     index_of_word int not null
 );
 
-create table page_rank
+create table hippohippogo_db.page_rank
 (
     page varchar(255) not null
         primary key,
@@ -34,7 +34,7 @@ create table page_rank
     out_links int not null
 );
 
-create table pages
+create table hippohippogo_db.pages
 (
     id int not null
         primary key,
@@ -47,7 +47,7 @@ create table pages
     date_published date null
 );
 
-create table pages_connection
+create table hippohippogo_db.pages_connection
 (
     id int not null
         primary key,
@@ -55,7 +55,7 @@ create table pages_connection
     referring varchar(255) not null
 );
 
-create table users
+create table hippohippogo_db.users
 (
     ip varchar(255) not null,
     query varchar(255) not null,
@@ -65,7 +65,7 @@ create table users
     primary key (ip, query, region)
 );
 
-create table users_frequent_domains
+create table hippohippogo_db.users_frequent_domains
 (
     domain varchar(255) not null,
     user_ip varchar(255) not null,
@@ -73,7 +73,7 @@ create table users_frequent_domains
     primary key (domain, user_ip)
 );
 
-create table words
+create table hippohippogo_db.words
 (
     id int not null
         primary key,
