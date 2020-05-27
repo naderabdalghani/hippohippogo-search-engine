@@ -34,28 +34,6 @@ create table hippohippogo_db.page_rank
     out_links int not null
 );
 
-create table images
-(
-	id int auto_increment,
-	description longtext null,
-	link longtext null,
-	constraint images_pk
-		primary key (id)
-);
-
-create table mydb.pages_connection
-(
-    id int not null
-        primary key,
-    content longtext not null,
-    link longtext not null,
-    length int not null,
-    title longtext not null,
-    description longtext not null,
-    region varchar(2) null,
-    date_published date null
-);
-
 create table hippohippogo_db.pages_connection
 (
     id int not null
