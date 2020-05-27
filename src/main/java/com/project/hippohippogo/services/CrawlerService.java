@@ -238,8 +238,8 @@ public class CrawlerService {
         private void CleanAndSetPage(String html, Document doc, String seed) {
             String content = doc.text();
             String title = doc.title();
-            Element time = doc.select("pubDate").first();
-            System.out.println("######################################the puplish time of the page" + time.text() + "################################################");
+//            Element time = doc.select("pubDate").first();
+//            System.out.println("######################################the puplish time of the page" + time.text() + "################################################");
             insertPageAndContent(seed, title, content);
         }
 
@@ -286,13 +286,13 @@ public class CrawlerService {
                     content = IOUtils.toByteArray(connection);
                 } catch (IOException ex) {
                     ex.printStackTrace();
-                    System.out.println("true from the exception");
+                    //System.out.println("true from the exception");
                     return true;
                 }
             }
 
             BaseRobotRules rules = parser.parseContent(url, content, "text/plain", "*");
-            System.out.println(rules.isAllowed(link) + "from the robots");
+            //System.out.println(rules.isAllowed(link) + "from the robots");
             return rules.isAllowed(link);
         }
 
