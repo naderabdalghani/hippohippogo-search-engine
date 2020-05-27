@@ -2,6 +2,7 @@ package com.project.hippohippogo;
 
 import com.project.hippohippogo.services.CrawlerService;
 import com.project.hippohippogo.services.RankerService;
+import com.project.hippohippogo.services.IndexerService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;

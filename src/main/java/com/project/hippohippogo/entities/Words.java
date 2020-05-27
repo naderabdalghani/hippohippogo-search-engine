@@ -22,7 +22,7 @@ public class Words {
 
     public Words() {
     }
-    public Words(Long id, String word, int doc_id, int index_of_word) {
+    public Words( String word, int doc_id, int index_of_word) {
         this.word = word;
         this.doc_id = doc_id;
         this.index_of_word = index_of_word;

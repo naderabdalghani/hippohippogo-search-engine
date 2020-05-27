@@ -13,19 +13,24 @@ create table hibernate_sequence
     next_val bigint null
 );
 
-create table page_rank
+create table mydb.page_rank
 (
-    page varchar(255) not null
-        primary key,
-    `rank` float not null,
-    out_links int null
+	page varchar(255) not null
+		primary key,
+	`rank` double not null,
+	out_links int not null
 );
 
-create table pages
+
+create table mydb.pages
 (
-    link varchar(100) not null
-        primary key,
-    content varchar(5000) null
+	id int auto_increment
+		primary key,
+	link longtext null,
+	title longtext null,
+	content longtext null,
+	length int null,
+	description varchar(255) null
 );
 
 create table images
@@ -37,13 +42,15 @@ create table images
 		primary key (id)
 );
 
-create table pages_connection
+create table mydb.pages_connection
 (
-    id int not null
-        primary key,
-    referred varchar(255) null,
-    referring varchar(255) null
+	id int auto_increment
+		primary key,
+	referred varchar(100) null,
+	referring varchar(100) null
 );
+
+
 
 create table search_queries
 (
@@ -52,12 +59,14 @@ create table search_queries
     hits int default 1 not null
 );
 
-create table words
+create table mydb.words
 (
-    id int not null
-        primary key,
-    word varchar(255) null,
-    doc_id int null,
-    index_of_word int null
+	id bigint auto_increment
+		primary key,
+	word varchar(100) not null,
+	doc_id int not null,
+	index_of_word int not null
 );
+
+
 
