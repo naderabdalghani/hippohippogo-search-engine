@@ -46,8 +46,19 @@ public class SearchController {
         this.queryProcessorService = queryProcessorService;
     }
 
-    @GetMapping("/search")
-    public String getWebResults(Model model, @RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit) {
+    @RequestMapping(value = "/search", produces = "application/json", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Page> getWebResultsAsJSON(@RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit) {
+        // List<Integer> resultsIds = queryProcessorService.getPageResults(queryString);
+        List<Integer> resultsIds = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+        Pageable pageable = PageRequest.of(offset, limit);
+        List<Page> results = pagesRepository.findAllByIdIn(resultsIds, pageable);
+        System.out.print(results);
+        return results;
+    }
+
+    @RequestMapping(value = "/search", produces = "text/html", method = RequestMethod.GET)
+    public String getWebResultsAsHTML(Model model, @RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit) {
         // Return to landing page if query is empty
         if (queryString.equals("")) {
             return "index";
@@ -65,14 +76,13 @@ public class SearchController {
         }
 
         // Get Results
-        String title = queryString + " at HippoHippoGo";
-        // Those are dummy ids. Ids should be received from the ranker service
-        List<Integer> resultsIds = queryProcessorService.getPageResults(queryString);
+        // List<Integer> resultsIds = queryProcessorService.getPageResults(queryString);
+        List<Integer> resultsIds = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
         Pageable pageable = PageRequest.of(offset, limit);
         List<Page> results = pagesRepository.findAllByIdIn(resultsIds, pageable);
-        model.addAttribute("title", title);
+        model.addAttribute("query", queryString);
         model.addAttribute("results", results);
-        return "showDummyData";
+        return "results";
     }
 
     @GetMapping("/img")
