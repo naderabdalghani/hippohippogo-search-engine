@@ -16,8 +16,6 @@ $(function () {
     const inputRegion = $('#region');
     const regionValue = $('#regionValue');
 
-    $('.ui.dropdown').dropdown();
-
     regionValue.on('change', function () {
         inputRegion.val(regionValue.val());
     });
