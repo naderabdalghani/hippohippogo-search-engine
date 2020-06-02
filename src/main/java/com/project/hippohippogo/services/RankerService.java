@@ -183,10 +183,9 @@ public class RankerService {
             else {
                 double TF;
                 for (int i : docs) {
-                    Optional<Page> document = pagesRepository.findById(i);
                     // Getting page rank element of the page
-                    Optional<PageRank> pageRank = pageRankRepository.findById(getBaseURL(document.get().getLink()));
-                    int docLength = document.get().getLength();
+                    Optional<PageRank> pageRank = pageRankRepository.findById(getBaseURL(pagesRepository.getPageLink(i)));
+                    int docLength = pagesRepository.getPageLength(i);
                     int wordCount = wordsRepository.getWordCountInDoc(s,i);
                     TF = (double)wordCount/docLength;
                     // Handling spam if TF is higher then 0.5 then it's spam and make it equals to 0
