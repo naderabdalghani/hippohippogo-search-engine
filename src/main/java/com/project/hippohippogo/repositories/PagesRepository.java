@@ -20,7 +20,7 @@ public interface PagesRepository extends JpaRepository<Page, Integer> {
     ArrayList<Integer> getWebPagesIds();
 
     // Return length of document
-    @Query(value = "SELECT [length] FROM pages WHERE id = ?1", nativeQuery = true)
+    @Query(value = "SELECT length FROM pages WHERE id = ?1", nativeQuery = true)
     int getPageLength(int id);
 
     // Return page link
