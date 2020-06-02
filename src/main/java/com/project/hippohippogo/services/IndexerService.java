@@ -203,12 +203,16 @@ public class IndexerService {
                         if (this.type==0) {
                             // Assign to the Database Table "words"
                             Words word = new Words(words.get(i), docs.get(j), indicies.get(k));
-                            wordsRepository.save(word);
+                            synchronized (wordsRepository) {
+                                wordsRepository.save(word);
+                            }
                         }
                         else {
                             // Assign to the Database Table "imageswords"
                             images_words word = new images_words(words.get(i), docs.get(j), indicies.get(k));
-                            imageswordsRepository.save(word);
+                            synchronized (imageswordsRepository) {
+                                imageswordsRepository.save(word);
+                            }
                         }
                     }
                 }
@@ -227,9 +231,31 @@ public class IndexerService {
             //System.out.println(doc.text());
             //String original =doc.text() ;
 
+            // if there is no documents to index
+            if (this.endingWebPage==0)
+                return;
             // For loop on all the webpages
             for (int i = this.startingWebPage; i <this.endingWebPage ; i++)
             {
+                // Check if document was already indexed and needs to be updated
+                // so delete it from table and then index it
+                if (this.type ==0) {
+                    synchronized (wordsRepository) {
+                        if (wordsRepository.checkIfDocExists(webpagesIds.get(i)) == 1) {
+                            wordsRepository.deleteEntriesOfDocId(webpagesIds.get(i));
+                            //continue;
+                        }
+                    }
+                }
+                else {
+                    synchronized (imageswordsRepository) {
+                        if (imageswordsRepository. checkIfimageExists(webpagesIds.get(i))== 1) {
+                            imageswordsRepository.deleteEntriesOfimageId(webpagesIds.get(i));
+                            //continue;
+                        }
+                    }
+
+                }
                 // Preprocess this webpage
                 try {
                     stemmedWords = preprocessing(webpages.get(i));
@@ -238,6 +264,13 @@ public class IndexerService {
                 }
                 // Index this webpage
                 indexing(stemmedWords, wordsToDocs, wordAndDocToIndicies, webpagesIds.get(i));
+                if(this.type==0) {
+                    pagesRepository.setWebPagesIndexed(webpagesIds.get(i));
+                }
+                else
+                {
+                    imagesRepository.setImagesIndexed(webpagesIds.get(i));
+                }
             }
 
         /*System.out.println(wordsToDocs);
@@ -262,7 +295,10 @@ public class IndexerService {
         }
     }
     public void main() {
-        wordsRepository.deleteAll();
+
+        //wordsRepository.deleteAll();
+
+
         //ArrayList<String> webpages= new ArrayList<String>();
 
         // Get Webpages content
