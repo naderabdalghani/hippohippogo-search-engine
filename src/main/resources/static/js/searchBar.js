@@ -13,6 +13,14 @@ $(function () {
     const voiceInputButton = $('#search_form_voice_input');
     const voiceInputDisabled = $('#search_form_voice_disabled');
     const searchForm = $('#search_bar');
+    const inputRegion = $('#region');
+    const regionValue = $('#regionValue');
+
+    $('.ui.dropdown').dropdown();
+
+    regionValue.on('change', function () {
+        inputRegion.val(regionValue.val());
+    });
 
     let recording = false;
 
