@@ -47,7 +47,7 @@ public class QueryProcessorService {
     public List<Integer> getPageResults(String query) {
         try {
             String processedQuery = preprocessing(query);
-            return rankerService.getURLs(processedQuery);
+            return rankerService.getPageURLs(processedQuery);
         } catch (IOException e) {
             return new ArrayList<Integer>();
         }
