@@ -57,10 +57,10 @@ create table hippohippogo_db.pages_connection
 
 create table hippohippogo_db.queries
 (
-    ip varchar(255) not null,
+    user_ip varchar(255) not null,
     query varchar(255) not null,
     hits int default 1 not null,
-    primary key (ip, query)
+    primary key (user_ip, query)
 );
 
 create table hippohippogo_db.users_frequent_domains

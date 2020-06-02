@@ -9,21 +9,21 @@ import javax.persistence.*;
 @Table(name = "queries")
 public class Query {
     @Id
+    @Column(name= "\"user_ip\"")
     private String userIp;
     @Id
+    @Column(name="\"query\"")
     private String query;
-    @Id
-    private String region;
+    @Column(name="\"hits\"")
     private int hits;
 
     public Query() {
 
     }
 
-    public Query(String userIp, String query, String region) {
+    public Query(String userIp, String query) {
         this.userIp = userIp;
         this.query = query;
-        this.region = region;
         hits = 1;
     }
 
@@ -33,14 +33,6 @@ public class Query {
 
     public void setUserIp(String ip) {
         this.userIp = ip;
-    }
-
-    public String getRegion() {
-        return region;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
     }
 
     public String getQuery() {
