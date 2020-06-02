@@ -714,7 +714,6 @@ html {
   box-sizing: content-box;
   -webkit-user-select: none;
   -khtml-user-select: none;
-  -moz-user-select: -moz-none;
   -ms-user-select: none;
   user-select: none;
 }
@@ -1132,7 +1131,6 @@ html {
   margin: 0;
   width: 200px;
   height: 56px;
-  background-image: url(assets/logo_homepage_mobile.normal.v108.unoptimized.svg);
   background-size: 100% 100%;
 }
 .is-atb-fullbleed .content--home .logo_homepage__tt {
@@ -1521,7 +1519,6 @@ html {
 }
 .is-atb-fullbleed.dark-bg .content--home .logo_homepage {
   width: 250px;
-  background-image: url("assets/logo_homepage_mobile.alt.v106.svg");
 }
 .is-atb-fullbleed.dark-bg .badge-link__img {
   display: none;
@@ -1543,7 +1540,6 @@ html {
 .is-atb-fullbleed.is-bb-exp .logo_homepage {
   width: 200px;
   height: 162px;
-  background-image: url(assets/logo_homepage.normal.v108.svg);
 }
 .is-atb-fullbleed.is-bb-exp
   .badge-link.badge-link--full.badge-link--billboard-exp {
@@ -1630,7 +1626,6 @@ html {
   border-radius: 10px;
 }
 .is-atb-fullbleed.is-bb-exp.dark-bg.is-bb-exp .logo_homepage {
-  background-image: url(assets/logo_homepage.alt.v108.svg);
 }
 .is-atb-fullbleed.is-bb-exp.dark-bg.is-bb-exp
   .badge-link__img-bb:not(.badge-link__img--dark) {
@@ -1788,7 +1783,6 @@ sub {
 .no-select {
   -webkit-user-select: none;
   -khtml-user-select: none;
-  -moz-user-select: -moz-none;
   -ms-user-select: none;
   user-select: none;
 }
@@ -1886,7 +1880,6 @@ a.is-disabled:hover {
   color: white;
   -webkit-user-select: none;
   -khtml-user-select: none;
-  -moz-user-select: -moz-none;
   -ms-user-select: none;
   user-select: none;
 }
@@ -1999,57 +1992,42 @@ a.is-disabled:hover {
   text-transform: lowercase;
 }
 .badge--prime {
-  background-image: url("/assets/icons/thirdparty/prime.v101.png");
   background-size: 44px 12px;
   width: 44px;
   height: 12px;
 }
-.svg .badge--prime {
-  background-image: url("/assets/icons/thirdparty/prime.v101.svg");
-}
+
 .badge--yandex {
-  background-image: url("/assets/attribution/yandex.v102.png");
   background-size: 44px 19px;
   width: 44px;
   height: 19px;
 }
 .svg .badge--yandex {
-  background-image: url("/assets/attribution/yandex.v102.svg");
 }
 .badge--yahoo {
-  background-image: url("/assets/attribution/yahoo.v103.png");
   background-size: 55px 13px;
   width: 55px;
   height: 13px;
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 2),
-  only screen and (-moz-min-device-pixel-ratio: 2),
-  only screen and (min--moz-device-pixel-ratio: 2),
-  only screen and (-ms-min-device-pixel-ratio: 2),
   only screen and (min-device-pixel-ratio: 2),
   only screen and (min-resolution: 192dppx) {
   .badge--yahoo {
-    background-image: url("/assets/attribution/yahoo.v103.svg");
   }
 }
 .badge--blekko {
-  background-image: url("/assets/attribution/blekko.v102.png");
   background-size: 48px 14px;
   width: 48px;
   height: 14px;
 }
 .svg .badge--blekko {
-  background-image: url("/assets/attribution/blekko.v102.svg");
 }
 .badge--bing {
-  background-image: url("/assets/attribution/bing.v102.png");
   background-size: 54px 22px;
   width: 54px;
   height: 22px;
 }
-.svg .badge--bing {
-  background-image: url("/assets/attribution/bing.v102.svg");
-}
+
 .result__image__plc {
   position: absolute;
   margin: auto;
@@ -3158,82 +3136,7 @@ a.is-disabled:hover {
   background-position: 50% 50%;
   background-repeat: no-repeat;
 }
-.browser--chrome {
-  background-image: url("/assets/icons/browsers/small/chrome.png");
-}
-.svg .browser--chrome {
-  background-image: url("/assets/icons/browsers/small/chrome.svg");
-}
-.browser--firefox {
-  background-image: url("/assets/icons/browsers/small/firefox.png");
-}
-.svg .browser--firefox {
-  background-image: url("/assets/icons/browsers/small/firefox.svg");
-}
-.browser--safari {
-  background-image: url("/assets/icons/browsers/small/safari.png");
-}
-.svg .browser--safari {
-  background-image: url("/assets/icons/browsers/small/safari.svg");
-}
-.browser--opera {
-  background-image: url("/assets/icons/browsers/small/opera.png");
-}
-.svg .browser--opera {
-  background-image: url("/assets/icons/browsers/small/opera.svg");
-}
-.browser--ie {
-  background-image: url("/assets/icons/browsers/small/ie.png");
-}
-.svg .browser--ie {
-  background-image: url("/assets/icons/browsers/small/ie.svg");
-}
-.browser--edge {
-  background-image: url("/assets/icons/browsers/small/edge.png");
-}
-.svg .browser--edge {
-  background-image: url("/assets/icons/browsers/small/edge.svg");
-}
-.browser--arora {
-  background-image: url("/assets/icons/browsers/small/arora.png");
-}
-.svg .browser--arora {
-  background-image: url("/assets/icons/browsers/small/arora.svg");
-}
-.browser--maxthon {
-  background-image: url("/assets/icons/browsers/small/maxthon.png");
-}
-.svg .browser--maxthon {
-  background-image: url("/assets/icons/browsers/small/maxthon.svg");
-}
-.browser--seamonkey {
-  background-image: url("/assets/icons/browsers/small/seamonkey.png");
-}
-.svg .browser--seamonkey {
-  background-image: url("/assets/icons/browsers/small/seamonkey.svg");
-}
-.browser--palemoon {
-  background-image: url("/assets/icons/browsers/small/palemoon.png");
-}
-.svg .browser--palemoon {
-  background-image: url("/assets/icons/browsers/small/palemoon.svg");
-}
-.browser--vivaldi {
-  background-image: url("/assets/icons/browsers/small/vivaldi.png");
-}
-.svg .browser--vivaldi {
-  background-image: url("/assets/icons/browsers/small/vivaldi.svg");
-}
-.browser--ddg,
-.logo_modal,
-.browser--brave {
-  background-image: url("/assets/icons/browsers/small/ddg.png");
-}
-.svg .browser--ddg,
-.svg .logo_modal,
-.svg .browser--brave {
-  background-image: url("/assets/icons/browsers/small/ddg.svg");
-}
+
 .logo_homepage,
 .header__logo-wrap,
 .logo--dax {
@@ -3250,10 +3153,8 @@ a.is-disabled:hover {
   display: block;
   position: relative;
   margin: 0 auto;
-  background-image: url("assets/logo_homepage.normal.v108.svg");
 }
 .dark-bg .logo_homepage {
-  background-image: url("assets/logo_homepage.alt.v108.svg");
 }
 @media only screen and (max-width: 425px) {
   .logo_homepage {
@@ -3265,49 +3166,27 @@ a.is-disabled:hover {
   .logo_homepage {
     width: 221px;
     height: 62px;
-    background-image: url("assets/logo_homepage_mobile.normal.v107.svg");
-  }
-  .dark-bg .logo_homepage {
-    background-image: url("assets/logo_homepage_mobile.alt.v106.svg");
   }
 }
 .body--html .logo_homepage {
-  background: no-repeat center url("assets/logo_homepage.normal.v108.png");
-  background: no-repeat center/100% url("assets/logo_homepage.normal.v108.svg"),
     linear-gradient(transparent, transparent);
 }
-@media only screen and (max-height: 425px) {
-  .body--html .logo_homepage {
-    background: no-repeat center
-      url("assets/logo_homepage_mobile.normal.v107.png");
-    background: no-repeat center/100%
-        url("assets/logo_homepage_mobile.normal.v107.svg"),
-      linear-gradient(transparent, transparent);
-  }
-}
+
 .header__logo-wrap {
   background-size: 36px 36px;
-  background-image: url("assets/logo_header.v108.svg");
 }
 .header--html .header__logo-wrap {
   display: block;
-  background: no-repeat center url("assets/logo_header.v108.png");
-  background: no-repeat center/auto 36px url("assets/logo_header.v108.svg"),
-    linear-gradient(transparent, transparent);
 }
 .dark-header .header__logo-wrap {
-  background-image: url("assets/logo_header.alt.v108.svg");
 }
 .logo--dax {
-  background-image: url("assets/dax.svg");
   width: 90px;
   height: 90px;
   background-size: 90px 90px;
   margin: auto;
 }
-html:not(.svg) .logo--dax {
-  background-image: url("assets/dax.png");
-}
+
 .logo_homepage__tt {
   padding: 0 12px;
   font-weight: 600;
@@ -4207,7 +4086,6 @@ body.body--html,
   border: none;
 }
 .frm__select:after {
-  background-image: url(/assets/chevron.png);
   content: "\00a0";
   background-repeat: no-repeat;
   width: 8px;
@@ -4339,9 +4217,6 @@ body.body--html,
   left: 0;
 }
 @media only screen and (max-width: 1079px) {
-  .result__badge-wrap:click .badge--ad__tooltip-wrap {
-    display: block;
-  }
   .badge--ad__tooltip-wrap {
     margin-top: 14px;
     top: 0;
