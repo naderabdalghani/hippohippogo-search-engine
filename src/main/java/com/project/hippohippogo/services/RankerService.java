@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 public class RankerService {
     private final int pageRankIterations = 20; // Number of iterations on page ranks
     private final double d = 0.85; // Damping factor
+    private final Date defualtPubDate = new Date(631195200); // Default publication date of the page
     private PagesConnectionRepository pagesConnection;
     private PageRankRepository pageRankRepository;
     private WordsRepository wordsRepository;
@@ -177,7 +178,7 @@ public class RankerService {
         HashMap<Integer,Double> pagesHashMap = new HashMap<Integer,Double>();
         for (String s : words) {
             List<Integer> docs = wordsRepository.getDocIdContainingWord(s);
-            double IDF = Math.log((double)numberOfDocs/docs.size());
+            double IDF = Math.log((double)numberOfDocs/docs.size())>0?Math.log((double)numberOfDocs/docs.size()):0.01;
             if (docs.isEmpty())
                 continue;
             else {
@@ -190,10 +191,14 @@ public class RankerService {
                     TF = (double)wordCount/docLength;
                     // Handling spam if TF is higher then 0.5 then it's spam and make it equals to 0
                     TF = TF < 0.5 ? TF : 0;
-                    // Weighted function from Page Rank and TF-IDF
-                    double weightedTfIdfPageRank = 0.5*TF*IDF + 0.5*pageRank.get().getRank();
+                    // Getting publication date of page
+                    Date date = pagesRepository.getPageDate(i) != null ? pagesRepository.getPageDate(i) : defualtPubDate;
+                    Date currentDate = new Date();
+                    // Getting 
+                    // Weighted function from Page Rank, TF-IDF, Time, Location, and personalized search
+                    double weightedRankFunction = 0.5*TF*IDF + 0.5*pageRank.get().getRank() + 0.2*((double)date.getTime()/(currentDate.getTime()/1000));
                     // If this page used before then add the TF-IDF of the other word to the page
-                    pagesHashMap.put(i,pagesHashMap.getOrDefault(i,(double)0)+weightedTfIdfPageRank);
+                    pagesHashMap.put(i,pagesHashMap.getOrDefault(i,(double)0)+weightedRankFunction);
                 }
             }
         }
