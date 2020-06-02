@@ -58,7 +58,7 @@ public class SearchController {
     }
 
     @RequestMapping(value = "/search", produces = "text/html", method = RequestMethod.GET)
-    public String getWebResultsAsHTML(Model model, @RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit) {
+    public String getWebResultsAsHTML(Model model, @RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region) {
         // Return to landing page if query is empty
         if (queryString.equals("")) {
             return "index";
@@ -82,6 +82,7 @@ public class SearchController {
         List<Page> results = pagesRepository.findAllByIdIn(resultsIds, pageable);
         model.addAttribute("query", queryString);
         model.addAttribute("results", results);
+        model.addAttribute("region", region);
         return "results";
     }
 
