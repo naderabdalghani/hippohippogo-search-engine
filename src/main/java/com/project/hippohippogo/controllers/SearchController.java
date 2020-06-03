@@ -95,13 +95,13 @@ public class SearchController {
         // Add query for suggestions if new or increment its hits if it already exists
         region = region.length() == 0 ? null : region;
         String userIp = request.getRemoteAddr();
-        QueryId queryId = new QueryId(userIp, queryString.toLowerCase(), region);
+        QueryId queryId = new QueryId(userIp, queryString.toLowerCase());
         Optional<Query> query = queriesRepository.findById(queryId);
         if (query.isPresent()) {
             query.get().incrementHits();
             queriesRepository.save(query.get());
         } else {
-            Query newQuery = new Query(userIp, queryString.toLowerCase(), region);
+            Query newQuery = new Query(userIp, queryString.toLowerCase());
             queriesRepository.save(newQuery);
         }
 
