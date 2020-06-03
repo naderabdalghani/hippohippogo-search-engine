@@ -239,7 +239,7 @@ public class RankerService {
             // Getting location of the page
             double loc = (location != null && location.equalsIgnoreCase(pagesRepository.getPageRegion((int)mapElement.getKey()))) ? 0.15 : 0;
             // Weighted function from TF-IDF, Page Rank, Time, Location, and personalized search
-            double weightedRankFunction = (double)mapElement.getValue()+ 0.5*pageRank.get().getRank() + 0.15*((double)date.getTime()/currentDate.getTime()) + loc + 0.3*personalizedSearch;
+            double weightedRankFunction = (double)mapElement.getValue()+ 0.3*pageRank.get().getRank() + 0.15*((double)date.getTime()/currentDate.getTime()) + loc + 0.3*personalizedSearch;
             pagesHashMap.put((int)mapElement.getKey(),(double)mapElement.getValue()+ weightedRankFunction);
         }
 
@@ -300,7 +300,7 @@ public class RankerService {
             // Getting location of the page
             double loc = (location != null && location.equalsIgnoreCase(imageRepository.getImageRegion((int)mapElement.getKey()))) ? 0.15 : 0;
             // Weighted function from TF-IDF, Page Rank, Time, Location, and personalized search
-            double weightedRankFunction = (double)mapElement.getValue()+ 0.5*pageRank.get().getRank() + 0.15*((double)date.getTime()/currentDate.getTime()) + loc + 0.3*personalizedSearch;
+            double weightedRankFunction = (double)mapElement.getValue()+ 0.3*pageRank.get().getRank() + 0.15*((double)date.getTime()/currentDate.getTime()) + loc + 0.3*personalizedSearch;
             pagesHashMap.put((int)mapElement.getKey(),(double)mapElement.getValue()+ weightedRankFunction);
         }
 
