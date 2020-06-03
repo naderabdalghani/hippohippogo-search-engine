@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html
+        lang="en_US"
+        class="has-zcm js no-touch opacity csstransforms3d csstransitions svg cssfilters is-not-mobile-device full-urls js no-touch opacity csstransforms3d csstransitions svg cssfilters"
+        xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title th:text="${query + ' at HippoHippoGo'}"></title>
+    <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css}">
+    <link
+            rel="stylesheet"
+            media="handheld, all"
+            th:href="@{/css/index.css}"
+            type="text/css"
+    />
+    <link
+            rel="stylesheet"
+            th:href="@{/css/results2.css}"
+            type="text/css"
+    />
+    <link
+            rel="stylesheet"
+            th:href="@{/css/results1.css}"
+            type="text/css"
+    />
+    <meta name="apple-mobile-web-app-title" th:content="${query}"/>
+    <link
+            rel="icon"
+            th:href="@{/assets/hippohippogo_logo.png}"
+            type="image/x-icon"
+    />
+    <link
+            rel="image_src"
+            th:href="@{/assets/hippohippogo_logo.png}"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="apple-mobile-web-app-capable" content="no"/>
+    <script
+            th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js}"
+    ></script>
+    <script
+            th:src="@{/js/imageResults.js}"
+    ></script>
+</head>
+<body class="body--serp" data-gr-c-s-loaded="true" cz-shortcut-listen="true">
+<div id="spacing_hidden_wrapper">
+    <div id="spacing_hidden"></div>
+</div>
+<div class="site-wrapper js-site-wrapper" style="min-height: 1007px;">
+    <div class="welcome-wrap js-welcome-wrap"></div>
+    <div
+            id="header_wrapper"
+            class="header-wrap js-header-wrap"
+            style="top: 0px;"
+    >
+        <div id="header" class="header cw">
+            <div class="header__search-wrap" style="-webkit-box-sizing: content-box; box-sizing: content-box">
+                <a
+                        tabindex="-1"
+                        href="http://localhost:8080/"
+                        class="header__logo-wrap js-header-logo"
+                ><span class="header__logo js-logo-ddg">HippoHippoGo</span></a
+                >
+                <div class="header__content header__search" id="search_bar">
+                    <div th:replace="fragments/searchBar :: searchBar(${query}, true)"></div>
+                </div>
+            </div>
+            <div
+                    id="duckbar"
+                    class="zcm-wrap zcm-wrap--header is-noscript-hidden"
+            >
+                <div class="zcm">
+                    <ul class="zcm__menu zcm__constant has-zci" id="duckbar_static">
+                        <li class="zcm__item">
+                            <a
+                                    data-zci-link="web"
+                                    class="zcm__link js-zci-link js-zci-link--web"
+                                    id="link--web"
+                            >All</a
+                            >
+                        </li>
+                        <li class="zcm__item">
+                            <a
+                                    data-zci-link="images"
+                                    class="zcm__link js-zci-link js-zci-link--images is-active"
+                                    id="link--images"
+                            >Images</a
+                            >
+                        </li>
+                        <li class="zcm__item">
+                            <a
+                                    data-zci-link="images"
+                                    class="zcm__link js-zci-link js-zci-link--trends"
+                                    id="link--trends"
+                            >Trends</a
+                            >
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="zero_click_wrapper" class="zci-wrap">
+        <div class="zci  zci--images  zci--type--tiles is-expanded is-active" id="zci-images"
+             style="min-height: 906px;">
+            <div class="js-tileview tileview--grid">
+                <div class="metabar  metabar--fixed  js-zcm-sticky has-dropdowns ">
+                    <div class="metabar__in  js-metabar"><span class="metabar__mode-wrap"><a
+                            class="metabar__mode  js-metabar-mode metabar__grid-btn is-hidden"
+                            title="Click to collapse">×</a></span>
+                        <div class="metabar__attribution  js-attribution  hide--screen-s  is-hidden"></div>
+                        <div class="metabar__primary-text js-metabar-primary metabar__primary-text--linked"><span
+                                class="metabar__item-type">Images</span> for <span
+                                class="metabar__term">michael scott</span></div>
+                        <div class="metabar__dropdowns-wrap" style="overflow: visible">
+                            <div class="metabar__dropdowns js-metabar-dropdowns" style="overflow: visible">
+                                <div style="position: absolute"
+                                     th:insert="fragments/dropdowns :: regionsDropdown(${region})"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile-wrap">
+                    <div class="zci__main  zci__main--tiles  js-tiles   has-nav tileview__images has-tiles--grid"
+                    >
+                        <div th:if="${results.empty}">
+                            <h5>No images found for <b th:text="${query}"></b>.</h5>
+                        </div>
+                        <div th:unless="${results.empty}" id="img_results">
+                            <div class="tile tile--img has-detail" th:each="result : ${results}" style="max-width: 25em">
+                                <div th:replace="fragments/result :: imageResult(${result.getTitle()}, ${result.getImage_link()}, ${result.getSource_link()})">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:insert="fragments/loader :: loader" id="img_results_loader" style="display: none"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js}"></script>
+<script>
+    $('.ui.dropdown').dropdown();
+</script>
+</body>
+</html>

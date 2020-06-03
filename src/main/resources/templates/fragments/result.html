@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Result Fragment</title>
+</head>
+<body>
+<div th:fragment="webResult(title, hyperlink, description)">
+    <div class="result__body links_main links_deep">
+        <h2 class="result__title">
+            <a
+                    class="result__a"
+                    rel="noopener"
+                    th:href="${hyperlink}"
+                    th:text="${title}"
+            ></a
+            ><a
+                rel="noopener"
+                class="result__check"
+                th:href="${hyperlink}"
+        ><span class="result__check__tt"
+        >Your browser indicates if you've visited this
+                          link</span
+        ></a
+        >
+        </h2>
+        <div class="result__extras js-result-extras">
+            <div class="result__extras__url">
+                <a
+                        th:href="${hyperlink}"
+                        rel="noopener"
+                        class="result__url js-result-extras-url"
+                ><span class="result__url__domain" th:text="${hyperlink}"
+                ></span
+                ></a
+                >
+            </div>
+        </div>
+        <div class="result__snippet js-result-snippet" th:utext="${description}"></div>
+    </div>
+</div>
+<div th:fragment="imageResult(title, image_link, source_link)">
+    <a th:href="${image_link}" target="_blank"><div class="tile--img__media" style="display: flex; align-items: center"><span class="tile--img__media__i"><img
+            class="tile--img__img  js-lazyload"
+            th:src="${image_link}"
+            th:title="${source_link}"
+            th:data-src="${image_link}"
+            th:alt="${title}"
+            style="object-fit: contain"
+    ></span></div></a>
+    <a class="tile--img__sub" th:href="${source_link}" style="contain: size"><span
+            class="tile--img__title" th:text="${title}" th:title="${source_link}" style="height: auto"></span><span
+            class="tile--img__domain" th:title="${source_link}" th:text="${source_link}"></span></a>
+</div>
+</body>
+</html>

@@ -3,13 +3,11 @@ package com.project.hippohippogo.controllers;
 import com.project.hippohippogo.entities.DummyItem;
 import com.project.hippohippogo.exceptions.DummyResourceNotFoundException;
 import com.project.hippohippogo.repositories.DummyRepository;
-import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +25,7 @@ public class DummyController {
 
     @GetMapping("/dummy")
     public String getAllItems(Model model) {
-        var items = (List<DummyItem>) dummyRepository.findAll();
+        List<DummyItem> items = (List<DummyItem>) dummyRepository.findAll();
 //        System.out.print(items);
         model.addAttribute("items", items);
         return "showDummyData";
