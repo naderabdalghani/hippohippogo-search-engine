@@ -1,5 +1,6 @@
 package com.project.hippohippogo.repositories;
 import com.project.hippohippogo.entities.Words;
+import com.project.hippohippogo.ids.WordId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface WordsRepository extends JpaRepository<Words,Long> {
+public interface WordsRepository extends JpaRepository<Words, WordId> {
 
 
     // Delete all entries of this doc_id from this indexer

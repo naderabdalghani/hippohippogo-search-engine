@@ -1,24 +1,27 @@
 package com.project.hippohippogo.entities;
+import com.project.hippohippogo.ids.QueryId;
+import com.project.hippohippogo.ids.WordId;
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 
 @Entity
+@IdClass(WordId.class)
 @Table(name = "words")
 public class Words {
+
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="\"id\"")
-    private Long id;
     @Column(name="\"word\"")
     private String word;
+    @Id
     @Column(name="\"doc_id\"")
     private int doc_id;
+    @Id
     @Column(name="\"index_of_word\"")
     private int index_of_word;
 
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Words() {
     }
@@ -38,10 +41,6 @@ public class Words {
 
     public void setWord(String word) {
         this.word = word;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public int getDoc_id() {
