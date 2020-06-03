@@ -88,7 +88,7 @@ public class SearchController {
     }
 
     @RequestMapping(value = "/search", produces = "text/html", method = RequestMethod.GET)
-    public String getWebResultsAsHTML(Model model, @RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
+    public String getWebResultsAsHTML(Model model, @RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) throws IOException {
         // Return to landing page if query is empty
         if (queryString.equals("")) {
             return "index";
@@ -115,6 +115,7 @@ public class SearchController {
         model.addAttribute("query", queryString);
         model.addAttribute("results", results);
         model.addAttribute("region", region);
+        checkIfPersonUsingOpenNLP(queryString,region);
         return "results";
     }
 
@@ -180,7 +181,7 @@ public class SearchController {
     }
 
 
-    public void checkIfPersonUsingOpenNLP(String query) throws IOException {
+    public void checkIfPersonUsingOpenNLP(String query,String Region) throws IOException {
             //InputStream inputStream = new FileInputStream("C:/OpenNLP_models/en-ner-person.bin");
         ArrayList<String> names=new ArrayList<String>();
         InputStream inputStream = getClass().getResourceAsStream("/en-ner-person.zip");
@@ -209,10 +210,11 @@ public class SearchController {
         {
             Optional<Trends> searchPerson = trendsRepository.findById(names.get(i));
             if (!searchPerson.isPresent()) {
-                Trends newSearchPerson = new Trends(names.get(i).toLowerCase());
+                Trends newSearchPerson = new Trends(names.get(i).toLowerCase(),Region);
                 trendsRepository.save(newSearchPerson);
             } else {
                 searchPerson.get().setPerson(searchPerson.get().getPerson().toLowerCase());
+                searchPerson.get().setRegion(Region);
                 searchPerson.get().incrementHits();
                 trendsRepository.save(searchPerson.get());
             }

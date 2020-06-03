@@ -85,6 +85,8 @@ create table hippohippogo_db.pages
 
 create table hippohippogo_db.trends
 (
-    person varchar(255)  not null primary key,
-    hits   int default 1 not null
+    person varchar(255)  not null,
+    hits   int default 1 not null,
+    region varchar(2)    not null,
+    primary key (person, region)
 );
