@@ -210,7 +210,7 @@ public class RankerService {
             double loc = (location != null && location.equalsIgnoreCase(pagesRepository.getPageRegion((int)mapElement.getKey()))) ? 0.15 : 0;
             // Weighted function from TF-IDF, Page Rank, Time, Location, and personalized search
             double weightedRankFunction = (double)mapElement.getValue()+ 0.5*pageRank.get().getRank() + 0.15*((double)date.getTime()/currentDate.getTime()) + loc;
-            pagesHashMap.put((int)mapElement.getKey(),weightedRankFunction);
+            pagesHashMap.put((int)mapElement.getKey(),(double)mapElement.getValue()+ weightedRankFunction);
         }
 
         List<Map.Entry<Integer,Double>> sortedPageMap = sortByValue(pagesHashMap);
