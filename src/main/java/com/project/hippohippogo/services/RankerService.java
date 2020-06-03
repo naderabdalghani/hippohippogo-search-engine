@@ -1,12 +1,8 @@
 package com.project.hippohippogo.services;
 
-import com.project.hippohippogo.entities.Page;
 import com.project.hippohippogo.entities.PageRank;
 import com.project.hippohippogo.entities.PagesConnection;
-import com.project.hippohippogo.repositories.PageRankRepository;
-import com.project.hippohippogo.repositories.PagesRepository;
-import com.project.hippohippogo.repositories.PagesConnectionRepository;
-import com.project.hippohippogo.repositories.WordsRepository;
+import com.project.hippohippogo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +19,8 @@ public class RankerService {
     private PageRankRepository pageRankRepository;
     private WordsRepository wordsRepository;
     private PagesRepository pagesRepository;
+    private ImageRepository imageRepository;
+    private ImagesWordsRepository imagesWordsRepository;
 
 
     @Autowired
@@ -42,6 +40,16 @@ public class RankerService {
     @Autowired
     public void setPagesRepository(PagesRepository pagesRepository) {
         this.pagesRepository = pagesRepository;
+    }
+
+    @Autowired
+    public void setImageRepository(ImageRepository imageRepository) {
+        this.imageRepository = imageRepository;
+    }
+
+    @Autowired
+    public void setImagesWordsRepository(ImagesWordsRepository imagesWordsRepository) {
+        this.imagesWordsRepository = imagesWordsRepository;
     }
 
     // This function is used to set pages rank in its table
@@ -170,7 +178,7 @@ public class RankerService {
         return link;
     }
 
-    // Function to return the web pages URLs to be used as a search result
+    // Function to return the web pages IDs to be used as a search result
     public List<Integer> getPageIDs(String query, String location, String userIP) {
         long numberOfDocs = pagesRepository.count();
         List<String> words = Arrays.asList(query.split(" "));
@@ -220,5 +228,10 @@ public class RankerService {
             URLids.add(sortedPageMap.get(i).getKey());
         }
         return URLids;
+    }
+
+    // Function to return the Images IDs to be used as a search result
+    public List<Integer> getImageIDS(String query, String location, String userIP) {
+
     }
 }

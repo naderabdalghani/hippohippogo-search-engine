@@ -11,7 +11,7 @@ import com.project.hippohippogo.entities.images_words;
 import com.project.hippohippogo.repositories.ImageRepository;
 import com.project.hippohippogo.repositories.PagesRepository;
 import com.project.hippohippogo.repositories.WordsRepository;
-import com.project.hippohippogo.repositories.imagesWordsRepository;
+import com.project.hippohippogo.repositories.ImagesWordsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tartarus.snowball.ext.englishStemmer;
@@ -40,10 +40,10 @@ public class IndexerService {
         this.imagesRepository = imagesRepository;
     }
 
-    private imagesWordsRepository imageswordsRepository;
+    private ImagesWordsRepository imageswordsRepository;
 
     @Autowired
-    public void setImageswordsRepository(imagesWordsRepository imageswordsRepository) {
+    public void setImageswordsRepository(ImagesWordsRepository imageswordsRepository) {
         this.imageswordsRepository = imageswordsRepository;
     }
 
