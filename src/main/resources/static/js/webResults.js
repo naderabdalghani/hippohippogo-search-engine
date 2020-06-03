@@ -16,6 +16,12 @@ function webResult(result) {
         "</div></div>";
 }
 
+function registerClick(link) {
+    $.post("http://localhost:8080/history", {
+        link: link
+    });
+}
+
 $(function () {
     const resultsView = $(".results");
     const loader = $("#web_results_loader");
@@ -25,7 +31,11 @@ $(function () {
     const limit = parseInt(urlParams.get('limit'));
     const region = urlParams.get('region');
     let limitReached = false;
+    const resultTitle1 = $(".result__a");
+    const resultTitle2 = $(".result__check");
+    const resultHyperlink = $(".result__url");
 
+    // Infinite scrolling (pagination)
     $(window).on("scroll", function () {
         if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
             if (!limitReached) {
@@ -46,5 +56,17 @@ $(function () {
             }
         }
     });
+
+    // Listen to users' clicks to record their most frequent domains
+    resultTitle1.on('click', function () {
+        registerClick(this.href);
+    });
+    resultTitle2.on('click', function () {
+        registerClick(this.href);
+    });
+    resultHyperlink.on('click', function () {
+        registerClick(this.href);
+    });
+
 });
 /*]]>*/

@@ -50,7 +50,7 @@ public class IndexerService {
 
 
 
-    public final class Pair<String,Integer> {
+    public final class Pair{
         private final String l;
         private final Integer r;
         private Pair(String l, Integer r){
@@ -167,7 +167,7 @@ public class IndexerService {
                     // add current document to the list
                     wordsToDocs.get(wordToSearch).add(pageID);
                     // get indices
-                    Pair x = new Pair<String, Integer>(wordToSearch, pageID);
+                    Pair x = new Pair(wordToSearch, pageID);
                     wordAndDocToIndicies.put(x, new Vector<Integer>());
                     for (int i = k; i < stemmedWords.size(); i++) {
                         if (wordToSearch.equals(stemmedWords.get(i))) {
@@ -196,7 +196,7 @@ public class IndexerService {
                 System.out.println(docs);
                 for (int j = 0; j < docs.size(); j++) {
                     // Pair of the word in that docID Return with list of indicies where the word occur
-                    Pair<String, Integer> x = new Pair<>(words.get(i), docs.get(j));
+                    Pair x = new Pair(words.get(i), docs.get(j));
                     System.out.println(x.print());
                     System.out.println(wordAndDocToIndicies.get(x));
                     Vector<Integer> indicies;
