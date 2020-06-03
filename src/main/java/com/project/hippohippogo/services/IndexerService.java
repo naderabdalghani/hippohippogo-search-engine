@@ -320,9 +320,9 @@ public class IndexerService {
         // Get Webpages Ids
         ArrayList<Integer> webpagesIds= pagesRepository.getWebPagesIds();
         // Get images content
-        //ArrayList<String> imagepages= imagesRepository.getImageContent();
+        ArrayList<String> imagepages= imageRepository.getImageContent();
         // Get images Ids
-        //ArrayList<Integer> imagepagesIds= imagesRepository.getImagesIds();
+        ArrayList<Integer> imagepagesIds= imageRepository.getImagesIds();
 
 
         //String html = "<html><head><title>First parse</title></head>"
@@ -337,7 +337,7 @@ public class IndexerService {
         Thread t3 =new Thread(new IndexerService.IndexerThreaded(2*(webpages.size()/5),3*(webpages.size()/5),webpages,webpagesIds,0));
         Thread t4 =new Thread(new IndexerService.IndexerThreaded(3*(webpages.size()/5),4*(webpages.size()/5),webpages,webpagesIds,0));
         Thread t5 =new Thread(new IndexerService.IndexerThreaded(4*(webpages.size()/5),webpages.size(),webpages,webpagesIds,0));
-        //(new Thread(new IndexerService.IndexerThreaded(0,imagepages.size(),imagepages,imagepagesIds,1))).start();
+        (new Thread(new IndexerService.IndexerThreaded(0,imagepages.size(),imagepages,imagepagesIds,1))).start();
         t1.start();
         t2.start();
         t3.start();

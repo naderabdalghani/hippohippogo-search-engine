@@ -15,8 +15,9 @@ public class HippoHippoGoApplication {
         ApplicationContext applicationContext = SpringApplication.run(HippoHippoGoApplication.class, args);
         CrawlerService crawlerService = applicationContext.getBean(CrawlerService.class);
         crawlerService.Crawl();
-//        IndexerService indexer = applicationContext.getBean(IndexerService.class);
-//        indexer.main();
+        System.out.print("the indexer begins######################################################################################################################3");
+        IndexerService indexer = applicationContext.getBean(IndexerService.class);
+        indexer.main();
         //RankerService rankerService = applicationContext.getBean(RankerService.class);
         //List<Integer> pagesIDs = rankerService.getURLs("football soccer");
     }
