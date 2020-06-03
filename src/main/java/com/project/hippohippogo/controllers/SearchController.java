@@ -8,6 +8,7 @@ import com.project.hippohippogo.ids.QueryId;
 import com.project.hippohippogo.repositories.DummyRepository;
 import com.project.hippohippogo.repositories.PagesRepository;
 import com.project.hippohippogo.repositories.QueriesRepository;
+import com.project.hippohippogo.repositories.TrendsRepository;
 import com.project.hippohippogo.services.QueryProcessorService;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
