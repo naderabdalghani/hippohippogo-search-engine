@@ -220,10 +220,18 @@ public class RankerService {
             // Getting publication date of page
             Date date = pagesRepository.getPageDate((int)mapElement.getKey()) != null ? pagesRepository.getPageDate((int)mapElement.getKey()) : defaultPubDate;
             Date currentDate = new Date();
+            // Personalize search weight for rank function
+            double personalizedSearch;
+            if (usersFrequentDomainsRepository.isUserDomainExists(userIP,getBaseURL(pagesRepository.getPageLink((int)mapElement.getKey()))) == 1) {
+                personalizedSearch = (double)usersFrequentDomainsRepository.getDomainHits(userIP,getBaseURL(pagesRepository.getPageLink((int)mapElement.getKey()))) / usersFrequentDomainsRepository.getUserDomainSum(userIP);
+            }
+            else {
+                personalizedSearch = 0;
+            }
             // Getting location of the page
             double loc = (location != null && location.equalsIgnoreCase(pagesRepository.getPageRegion((int)mapElement.getKey()))) ? 0.15 : 0;
             // Weighted function from TF-IDF, Page Rank, Time, Location, and personalized search
-            double weightedRankFunction = (double)mapElement.getValue()+ 0.5*pageRank.get().getRank() + 0.15*((double)date.getTime()/currentDate.getTime()) + loc;
+            double weightedRankFunction = (double)mapElement.getValue()+ 0.5*pageRank.get().getRank() + 0.15*((double)date.getTime()/currentDate.getTime()) + loc + 0.3*personalizedSearch;
             pagesHashMap.put((int)mapElement.getKey(),(double)mapElement.getValue()+ weightedRankFunction);
         }
 
@@ -270,14 +278,20 @@ public class RankerService {
             Map.Entry mapElement = (Map.Entry)hmIterator.next();
             Optional<PageRank> pageRank = pageRankRepository.findById(getBaseURL(imageRepository.getImageLink((int)mapElement.getKey())));
             // Getting publication date of page
-            Date date = imageRepository.getImageDate((int)mapElement.getKey()) != null ? pagesRepository.getPageDate((int)mapElement.getKey()) : defaultPubDate;
+            Date date = imageRepository.getImageDate((int)mapElement.getKey()) != null ? imageRepository.getImageDate((int)mapElement.getKey()) : defaultPubDate;
             Date currentDate = new Date();
-            // Frequent domains sum
-
+            // Personalize search weight for rank function
+            double personalizedSearch;
+            if (usersFrequentDomainsRepository.isUserDomainExists(userIP,getBaseURL(imageRepository.getImageLink((int)mapElement.getKey()))) == 1) {
+                personalizedSearch = (double)usersFrequentDomainsRepository.getDomainHits(userIP,getBaseURL(imageRepository.getImageLink((int)mapElement.getKey()))) / usersFrequentDomainsRepository.getUserDomainSum(userIP);
+            }
+            else {
+                personalizedSearch = 0;
+            }
             // Getting location of the page
             double loc = (location != null && location.equalsIgnoreCase(imageRepository.getImageRegion((int)mapElement.getKey()))) ? 0.15 : 0;
             // Weighted function from TF-IDF, Page Rank, Time, Location, and personalized search
-            double weightedRankFunction = (double)mapElement.getValue()+ 0.5*pageRank.get().getRank() + 0.15*((double)date.getTime()/currentDate.getTime()) + loc;
+            double weightedRankFunction = (double)mapElement.getValue()+ 0.5*pageRank.get().getRank() + 0.15*((double)date.getTime()/currentDate.getTime()) + loc + 0.3*personalizedSearch;
             pagesHashMap.put((int)mapElement.getKey(),(double)mapElement.getValue()+ weightedRankFunction);
         }
 

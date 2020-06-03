@@ -13,9 +13,13 @@ public interface UsersFrequentDomainsRepository extends JpaRepository<UserFreque
 
     // Getting number of hits of a domain
     @Query(value = "SELECT hits FROM users_frequent_domains WHERE user_ip = ?1 and domain = ?2", nativeQuery = true)
-    int getDomainHits(int user_id, String domain);
+    int getDomainHits(String userIP, String domain);
 
     // Getting domain hits
     @Query(value = "SELECT SUM(hits) FROM users_frequent_domains WHERE user_ip = ?1", nativeQuery = true)
-    int getUserDomainSum(int user_id, String domain);
+    int getUserDomainSum(String userIP);
+
+    // Check if the domain is exist
+    @Query(value = "SELECT EXISTS(SELECT * FROM users_frequent_domains WHERE user_ip = ?1) ", nativeQuery = true)
+    int isUserDomainExists(String userIP, String domain);
 }
