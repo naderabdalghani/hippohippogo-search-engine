@@ -23,6 +23,7 @@ $(function () {
     const query = urlParams.get('q');
     let offset = parseInt(urlParams.get('offset')) + 1;
     const limit = parseInt(urlParams.get('limit'));
+    const region = urlParams.get('region');
     let limitReached = false;
 
     $(window).on("scroll", function () {
@@ -32,7 +33,8 @@ $(function () {
                 $.getJSON("http://localhost:8080/search", {
                     q: query,
                     offset: offset,
-                    limit: limit
+                    limit: limit,
+                    region: region
                 },function(results){
                     loader.hide();
                     limitReached = results.length === 0;

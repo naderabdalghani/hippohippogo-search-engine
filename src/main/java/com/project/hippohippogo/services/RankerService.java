@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 public class RankerService {
     private final int pageRankIterations = 20; // Number of iterations on page ranks
     private final double d = 0.85; // Damping factor
+    private final Date defualtPubDate = new Date(946688684000L); // Default publication date of the page
     private PagesConnectionRepository pagesConnection;
     private PageRankRepository pageRankRepository;
     private WordsRepository wordsRepository;
@@ -170,31 +171,35 @@ public class RankerService {
     }
 
     // Function to return the web pages URLs to be used as a search result
-    public List<Integer> getURLs(String query) {
+    public List<Integer> getPageURLs(String query, String location, String userIP) {
         long numberOfDocs = pagesRepository.count();
         List<String> words = Arrays.asList(query.split(" "));
         // Key is the doc id and value is the TF-IDF value
         HashMap<Integer,Double> pagesHashMap = new HashMap<Integer,Double>();
         for (String s : words) {
             List<Integer> docs = wordsRepository.getDocIdContainingWord(s);
-            double IDF = Math.log((double)numberOfDocs/docs.size());
+            double IDF = Math.log((double)numberOfDocs/docs.size())>0?Math.log((double)numberOfDocs/docs.size()):0.01;
             if (docs.isEmpty())
                 continue;
             else {
                 double TF;
                 for (int i : docs) {
-                    Optional<Page> document = pagesRepository.findById(i);
                     // Getting page rank element of the page
-                    Optional<PageRank> pageRank = pageRankRepository.findById(getBaseURL(document.get().getLink()));
-                    int docLength = document.get().getLength();
+                    Optional<PageRank> pageRank = pageRankRepository.findById(getBaseURL(pagesRepository.getPageLink(i)));
+                    int docLength = pagesRepository.getPageLength(i);
                     int wordCount = wordsRepository.getWordCountInDoc(s,i);
                     TF = (double)wordCount/docLength;
                     // Handling spam if TF is higher then 0.5 then it's spam and make it equals to 0
                     TF = TF < 0.5 ? TF : 0;
-                    // Weighted function from Page Rank and TF-IDF
-                    double weightedTfIdfPageRank = 0.5*TF*IDF + 0.5*pageRank.get().getRank();
+                    // Getting publication date of page
+                    Date date = pagesRepository.getPageDate(i) != null ? pagesRepository.getPageDate(i) : defualtPubDate;
+                    Date currentDate = new Date();
+                    // Getting location of the page
+                    double loc = (location != null && location.equalsIgnoreCase(pagesRepository.getPageRegion(i)) ) ? 0.2 : 0;
+                    // Weighted function from Page Rank, TF-IDF, Time, Location, and personalized search
+                    double weightedRankFunction = 0.5*TF*IDF + 0.5*pageRank.get().getRank() + 0.2*((double)date.getTime()/currentDate.getTime()) + loc;
                     // If this page used before then add the TF-IDF of the other word to the page
-                    pagesHashMap.put(i,pagesHashMap.getOrDefault(i,(double)0)+weightedTfIdfPageRank);
+                    pagesHashMap.put(i,pagesHashMap.getOrDefault(i,(double)0)+weightedRankFunction);
                 }
             }
         }

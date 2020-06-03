@@ -6,6 +6,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title th:text="${query + ' at HippoHippoGo'}"></title>
+    <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css}">
     <link
             rel="stylesheet"
             media="handheld, all"
@@ -22,10 +23,10 @@
             th:href="@{/css/results1.css}"
             type="text/css"
     />
-    <meta name="apple-mobile-web-app-title" content="michael scott"/>
+    <meta name="apple-mobile-web-app-title" th:content="${query}"/>
     <link
-            rel="shortcut icon"
-            th:href="@{/assets/hippohippogo_logo.ico}"
+            rel="icon"
+            th:href="@{/assets/hippohippogo_logo.png}"
             type="image/x-icon"
     />
     <link
@@ -39,7 +40,7 @@
             th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js}"
     ></script>
     <script
-            th:src="@{/js/webResultsInfiniteScroll.js}"
+            th:src="@{/js/webResults.js}"
     ></script>
 </head>
 <body class="body--serp" data-gr-c-s-loaded="true" cz-shortcut-listen="true">
@@ -54,7 +55,7 @@
             style="top: 0px;"
     >
         <div id="header" class="header cw">
-            <div class="header__search-wrap">
+            <div class="header__search-wrap" style="-webkit-box-sizing: content-box; box-sizing: content-box">
                 <a
                         tabindex="-1"
                         href="http://localhost:8080/"
@@ -99,20 +100,10 @@
         <div class="cw">
             <div id="links_wrapper" class="serp__results js-serp-results">
                 <div class="results--main">
-                    <div class="search-filters-wrap">
-                        <div class="js-search-filters search-filters">
+                    <div class="search-filters-wrap" style="overflow: visible">
+                        <div class="js-search-filters search-filters" style="overflow: visible">
                             <div class="dropdown dropdown--region">
-                                <a
-                                        class="dropdown__button dropdown__button js-dropdown-button"
-                                >All Regions</a
-                                >
-                            </div>
-                            <div class="dropdown dropdown--date">
-                                <a
-                                        href="https://duckduckgo.com/?q=michael+scott&amp;t=hj&amp;ia=web&amp;iax=about#"
-                                        class="dropdown__button js-dropdown-button"
-                                >Any Time</a
-                                >
+                                <div style="position: absolute" th:insert="fragments/dropdowns :: regionsDropdown(${region})"></div>
                             </div>
                         </div>
                     </div>
@@ -133,5 +124,9 @@
         </div>
     </div>
 </div>
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js}"></script>
+<script>
+    $('.ui.dropdown').dropdown();
+</script>
 </body>
 </html>
