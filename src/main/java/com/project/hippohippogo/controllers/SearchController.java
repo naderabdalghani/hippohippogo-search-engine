@@ -219,10 +219,11 @@ public class SearchController {
                 Trends newSearchPerson = new Trends(names.get(i).toLowerCase(),Region);
                 trendsRepository.save(newSearchPerson);
             } else {
-                searchPerson.get().setPerson(searchPerson.get().getPerson().toLowerCase());
-                searchPerson.get().setRegion(Region);
-                searchPerson.get().incrementHits();
-                trendsRepository.save(searchPerson.get());
+                //searchPerson.get().setPerson(searchPerson.get().getPerson().toLowerCase());
+                //searchPerson.get().setRegion(Region);
+                //searchPerson.get().incrementHits();
+                //trendsRepository.save(searchPerson.get());
+                trendsRepository.updateHits(searchPerson.get().getPerson(),searchPerson.get().getRegion(),searchPerson.get().getHits()+1);
             }
 
         }
