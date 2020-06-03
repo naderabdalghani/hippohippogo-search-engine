@@ -55,4 +55,14 @@ public class QueryProcessorService {
         }
     }
 
+    // Function to get search image results
+    public List<Integer> getImageResults(String query, String location, String userIP) {
+        try {
+            String processedQuery = preprocessing(query);
+            return rankerService.getImageIDS(processedQuery,location,userIP);
+        } catch (IOException e) {
+            return new ArrayList<Integer>();
+        }
+    }
+
 }

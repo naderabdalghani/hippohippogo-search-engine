@@ -1,5 +1,6 @@
 package com.project.hippohippogo.services;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -11,7 +12,7 @@ import com.project.hippohippogo.entities.images_words;
 import com.project.hippohippogo.repositories.ImageRepository;
 import com.project.hippohippogo.repositories.PagesRepository;
 import com.project.hippohippogo.repositories.WordsRepository;
-import com.project.hippohippogo.repositories.imagesWordsRepository;
+import com.project.hippohippogo.repositories.ImagesWordsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tartarus.snowball.ext.englishStemmer;
@@ -40,10 +41,10 @@ public class IndexerService {
         this.imagesRepository = imagesRepository;
     }
 
-    private imagesWordsRepository imageswordsRepository;
+    private ImagesWordsRepository imageswordsRepository;
 
     @Autowired
-    public void setImageswordsRepository(imagesWordsRepository imageswordsRepository) {
+    public void setImageswordsRepository(ImagesWordsRepository imageswordsRepository) {
         this.imageswordsRepository = imageswordsRepository;
     }
 
@@ -118,7 +119,8 @@ public class IndexerService {
             /*--------------------Removing nonalphanumeric characters--------------------*/
             document = document.replaceAll("[^a-zA-Z0-9]", " ");
             /*----------------------------Removing stop words----------------------------*/
-            List<String> stopwords = Files.readAllLines(Paths.get("C:\\Users\\Mahmood\\Music\\English_stopwords.txt"));
+            URL url = getClass().getResource("/English_stopwords.txt");
+            List<String> stopwords = Files.readAllLines(Paths.get(url.getPath().substring(1)));
             ArrayList<String> allWords =
                     Stream.of(document.toLowerCase().split(" +"))
                             .collect(Collectors.toCollection(ArrayList<String>::new));

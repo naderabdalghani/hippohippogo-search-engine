@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface imagesWordsRepository extends JpaRepository<images_words,Long> {
+public interface ImagesWordsRepository extends JpaRepository<images_words,Long> {
 
     // Delete all entries of this doc_id from this indexer
     @Query(value = "DELETE FROM images_words WHERE doc_id=?1", nativeQuery = true)
