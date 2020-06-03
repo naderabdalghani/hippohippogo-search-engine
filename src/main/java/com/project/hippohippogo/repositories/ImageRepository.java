@@ -1,6 +1,7 @@
 package com.project.hippohippogo.repositories;
 
 import com.project.hippohippogo.entities.Image;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -9,9 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Integer> {
+    public List<Image> findAllByIdIn(List<Integer> id, Pageable pageable);
+
     @Query(value = "UPDATE images SET indexed=TRUE  WHERE id =?1", nativeQuery = true)
     @Modifying
     @Transactional
