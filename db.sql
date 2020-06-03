@@ -20,10 +20,10 @@ create table hippohippogo_db.images
 
 create table hippohippogo_db.images_words
 (
-	word varchar(255) not null,
-	doc_id int not null,
-	index_of_word int not null,
-	primary key (word, doc_id, index_of_word)
+    word          varchar(255) not null,
+    doc_id        int          not null,
+    index_of_word int          not null,
+    primary key (word, doc_id, index_of_word)
 );
 
 
@@ -62,10 +62,10 @@ create table hippohippogo_db.users_frequent_domains
 
 create table hippohippogo_db.words
 (
-	word varchar(255) not null,
-	doc_id int not null,
-	index_of_word int not null,
-	primary key (word, doc_id, index_of_word)
+    word          varchar(255) not null,
+    doc_id        int          not null,
+    index_of_word int          not null,
+    primary key (word, doc_id, index_of_word)
 );
 
 
@@ -85,6 +85,8 @@ create table hippohippogo_db.pages
 
 create table hippohippogo_db.trends
 (
-    person varchar(255)  not null primary key,
-    hits   int default 1 not null
+    person varchar(255)  not null,
+    hits   int default 1 not null,
+    region varchar(2)    not null,
+    primary key (person, region)
 );
