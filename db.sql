@@ -1,8 +1,9 @@
 create schema hippohippogo_db collate utf8mb4_0900_ai_ci;
 
-create table hippohippogo_db.hibernate_sequence
+create table hibernate_sequences
 (
-    next_val bigint null
+    sequence_name VARCHAR(1000) NOT NULL,
+    next_val      INTEGER NOT NULL
 );
 
 create table hippohippogo_db.images
@@ -38,8 +39,8 @@ create table hippohippogo_db.pages_connection
 (
     id        int          not null
         primary key,
-    referred  varchar(255) not null,
-    referring varchar(255) not null
+    referred  longtext not null,
+    referring longtext not null
 );
 
 create table hippohippogo_db.users
@@ -78,5 +79,6 @@ create table hippohippogo_db.pages
     title          longtext   not null,
     description    longtext   not null,
     region         varchar(2) null,
-    date_published date       null
+    date_published date       null,
+    indexed        tinyint(1) default 0 null
 );

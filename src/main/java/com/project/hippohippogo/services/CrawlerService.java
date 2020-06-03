@@ -1,15 +1,18 @@
 package com.project.hippohippogo.services;
 
 
+import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.exception.GeoIp2Exception;
+import com.maxmind.geoip2.model.CityResponse;
+import com.maxmind.geoip2.record.Country;
 import com.project.hippohippogo.entities.Page;
 import com.project.hippohippogo.entities.PagesConnection;
 import com.project.hippohippogo.entities.image;
 import com.project.hippohippogo.repositories.ImageRepository;
-import com.project.hippohippogo.repositories.PagesRepository;
 import com.project.hippohippogo.repositories.PagesConnectionRepository;
+import com.project.hippohippogo.repositories.PagesRepository;
 import crawlercommons.robots.BaseRobotRules;
 import crawlercommons.robots.SimpleRobotRulesParser;
-//import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,12 +22,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
+
 import java.io.*;
-import java.util.Scanner;
+import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Scanner;
+import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import static com.project.hippohippogo.services.RankerService.getString;
@@ -90,17 +96,17 @@ public class CrawlerService {
 
     public void Crawl() {
         Integer status = ReadStatus();
-        if (status == 0) {
-            PageRepo.deleteAll();
-            pagesConnectionRepository.deleteAll();
-            imageRepository.deleteAll();
-        }
+//        if (status == 0) {
+//            PageRepo.deleteAll();
+//            pagesConnectionRepository.deleteAll();
+//            imageRepository.deleteAll();
+//        }
 
         Thread t0 = new Thread(new CrawlerThreaded("https://www.geeksforgeeks.org/", status));
-        Thread t1 = new Thread(new CrawlerThreaded("https://www.who.int/",status));
-        Thread t2 = new Thread(new CrawlerThreaded("https://www.bbc.com/",status));
-        Thread t3 = new Thread(new CrawlerThreaded("https://www.quora.com",status));
-        Thread t4 = new Thread(new CrawlerThreaded("https://www.stackoverflow.com",status));
+        Thread t1 = new Thread(new CrawlerThreaded("https://www.who.int/", status));
+        Thread t2 = new Thread(new CrawlerThreaded("https://www.bbc.com/", status));
+        Thread t3 = new Thread(new CrawlerThreaded("https://www.nationalgeographic.com/", status));
+        Thread t4 = new Thread(new CrawlerThreaded("https://www.stackoverflow.com", status));
 
         t0.setName("thread_0");
         t1.setName("thread_1");
@@ -109,10 +115,10 @@ public class CrawlerService {
         t4.setName("thread_4");
 
         t0.start();
-        t1.start();
-        t2.start();
-        t3.start();
-        t4.start();
+//        t1.start();
+//        t2.start();
+//        t3.start();
+//        t4.start();
 
         try {
             t0.join();
@@ -144,11 +150,11 @@ public class CrawlerService {
 
         @Override
         public void run() {
-            Crawl(MainSeed,status);
+            Crawl(MainSeed, status);
         }
 
         public void Crawl(String seed, int status) {
-            if(status == 0){
+            if (status == 0) {
                 try {
                     VisitedQueue.add(seed);
                     CrawlPage(seed);
@@ -159,8 +165,8 @@ public class CrawlerService {
             } else {
                 ReadState();
             }
-            Integer i=0;
-            while(!LinksQueue.isEmpty()) {
+            Integer i = 0;
+            while (!LinksQueue.isEmpty()) {
                 SaveState();
                 String link = LinksQueue.remove();
                 i++;
@@ -170,10 +176,10 @@ public class CrawlerService {
                     //getLinks(link);
 
                     AppendVisited(link);
-                    System.out.println(i);
+                    System.out.println(Thread.currentThread().getName() + " " +i);
                 } catch (Exception e) {
                     count--;
-                    System.out.println(i.toString()+link);
+                    System.out.println(i.toString() + link);
                     System.out.println(e);
                     System.out.println("i am here");
                 }
@@ -210,7 +216,12 @@ public class CrawlerService {
             return textBuilder.toString();
         }
 
-        private void getLinks(Document doc ,String html, String seed) throws IOException {
+        private String getBaseURL(String link) {
+            //extracting the base link from the link we have
+            return getString(link);
+        }
+
+        private void getLinks(Document doc, String html, String seed) {
             Elements links = doc.select("a[href]");     //selecting the links in the page to get them and recrawl them
             //start looping on the links and add them to  the queue
             for (Element link : links) {
@@ -230,31 +241,55 @@ public class CrawlerService {
             }
         }
 
-        private String getBaseURL(String link) {
-            //extracting the base link from the link we have
-            return getString(link);
+        private void getImages(Document doc, String seed) {
+            Elements imgs = doc.getElementsByTag("img");
+            String title = doc.title();
+            int length = countWords(title);
+            String region = "eg";
+            String date = doc.select("time").attr("date");
+            // Loop through img tags
+            for (Element img : imgs) {
+                String link = fixLink(img.attr("src"), seed);
+                // If alt is empty or null, add one to counter
+                if (Pattern.compile("^https://").matcher(link).find()) {
+                    insertImage(link, seed, title, length, region, date);
+                }
+            }
+        }
+
+        private void getRegion(String ip) throws IOException, GeoIp2Exception {
+            File database = new File("D:\\third year\\APT\\final assessment\\hippohippogo-search-engine\\database\\GeoLite2-Country_20200526\\GeoLite2-Country.mmdb");
+            DatabaseReader reader = new DatabaseReader.Builder(database).build();
+            InetAddress ipAddress = InetAddress.getByName("128.101.101.101");
+            CityResponse response = reader.city(ipAddress);
+            Country country = response.getCountry();
+            System.out.println(country.getIsoCode());
         }
 
         private void CleanAndSetPage(String html, Document doc, String seed) {
             String content = doc.text();
+            //System.out.println("content is " + content);
+            int length = countWords(content);
             String title = doc.title();
-//            Element time = doc.select("pubDate").first();
-//            System.out.println("######################################the puplish time of the page" + time.text() + "################################################");
-            insertPageAndContent(seed, title, content);
-        }
-
-        private void getImages(Document doc, String seed) throws IOException {
-            Elements imgs = doc.getElementsByTag("img");
-
-            // Loop through img tags
-            for (Element img : imgs) {
-                String link = fixLink(img.attr("src"), seed);
-                String description = img.attr("alt");
-                // If alt is empty or null, add one to counter
-                if(!( description == null) && !description.equals("") && Pattern.compile("^https://").matcher(link).find()) {
-                    insertImage(description, link);
-                }
+            String description = doc.select("meta[name=\"description\"]").attr("content");
+            if(description == "" || description == null) {
+                description = doc.body().text();
             }
+            if(description.length() > 397) {
+                description = description.substring(0,396);
+            }
+            description = description + "...";
+            //System.out.println("description is " + description);
+            String date = doc.select("time").attr("date");
+//            try {
+//                getRegion("128.101.101.101");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } catch (GeoIp2Exception e) {
+//                e.printStackTrace();
+//            }
+            String region = "eg";
+            insertPageAndContent(content, seed, length, title, description, region, date);
         }
 
         private String fixLink(String link, String baseURL) {
@@ -264,8 +299,7 @@ public class CrawlerService {
                 return baseURL + link;
             } else if (Pattern.compile("^http:").matcher(link).find()) {
                 return "https:" + link.substring(5, link.length());
-            }
-            else {
+            } else {
                 return link;
             }
         }
@@ -296,23 +330,56 @@ public class CrawlerService {
             return rules.isAllowed(link);
         }
 
-        private void insertPageAndContent(String link, String title, String content) {
-            Page P = new Page(link, title, content);
-            synchronized (PageRepo){
-                PageRepo.save(P);
+        public int countWords(String sentence) {
+            if (sentence == null || sentence.isEmpty()) {
+                return 0;
+            }
+            StringTokenizer tokens = new StringTokenizer(sentence);
+            return tokens.countTokens();
+        }
+
+        private void insertPageAndContent(String content, String link, int length, String title, String description, String region, String date) {
+            Page P;
+            if (date == "" || date == null) {
+                P = new Page(content, link, length, title, description, region, false);
+            } else {
+                P = new Page(content, link, length, title, description, region, date, false);
+            }
+            //todo: ask mahmoud what should i ignore when get the page from the database... thanks.
+            ExampleMatcher modelMatcher = ExampleMatcher.matching().withIgnorePaths("id", "content", "length", "title", "description", "region", "date", "indexed");
+            Example<Page> pageExample = Example.of(P, modelMatcher);
+            synchronized (PageRepo) {
+                if(!PageRepo.exists(pageExample)) {
+                    PageRepo.save(P);
+                } else {
+                    Page p2 = PageRepo.findOne(pageExample).get();
+                    if(!p2.getContent().equalsIgnoreCase(P.getContent())) {
+                        P.setId(p2.getId());
+                        PageRepo.save(P);
+                    }
+                }
             }
         }
 
         private void insertInnerlink(String Base, String Inner) {
             PagesConnection I = new PagesConnection(Base, Inner);
+            ExampleMatcher modelMatcher = ExampleMatcher.matching().withIgnorePaths("id");
+            Example<PagesConnection> pageExample = Example.of(I, modelMatcher);
             synchronized (pagesConnectionRepository) {
-                pagesConnectionRepository.save(I);
+                if(pagesConnectionRepository.exists(pageExample)) {
+                    pagesConnectionRepository.save(I);
+                }
             }
         }
 
-        private void insertImage(String description, String link) {
-            image i = new image(description, link);
-            ExampleMatcher modelMatcher = ExampleMatcher.matching().withIgnorePaths("id");
+        private void insertImage(String image_link, String source_link, String title, int length, String region, String date) {
+            image i;
+            if(date == "" || date == null) {
+                i = new image(image_link, source_link, title, length, region, false);
+            } else {
+                i = new image(image_link, source_link, title, length, region, date, false);
+            }
+            ExampleMatcher modelMatcher = ExampleMatcher.matching().withIgnorePaths("id", "indexed");
             Example<image> imageExample = Example.of(i, modelMatcher);
             synchronized (imageRepository) {
                 if (!imageRepository.exists(imageExample)) {
@@ -338,7 +405,7 @@ public class CrawlerService {
         private void SaveQueue() {
             FileWriter write = null;
             try {
-                write = new FileWriter("state/queue" + Thread.currentThread().getName()  + ".txt");
+                write = new FileWriter("state/queue" + Thread.currentThread().getName() + ".txt");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -377,7 +444,7 @@ public class CrawlerService {
 
         private void ReadQueue() {
             try {
-                File myObj = new File("state/queue" + Thread.currentThread().getName()  + ".txt");
+                File myObj = new File("state/queue" + Thread.currentThread().getName() + ".txt");
                 Scanner myReader = new Scanner(myObj);
                 while (myReader.hasNextLine()) {
                     String data = myReader.nextLine();
@@ -393,7 +460,7 @@ public class CrawlerService {
         private void ReadVisited() {
             //I could not use the database because of each thread has its own queue and tha database stores the visited for all threads
             try {
-                File myObj = new File("state/visited" + Thread.currentThread().getName()  + ".txt");
+                File myObj = new File("state/visited" + Thread.currentThread().getName() + ".txt");
                 Scanner myReader = new Scanner(myObj);
                 while (myReader.hasNextLine()) {
                     String data = myReader.nextLine();
@@ -413,7 +480,7 @@ public class CrawlerService {
             try {
                 writeCount = new FileWriter("state/count" + Thread.currentThread().getName() + ".txt");
                 writeVisited = new FileWriter("state/visited" + Thread.currentThread().getName() + ".txt");
-                writeQueue = new FileWriter("state/queue" + Thread.currentThread().getName()  + ".txt");
+                writeQueue = new FileWriter("state/queue" + Thread.currentThread().getName() + ".txt");
             } catch (IOException e) {
                 e.printStackTrace();
             }

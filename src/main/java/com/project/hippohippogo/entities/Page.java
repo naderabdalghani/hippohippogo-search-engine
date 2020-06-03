@@ -8,55 +8,137 @@ public class Page {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="\"id\"")
     private Integer id;
-    private String link;
-    private String title;
+    @Column(name="\"content\"")
     private String content;
-    private String description;
+    @Column(name="\"link\"")
+    private String link;
+    @Column(name="\"length\"")
     private int length;
+    @Column(name="\"title\"")
+    private String title;
+    @Column(name="\"description\"")
+    private String description;
+    @Column(name="\"region\"")
+    private String region;
+    @Column(name="\"date_published\"")
+    private String date_published;
+    @Column(name="\"indexed\"")
+    private Boolean indexed;
 
     public Page() {
     }
 
-    public Page(String link, String title, String content) {
-        set_link(link);
-        set_title(title);
-        set_content(content);
+    public Page(String content, String link, int length, String title, String description, String region, String date_published, Boolean indexed) {
+        setContent(content);
+        setLink(link);
+        setLength(length);
+        setTitle(title);
+        setDescription(description);
+        setRegion(region);
+        setDate_Published(date_published);
+        setIndexed(indexed);
     }
 
-    public void set_link(String link) {
-        this.link = link;
+    public Page(String content, String link, int length, String title, String description, String region, String date_published) {
+        setContent(content);
+        setLink(link);
+        setLength(length);
+        setTitle(title);
+        setDescription(description);
+        setRegion(region);
+        setDate_Published(date_published);
     }
 
-    public void set_title(String title) {
-        this.title = title;
+    public Page(String content, String link, int length, String title, String description, String region, Boolean indexed) {
+        setContent(content);
+        setLink(link);
+        setLength(length);
+        setTitle(title);
+        setDescription(description);
+        setRegion(region);
+        setIndexed(indexed);
     }
 
-    public void set_content(String content) {
+    public Page(String content, String link, int length, String title, String description, String region) {
+        setContent(content);
+        setLink(link);
+        setLength(length);
+        setTitle(title);
+        setDescription(description);
+        setRegion(region);
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setContent(String content) {
         this.content = content;
     }
 
-    public void set_length(int length) {
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public void setLength(int length) {
         this.length = length;
     }
 
-    public void set_description(String description) {
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public String get_description() {
-        return description;
+    public void setRegion(String region) {
+        this.region = region;
     }
 
-    public String get_title() {
-        return title;
+    public void setDate_Published(String date_published) {
+        this.date_published = date_published;
+    }
+
+    public void setIndexed(Boolean indexed) {
+        this.indexed = indexed;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public String getLink() {
+        return link;
     }
 
     public int getLength() {
         return length;
     }
 
-    public String getLink() {
-        return link;
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public String getDate_published() {
+        return date_published;
+    }
+
+    public Boolean getIndexed() {
+        return indexed;
     }
 }
