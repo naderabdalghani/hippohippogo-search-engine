@@ -366,7 +366,7 @@ public class CrawlerService {
             ExampleMatcher modelMatcher = ExampleMatcher.matching().withIgnorePaths("id");
             Example<PagesConnection> pageExample = Example.of(I, modelMatcher);
             synchronized (pagesConnectionRepository) {
-                if(pagesConnectionRepository.exists(pageExample)) {
+                if(!pagesConnectionRepository.exists(pageExample)) {
                     pagesConnectionRepository.save(I);
                 }
             }
