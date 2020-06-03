@@ -1,35 +1,49 @@
 package com.project.hippohippogo.entities;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "images")
 public class image {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="\"id\"")
     private Integer id;
+    @Column(name="\"image_link\"")
     private String image_link;
+    @Column(name="\"source_link\"")
     private String source_link;
+    @Column(name="\"title\"")
     private String title;
-    private int length;
-    private Date date_published;
+    @Column(name="\"length\"")
+    private Integer length;
+    @Column(name="\"region\"")
+    private String region;
+    @Column(name="\"date_published\"")
+    private String date_published;
+    @Column(name="\"indexed\"")
+    private Boolean indexed;
 
-    public image() {
+
+    public image() { }
+
+    public image(String image_link, String source_link, String title, int length, String region, String date_published, Boolean indexed) {
+        setImage_link(image_link);
+        setSource_link(source_link);
+        setTitle(title);
+        setLength(length);
+        setRegion(region);
+        setDate_published(date_published);
+        setIndex(indexed);
     }
 
-    public image(Integer id, String image_link, String source_link, String title, int length, Date date_published) {
-        this.id = id;
-        this.image_link = image_link;
-        this.source_link = source_link;
-        this.title = title;
-        this.length = length;
-        this.date_published = date_published;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+    public image(String image_link, String source_link, String title, int length, String region, Boolean indexed) {
+        setImage_link(image_link);
+        setSource_link(source_link);
+        setTitle(title);
+        setLength(length);
+        setRegion(region);
+        setIndex(indexed);
     }
 
     public void setImage_link(String image_link) {
@@ -48,8 +62,16 @@ public class image {
         this.length = length;
     }
 
-    public void setDate_published(Date date_published) {
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public void setDate_published(String date_published) {
         this.date_published = date_published;
+    }
+
+    public void setIndex(Boolean indexed) {
+        this.indexed = indexed;
     }
 
     public Integer getId() {
@@ -68,11 +90,19 @@ public class image {
         return title;
     }
 
-    public int getLength() {
+    public Integer getLength() {
         return length;
     }
 
-    public Date getDate_published() {
+    public String getRegion() {
+        return region;
+    }
+
+    public String getDate_published() {
         return date_published;
+    }
+
+    public Boolean getIndex(Boolean indexed) {
+        return indexed;
     }
 }
