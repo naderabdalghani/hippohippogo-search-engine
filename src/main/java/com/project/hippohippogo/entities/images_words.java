@@ -1,17 +1,19 @@
 package com.project.hippohippogo.entities;
+import com.project.hippohippogo.ids.WordId;
+
 import javax.persistence.*;
 
 @Entity
+@IdClass(WordId.class)
 @Table(name = "images_words")
 public class images_words {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="\"id\"")
-    private Long id;
     @Column(name="\"word\"")
     private String word;
+    @Id
     @Column(name="\"doc_id\"")
     private int doc_id;
+    @Id
     @Column(name="\"index_of_word\"")
     private int index_of_word;
 
@@ -19,17 +21,9 @@ public class images_words {
     }
 
     public images_words( String word, int doc_id, int index_of_word) {
-        this.id = id;
         this.word = word;
         this.doc_id = doc_id;
         this.index_of_word = index_of_word;
-    }
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getWord() {
