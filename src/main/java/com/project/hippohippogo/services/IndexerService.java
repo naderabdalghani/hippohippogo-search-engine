@@ -8,14 +8,12 @@ import java.util.stream.Stream;
 
 import com.project.hippohippogo.entities.Words;
 import com.project.hippohippogo.entities.images_words;
-import com.project.hippohippogo.repositories.ImagesRepository;
+import com.project.hippohippogo.repositories.ImageRepository;
 import com.project.hippohippogo.repositories.PagesRepository;
 import com.project.hippohippogo.repositories.WordsRepository;
 import com.project.hippohippogo.repositories.imagesWordsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.tartarus.snowball.ext.englishStemmer;
 
 @Service
@@ -35,10 +33,10 @@ public class IndexerService {
         this.wordsRepository = wordsRepository;
     }
 
-    private ImagesRepository imagesRepository;
+    private ImageRepository imagesRepository;
 
     @Autowired
-    public void setImagesRepository(ImagesRepository imagesRepository) {
+    public void setImagesRepository(ImageRepository imagesRepository) {
         this.imagesRepository = imagesRepository;
     }
 

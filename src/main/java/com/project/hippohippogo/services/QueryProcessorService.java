@@ -49,7 +49,7 @@ public class QueryProcessorService {
     public List<Integer> getPageResults(String query, String location, String userIP) {
         try {
             String processedQuery = preprocessing(query);
-            return rankerService.getPageURLs(processedQuery,location,userIP);
+            return rankerService.getPageIDs(processedQuery,location,userIP);
         } catch (IOException e) {
             return new ArrayList<Integer>();
         }
