@@ -143,7 +143,7 @@ public class CrawlerService {
 
         public CrawlerThreaded(String seed, int status) {
             count = 0;
-            till = 10;
+            till = 1000;
             MainSeed = seed;
             this.status = status;
         }
