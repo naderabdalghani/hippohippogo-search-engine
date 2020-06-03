@@ -63,7 +63,6 @@ public class RankerService {
         System.out.println("////////////////////////////////////////////////////////////");
         System.out.println("/////////////////// Page Rank Started //////////////////////");
         System.out.println("////////////////////////////////////////////////////////////");
-
         // Empty table before beginning
         pageRankRepository.deleteAll();
         List<PagesConnection> pageConnectionsArray = (List<PagesConnection>) pagesConnection.findAll();
@@ -73,32 +72,32 @@ public class RankerService {
         HashMap<String,PageRank> tempHashMap = new HashMap<String,PageRank>();
         // Initialize pages in page_rank table with rank = 1
         for (PagesConnection p : pageConnectionsArray) {
-            Optional<PageRank> pageRank1 = pageRankRepository.findById(p.getReferred());
-            Optional<PageRank> pageRank2 = pageRankRepository.findById(p.getReferring());
+            String page1 = p.getReferred();
+            String page2 = p.getReferring();
             // If we found that the page is added and we find it again in Referring column then outLinks++
             // Else add the page to page_rank table
-            if (pageRank2.isPresent()) {
-                pageRank2.get().setOut_links(pageRank2.get().getOut_links()+1);
-                pageRankRepository.save(pageRank2.get());
-                tempHashMap.put(pageRank2.get().getPage(),pageRank2.get());
-            } else {
-                PageRank pr = new PageRank(p.getReferring(),1,1);
-                pageRankRepository.save(pr);
-                tempHashMap.put(pr.getPage(),pr);
-                pageRankHashTable.put(pr.getPage(),(double)0);
-            }
+            PageRank pageRankDefault2 = tempHashMap.getOrDefault(page2,new PageRank(page2,1,0));
+            pageRankDefault2.setOut_links(pageRankDefault2.getOut_links()+1);
+            tempHashMap.put(page2,pageRankDefault2);
+            pageRankHashTable.put(page2,(double)0);
+
             // If the page was in the referred column and it wasn't added before then add it to page_rank table
-            if (pageRank1.isPresent()) {
-                continue;
-            } else {
-                PageRank pr = new PageRank(p.getReferred(),1,0);
-                pageRankRepository.save(pr);
-                tempHashMap.put(pr.getPage(),pr);
-                pageRankHashTable.put(pr.getPage(),(double)0);
-            }
+            PageRank pageRankDefault1 = tempHashMap.getOrDefault(page1,new PageRank(page1,1,0));
+            tempHashMap.put(page1,pageRankDefault1);
+            pageRankHashTable.put(page1,(double)0);
         }
 
-        List<PageRank> pageRankList = pageRankRepository.findAll(); // Holding pages in Page Rank table to iterate on it and get the rank value for each page in it
+        List<PageRank> pageRankList = new ArrayList<PageRank>(); // Holding pages in Page Rank table to iterate on it and get the rank value for each page in it
+
+        // Getting an iterator
+        Iterator hmIterator = tempHashMap.entrySet().iterator();
+
+        // Iterate through the hashmap
+        while (hmIterator.hasNext()) {
+            Map.Entry mapElement = (Map.Entry)hmIterator.next();
+            pageRankList.add((PageRank) mapElement.getValue());
+        }
+
         // This loop is used to iterate on page ranks and update them
         // For each loop we calculate PR(A) = (d-1)+d*(PR(B)/C(B)+...+PR(N)/C(N)
         for (int i=0;i<pageRankIterations;i++) {
