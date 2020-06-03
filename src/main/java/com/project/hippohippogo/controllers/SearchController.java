@@ -119,8 +119,20 @@ public class SearchController {
         return "results";
     }
 
-    @GetMapping("/img")
-    public String getImgResults(Model model, @RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
+    @RequestMapping(value = "/img", produces = "application/json", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Image> getImgResultsAsJSON(@RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
+        region = region.length() == 0 ? null : region;
+        String userIp = request.getRemoteAddr();
+        // List<Integer> resultsIds = queryProcessorService.getPageResults(queryString,region,userIp);
+        List<Integer> resultsIds = Arrays.asList(225, 245, 312, 314, 214, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 24, 21, 22, 23, 28, 20, 26, 111, 123,122, 345, 345, 212, 214, 213, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 226);
+        Pageable pageable = PageRequest.of(offset, limit);
+        List<Image> results = imageRepository.findAllByIdIn(resultsIds, pageable);
+        return results;
+    }
+
+    @RequestMapping(value = "/img", produces = "text/html", method = RequestMethod.GET)
+    public String getImgResultsAsHTML(Model model, @RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
         // Return to landing page if query is empty
         if (queryString.equals("")) {
             return "index";
@@ -149,6 +161,7 @@ public class SearchController {
         model.addAttribute("region", region);
         return "imageResults";
     }
+
     public void checkIfPerson(String query)
     {
         boolean prevPerson=false;
