@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "images")
-public class image {
+public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="\"id\"")
@@ -25,9 +25,9 @@ public class image {
     private Boolean indexed;
 
 
-    public image() { }
+    public Image() { }
 
-    public image(String image_link, String source_link, String title, int length, String region, String date_published, Boolean indexed) {
+    public Image(String image_link, String source_link, String title, int length, String region, String date_published, Boolean indexed) {
         setImage_link(image_link);
         setSource_link(source_link);
         setTitle(title);
@@ -37,7 +37,7 @@ public class image {
         setIndex(indexed);
     }
 
-    public image(String image_link, String source_link, String title, int length, String region, Boolean indexed) {
+    public Image(String image_link, String source_link, String title, int length, String region, Boolean indexed) {
         setImage_link(image_link);
         setSource_link(source_link);
         setTitle(title);

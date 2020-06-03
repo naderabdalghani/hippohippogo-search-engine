@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.project.hippohippogo.entities.Words;
-import com.project.hippohippogo.entities.images_words;
+import com.project.hippohippogo.entities.ImageWord;
 import com.project.hippohippogo.repositories.ImageRepository;
 import com.project.hippohippogo.repositories.PagesRepository;
 import com.project.hippohippogo.repositories.WordsRepository;
@@ -209,7 +209,7 @@ public class IndexerService {
                         }
                         else {
                             // Assign to the Database Table "imageswords"
-                            images_words word = new images_words(words.get(i), docs.get(j), indicies.get(k));
+                            ImageWord word = new ImageWord(words.get(i), docs.get(j), indicies.get(k));
                             synchronized (imageswordsRepository) {
                                 imageswordsRepository.save(word);
                             }

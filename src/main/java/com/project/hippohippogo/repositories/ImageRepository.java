@@ -1,6 +1,6 @@
 package com.project.hippohippogo.repositories;
 
-import com.project.hippohippogo.entities.image;
+import com.project.hippohippogo.entities.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 @Repository
-public interface ImageRepository extends JpaRepository<image, Integer> {
+public interface ImageRepository extends JpaRepository<Image, Integer> {
     @Query(value = "UPDATE images SET indexed=TRUE  WHERE id =?1", nativeQuery = true)
     @Modifying
     @Transactional
