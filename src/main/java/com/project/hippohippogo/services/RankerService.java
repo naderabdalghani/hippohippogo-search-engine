@@ -171,7 +171,7 @@ public class RankerService {
     }
 
     // Function to return the web pages URLs to be used as a search result
-    public List<Integer> getPageURLs(String query, String location, String userIP) {
+    public List<Integer> getPageIDs(String query, String location, String userIP) {
         long numberOfDocs = pagesRepository.count();
         List<String> words = Arrays.asList(query.split(" "));
         // Key is the doc id and value is the TF-IDF value
