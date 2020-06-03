@@ -123,7 +123,7 @@
                             <div
                                     class="result results_links_deep highlight_d result--url-above-snippet"
                                     th:each="result : ${results}"
-                            ><div th:replace="fragments/result :: webResult(${result.get_title()}, ${result.getLink()}, ${result.get_description()})"></div></div>
+                            ><div th:replace="fragments/result :: webResult(${result.title}, ${result.link}, ${result.description})"></div></div>
                         </div>
                     </div>
                     <div th:insert="fragments/loader :: loader" id="web_results_loader" style="display: none"></div>
