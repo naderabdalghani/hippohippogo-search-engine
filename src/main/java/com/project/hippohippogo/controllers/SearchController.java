@@ -76,9 +76,11 @@ public class SearchController {
 
     @RequestMapping(value = "/search", produces = "application/json", method = RequestMethod.GET)
     @ResponseBody
-    public List<Page> getWebResultsAsJSON(@RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region) {
-        // List<Integer> resultsIds = queryProcessorService.getPageResults(queryString);
-        List<Integer> resultsIds = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+    public List<Page> getWebResultsAsJSON(@RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
+        region = region.length() == 0 ? null : region;
+        String userIp = request.getRemoteAddr();
+        List<Integer> resultsIds = queryProcessorService.getPageResults(queryString,region,userIp);
+        //List<Integer> resultsIds = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
         Pageable pageable = PageRequest.of(offset, limit);
         List<Page> results = pagesRepository.findAllByIdIn(resultsIds, pageable);
         System.out.print(results);
@@ -106,8 +108,8 @@ public class SearchController {
         }
 
         // Fetch Results
-        // List<Integer> resultsIds = queryProcessorService.getPageResults(queryString);
-        List<Integer> resultsIds = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+        List<Integer> resultsIds = queryProcessorService.getPageResults(queryString,region,userIp);
+        //List<Integer> resultsIds = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
         Pageable pageable = PageRequest.of(offset, limit);
         List<Page> results = pagesRepository.findAllByIdIn(resultsIds, pageable);
         model.addAttribute("query", queryString);

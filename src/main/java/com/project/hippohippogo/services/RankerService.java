@@ -60,6 +60,10 @@ public class RankerService {
 
     // This function is used to set pages rank in its table
     public void rankPages() {
+        System.out.println("////////////////////////////////////////////////////////////");
+        System.out.println("/////////////////// Page Rank Started //////////////////////");
+        System.out.println("////////////////////////////////////////////////////////////");
+
         // Empty table before beginning
         pageRankRepository.deleteAll();
         List<PagesConnection> pageConnectionsArray = (List<PagesConnection>) pagesConnection.findAll();
@@ -119,6 +123,9 @@ public class RankerService {
             pageRankRepository.save(p);
         }
 
+        System.out.println("////////////////////////////////////////////////////////////");
+        System.out.println("/////////////////// Page Rank Finished /////////////////////");
+        System.out.println("////////////////////////////////////////////////////////////");
     }
 
     // Sorting HashMap using values
