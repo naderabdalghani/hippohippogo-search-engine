@@ -43,14 +43,12 @@ create table hippohippogo_db.pages_connection
     referring longtext not null
 );
 
-create table hippohippogo_db.users
+create table hippohippogo_db.queries
 (
-    ip     varchar(255)  not null,
-    query  varchar(255)  not null,
-    hits   int default 1 not null,
-    region varchar(255)  not null,
-    person tinyint(1)    null,
-    primary key (ip, query, region)
+    ip varchar(255) not null,
+    query varchar(255) not null,
+    hits int default 1 not null,
+    primary key (ip, query)
 );
 
 create table hippohippogo_db.users_frequent_domains

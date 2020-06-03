@@ -1,17 +1,15 @@
 package com.project.hippohippogo.controllers;
 
-import com.project.hippohippogo.entities.SearchQuery;
 import com.project.hippohippogo.repositories.QueriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @RestController
 public class SuggestionsController {
@@ -24,23 +22,16 @@ public class SuggestionsController {
     }
 
     @GetMapping("/suggestions")
-    public String getSuggestions(@RequestParam("query") String query) throws JSONException {
-        List<SearchQuery> searchQueries = queriesRepository.findAll(Sort.by(Sort.Direction.DESC, "hits"));
-        ArrayList<String> queriesStrings = new ArrayList<>();
-        String re = "^" + query.toLowerCase();
-        Pattern pattern = Pattern.compile(re, Pattern.CASE_INSENSITIVE);
+    public String getSuggestions(@RequestParam("query") String query, HttpServletRequest request) throws JSONException {
+        String userIp = request.getRemoteAddr();
+        int personalSuggestionsLimit = 3;
+        int globalSuggestionsLimit = 5;
+        String pattern = "^" + query.toLowerCase();
 
-        int suggestionsLimit = 8;
-
-        for (SearchQuery searchQuery : searchQueries) {
-            Matcher matcher = pattern.matcher(searchQuery.getQuery());
-            if (matcher.find()) {
-                queriesStrings.add(searchQuery.getQuery());
-                if (queriesStrings.size() > suggestionsLimit) {
-                    break;
-                }
-            }
-        }
-        return new JSONObject().put("query", "Unit").put("suggestions", JSONObject.wrap(queriesStrings)).toString();
+        List<String> suggestionsStrings = new ArrayList<>();
+        suggestionsStrings.addAll(queriesRepository.findPersonalSuggestions(userIp, pattern, personalSuggestionsLimit));
+        suggestionsStrings.addAll(queriesRepository.findGlobalSuggestions(pattern, globalSuggestionsLimit));
+        suggestionsStrings = suggestionsStrings.stream().distinct().collect(Collectors.toList());
+        return new JSONObject().put("query", "Unit").put("suggestions", JSONObject.wrap(suggestionsStrings)).toString();
     }
 }
