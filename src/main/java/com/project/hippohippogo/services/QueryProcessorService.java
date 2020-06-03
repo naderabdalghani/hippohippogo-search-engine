@@ -44,10 +44,10 @@ public class QueryProcessorService {
     }
 
     // Function to get search page results
-    public List<Integer> getPageResults(String query) {
+    public List<Integer> getPageResults(String query, String location, String userIP) {
         try {
             String processedQuery = preprocessing(query);
-            return rankerService.getPageURLs(processedQuery);
+            return rankerService.getPageURLs(processedQuery,location,userIP);
         } catch (IOException e) {
             return new ArrayList<Integer>();
         }
