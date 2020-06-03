@@ -195,9 +195,9 @@ public class RankerService {
                     Date date = pagesRepository.getPageDate(i) != null ? pagesRepository.getPageDate(i) : defualtPubDate;
                     Date currentDate = new Date();
                     // Getting location of the page
-                    double loc = (location != null && location.equalsIgnoreCase(pagesRepository.getPageRegion(i)) ) ? 0.2 : 0;
-                    // Weighted function from Page Rank, TF-IDF, Time, Location, and personalized search
-                    double weightedRankFunction = 0.5*TF*IDF + 0.5*pageRank.get().getRank() + 0.2*((double)date.getTime()/currentDate.getTime()) + loc;
+                    double loc = (location != null && location.equalsIgnoreCase(pagesRepository.getPageRegion(i)) ) ? 0.15 : 0;
+                    // Weighted function from TF-IDF, Page Rank, Time, Location, and personalized search
+                    double weightedRankFunction = 0.7*TF*IDF + 0.5*pageRank.get().getRank() + 0.15*((double)date.getTime()/currentDate.getTime()) + loc;
                     // If this page used before then add the TF-IDF of the other word to the page
                     pagesHashMap.put(i,pagesHashMap.getOrDefault(i,(double)0)+weightedRankFunction);
                 }
