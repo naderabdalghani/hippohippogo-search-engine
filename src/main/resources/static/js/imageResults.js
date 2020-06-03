@@ -1,19 +1,20 @@
 /*<![CDATA[*/
-function webResult(result) {
-    return "<div class=\"result results_links_deep highlight_d result--url-above-snippet\"><div>\n" +
-        "    <div class=\"result__body links_main links_deep\">\n" +
-        "        <h2 class=\"result__title\">\n" +
-        "            <a class=\"result__a\" rel=\"noopener\" href="+ result.link +">"+ result.title +"</a><a rel=\"noopener\" class=\"result__check\" href="+ result.link +"><span class=\"result__check__tt\">Your browser indicates if you've visited this\n" +
-        "                          link</span></a>\n" +
-        "        </h2>\n" +
-        "        <div class=\"result__extras js-result-extras\">\n" +
-        "            <div class=\"result__extras__url\">\n" +
-        "                <a href="+ result.link +" rel=\"noopener\" class=\"result__url js-result-extras-url\"><span class=\"result__url__domain\">"+ result.link +"</span></a>\n" +
-        "            </div>\n" +
-        "        </div>\n" +
-        "        <div class=\"result__snippet js-result-snippet\">"+ result.description +"</div>\n" +
+function imgResult(result) {
+    return "<div class=\"tile tile--img has-detail\" style=\"max-width: 25em\">\n" +
+        "    <div>\n" +
+        "        <a href=\"${image_link}\" target=\"_blank\"><div class=\"tile--img__media\" style=\"display: flex; align-items: center\"><span class=\"tile--img__media__i\"><img\n" +
+        "                class=\"tile--img__img  js-lazyload\"\n" +
+        "                src="+ result.image_link +"\n" +
+        "                title="+ result.source_link +"\n" +
+        "                data-src="+ result.image_link +"\n" +
+        "                alt="+ result.title +"\n" +
+        "                style=\"object-fit: contain\"\n" +
+        "        ></span></div></a>\n" +
+        "        <a class=\"tile--img__sub\" href="+ result.source_link +" style=\"contain: size\"><span\n" +
+        "                class=\"tile--img__title\" title="+ result.source_link +" style=\"height: auto\">"+ result.title +"</span><span\n" +
+        "                class=\"tile--img__domain\" title="+ result.source_link +">"+ result.source_link +"</span></a>\n" +
         "    </div>\n" +
-        "</div></div>";
+        "</div>";
 }
 
 function registerClick(link) {
@@ -23,8 +24,8 @@ function registerClick(link) {
 }
 
 $(function () {
-    const resultsView = $(".results");
-    const loader = $("#web_results_loader");
+    const resultsView = $("#img_results");
+    const loader = $("#img_results_loader");
     const url = window.location.href;
     const urlParams = new URLSearchParams(window.location.search);
     const query = urlParams.get('q');
@@ -49,7 +50,7 @@ $(function () {
         if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
             if (!limitReached) {
                 loader.show();
-                $.getJSON("http://localhost:8080/search", {
+                $.getJSON("http://localhost:8080/img", {
                     q: query,
                     offset: offset,
                     limit: limit,
@@ -59,7 +60,7 @@ $(function () {
                     limitReached = results.length === 0;
                     offset++;
                     $.each(results, function(i, result){
-                        resultsView.append(webResult(result));
+                        resultsView.append(imgResult(result));
                     });
                 });
             }
