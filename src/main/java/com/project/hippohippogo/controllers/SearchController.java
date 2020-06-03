@@ -5,6 +5,7 @@ import com.project.hippohippogo.entities.Page;
 import com.project.hippohippogo.entities.Trends;
 import com.project.hippohippogo.entities.Query;
 import com.project.hippohippogo.ids.QueryId;
+import com.project.hippohippogo.ids.TrendsId;
 import com.project.hippohippogo.repositories.DummyRepository;
 import com.project.hippohippogo.repositories.PagesRepository;
 import com.project.hippohippogo.repositories.QueriesRepository;
@@ -182,6 +183,10 @@ public class SearchController {
 
 
     public void checkIfPersonUsingOpenNLP(String query,String Region) throws IOException {
+        if (Region==null)
+        {
+            Region="";
+        }
             //InputStream inputStream = new FileInputStream("C:/OpenNLP_models/en-ner-person.bin");
         ArrayList<String> names=new ArrayList<String>();
         InputStream inputStream = getClass().getResourceAsStream("/en-ner-person.zip");
@@ -208,7 +213,8 @@ public class SearchController {
         System.out.println(names);
         for (int i=0;i<names.size();i++)
         {
-            Optional<Trends> searchPerson = trendsRepository.findById(names.get(i));
+            TrendsId a = new TrendsId(names.get(i),Region);
+            Optional<Trends> searchPerson = trendsRepository.findById(a);
             if (!searchPerson.isPresent()) {
                 Trends newSearchPerson = new Trends(names.get(i).toLowerCase(),Region);
                 trendsRepository.save(newSearchPerson);

@@ -1,10 +1,14 @@
 package com.project.hippohippogo.entities;
 
+import com.project.hippohippogo.ids.TrendsId;
+import com.project.hippohippogo.ids.WordId;
+
 import javax.persistence.*;
 
 
 
 @Entity
+@IdClass(TrendsId.class)
 @Table(name = "trends")
 public class Trends {
     @Id
