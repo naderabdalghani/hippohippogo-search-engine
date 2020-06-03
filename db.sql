@@ -1,6 +1,6 @@
 create schema hippohippogo_db collate utf8mb4_0900_ai_ci;
 
-create table hibernate_sequences
+create table hippohippogo_db.hibernate_sequences
 (
     sequence_name VARCHAR(1000) NOT NULL,
     next_val      INTEGER       NOT NULL
