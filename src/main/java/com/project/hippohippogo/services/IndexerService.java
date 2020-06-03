@@ -34,11 +34,11 @@ public class IndexerService {
         this.wordsRepository = wordsRepository;
     }
 
-    private ImageRepository imagesRepository;
+    private ImageRepository imageRepository;
 
     @Autowired
     public void setImagesRepository(ImageRepository imagesRepository) {
-        this.imagesRepository = imagesRepository;
+        this.imageRepository = imagesRepository;
     }
 
     private ImagesWordsRepository imageswordsRepository;
@@ -188,7 +188,7 @@ public class IndexerService {
             ArrayList<String> words = new ArrayList<String>(wordsToDocs.keySet());
             System.out.println(words);
             ArrayList<Words> wordsToSave=new ArrayList<>();
-            ArrayList<images_words> imagesToSave=new ArrayList<>();
+            ArrayList<ImageWord> imagesToSave=new ArrayList<>();
             for (int i = 0; i < words.size(); i++) {
                 // Get list of docIds the word appeared in them
                 ArrayList<Integer> docs = new ArrayList<Integer>(wordsToDocs.get(words.get(i)));
@@ -283,7 +283,7 @@ public class IndexerService {
                 }
                 else
                 {
-                    imagesRepository.setImagesIndexed(webpagesIds.get(i));
+                    imageRepository.setImagesIndexed(webpagesIds.get(i));
                 }
             }
 
