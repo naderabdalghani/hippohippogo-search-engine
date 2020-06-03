@@ -25,6 +25,7 @@ function registerClick(link) {
 $(function () {
     const resultsView = $(".results");
     const loader = $("#web_results_loader");
+    const url = window.location.href;
     const urlParams = new URLSearchParams(window.location.search);
     const query = urlParams.get('q');
     let offset = parseInt(urlParams.get('offset')) + 1;
@@ -34,6 +35,14 @@ $(function () {
     const resultTitle1 = $(".result__a");
     const resultTitle2 = $(".result__check");
     const resultHyperlink = $(".result__url");
+    const webResultsTab = $("#link--web");
+    const imagesResultsTab = $("#link--images");
+    const trendsResultsTab = $("#link--trends");
+    const inputRegion = $('#region');
+
+    inputRegion.val(region);
+    webResultsTab.attr("href", url);
+    imagesResultsTab.attr("href", url.replace("search", "img"));
 
     // Infinite scrolling (pagination)
     $(window).on("scroll", function () {
