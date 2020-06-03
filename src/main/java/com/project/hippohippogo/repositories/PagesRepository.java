@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -17,4 +18,20 @@ public interface PagesRepository extends JpaRepository<Page, Integer> {
     ArrayList<String> getWebPages();
     @Query(value = "SELECT id FROM pages", nativeQuery = true)
     ArrayList<Integer> getWebPagesIds();
+
+    // Return length of document
+    @Query(value = "SELECT length FROM pages WHERE id = ?1", nativeQuery = true)
+    int getPageLength(int id);
+
+    // Return page link
+    @Query(value = "SELECT link FROM pages WHERE id = ?1", nativeQuery = true)
+    String getPageLink(int id);
+
+    // Return page region
+    @Query(value = "SELECT region FROM pages WHERE id = ?1", nativeQuery = true)
+    String getPageRegion(int id);
+
+    // Return page region
+    @Query(value = "SELECT date_published FROM pages WHERE id = ?1", nativeQuery = true)
+    Date getPageDate(int id);
 }
