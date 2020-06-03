@@ -1,14 +1,8 @@
 package com.project.hippohippogo.controllers;
 
-import com.project.hippohippogo.entities.DummyItem;
-import com.project.hippohippogo.entities.Page;
-import com.project.hippohippogo.entities.Trends;
-import com.project.hippohippogo.entities.Query;
+import com.project.hippohippogo.entities.*;
 import com.project.hippohippogo.ids.QueryId;
-import com.project.hippohippogo.repositories.DummyRepository;
-import com.project.hippohippogo.repositories.PagesRepository;
-import com.project.hippohippogo.repositories.QueriesRepository;
-import com.project.hippohippogo.repositories.TrendsRepository;
+import com.project.hippohippogo.repositories.*;
 import com.project.hippohippogo.services.QueryProcessorService;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
@@ -48,9 +42,16 @@ public class SearchController {
     private PagesRepository pagesRepository;
     private QueryProcessorService queryProcessorService;
     private TrendsRepository trendsRepository;
+    private ImageRepository imageRepository;
+
     @Autowired
     public void setDummyRepository(DummyRepository dummyRepository) {
         this.dummyRepository = dummyRepository;
+    }
+
+    @Autowired
+    public void setImageRepository(ImageRepository imageRepository) {
+        this.imageRepository = imageRepository;
     }
 
     @Autowired
@@ -119,10 +120,34 @@ public class SearchController {
     }
 
     @GetMapping("/img")
-    public String getImgResults(Model model) {
-        List<DummyItem> items = (List<DummyItem>) dummyRepository.findAll();
-        model.addAttribute("items", items);
-        return "showDummyData";
+    public String getImgResults(Model model, @RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
+        // Return to landing page if query is empty
+        if (queryString.equals("")) {
+            return "index";
+        }
+
+        // Add query for suggestions if new or increment its hits if it already exists
+        region = region.length() == 0 ? null : region;
+        String userIp = request.getRemoteAddr();
+        QueryId queryId = new QueryId(userIp, queryString.toLowerCase());
+        Optional<Query> query = queriesRepository.findById(queryId);
+        if (query.isPresent()) {
+            query.get().incrementHits();
+            queriesRepository.save(query.get());
+        } else {
+            Query newQuery = new Query(userIp, queryString.toLowerCase());
+            queriesRepository.save(newQuery);
+        }
+
+        // Fetch Results
+        // List<Integer> resultsIds = queryProcessorService.getPageResults(queryString,region,userIp);
+        List<Integer> resultsIds = Arrays.asList(225, 245, 312, 314, 214, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 24, 21, 22, 23, 28, 20, 26, 111, 123,122, 345, 345, 212, 214, 213, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 226);
+        Pageable pageable = PageRequest.of(offset, limit);
+        List<Image> results = imageRepository.findAllByIdIn(resultsIds, pageable);
+        model.addAttribute("query", queryString);
+        model.addAttribute("results", results);
+        model.addAttribute("region", region);
+        return "imageResults";
     }
     public void checkIfPerson(String query)
     {
