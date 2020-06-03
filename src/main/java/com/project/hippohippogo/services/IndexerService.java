@@ -7,8 +7,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.project.hippohippogo.entities.Words;
+import com.project.hippohippogo.entities.images_words;
+import com.project.hippohippogo.repositories.ImagesRepository;
 import com.project.hippohippogo.repositories.PagesRepository;
 import com.project.hippohippogo.repositories.WordsRepository;
+import com.project.hippohippogo.repositories.imagesWordsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.jsoup.Jsoup;
@@ -28,9 +31,24 @@ public class IndexerService {
     private WordsRepository wordsRepository;
 
     @Autowired
-    public void setPagesRepository(WordsRepository wordsRepository) {
+    public void setWordsRepository(WordsRepository wordsRepository) {
         this.wordsRepository = wordsRepository;
     }
+
+    private ImagesRepository imagesRepository;
+
+    @Autowired
+    public void setImagesRepository(ImagesRepository imagesRepository) {
+        this.imagesRepository = imagesRepository;
+    }
+
+    private imagesWordsRepository imageswordsRepository;
+
+    @Autowired
+    public void setImageswordsRepository(imagesWordsRepository imageswordsRepository) {
+        this.imageswordsRepository = imageswordsRepository;
+    }
+
 
 
     public final class Pair<String,Integer> {
@@ -87,12 +105,14 @@ public class IndexerService {
         int endingWebPage;
         ArrayList<String> webpages;
         ArrayList<Integer> webpagesIds;
+        int type;
 
-        public IndexerThreaded(int x,int y,ArrayList<String> webpages,ArrayList<Integer> webpagesIds) {
+        public IndexerThreaded(int x,int y,ArrayList<String> webpages,ArrayList<Integer> webpagesIds,int type) {
             this.startingWebPage=x;
             this.endingWebPage=y;
             this.webpages=webpages;
             this.webpagesIds=webpagesIds;
+            this.type=type;
         }
 
         public  ArrayList<String> preprocessing(String document) throws IOException {
@@ -180,9 +200,20 @@ public class IndexerService {
                     indicies = new Vector<Integer>(wordAndDocToIndicies.get(x));
                     System.out.println(indicies);
                     for (int k = 0; k < indicies.size(); k++) {
-                        // Assign to the Database Table "words"
-                        Words word = new Words(words.get(i), docs.get(j), indicies.get(k));
-                        wordsRepository.save(word);
+                        if (this.type==0) {
+                            // Assign to the Database Table "words"
+                            Words word = new Words(words.get(i), docs.get(j), indicies.get(k));
+                            synchronized (wordsRepository) {
+                                wordsRepository.save(word);
+                            }
+                        }
+                        else {
+                            // Assign to the Database Table "imageswords"
+                            images_words word = new images_words(words.get(i), docs.get(j), indicies.get(k));
+                            synchronized (imageswordsRepository) {
+                                imageswordsRepository.save(word);
+                            }
+                        }
                     }
                 }
             }
@@ -200,9 +231,31 @@ public class IndexerService {
             //System.out.println(doc.text());
             //String original =doc.text() ;
 
+            // if there is no documents to index
+            if (this.endingWebPage==0)
+                return;
             // For loop on all the webpages
             for (int i = this.startingWebPage; i <this.endingWebPage ; i++)
             {
+                // Check if document was already indexed and needs to be updated
+                // so delete it from table and then index it
+                if (this.type ==0) {
+                    synchronized (wordsRepository) {
+                        if (wordsRepository.checkIfDocExists(webpagesIds.get(i)) == 1) {
+                            wordsRepository.deleteEntriesOfDocId(webpagesIds.get(i));
+                            //continue;
+                        }
+                    }
+                }
+                else {
+                    synchronized (imageswordsRepository) {
+                        if (imageswordsRepository. checkIfimageExists(webpagesIds.get(i))== 1) {
+                            imageswordsRepository.deleteEntriesOfimageId(webpagesIds.get(i));
+                            //continue;
+                        }
+                    }
+
+                }
                 // Preprocess this webpage
                 try {
                     stemmedWords = preprocessing(webpages.get(i));
@@ -211,6 +264,13 @@ public class IndexerService {
                 }
                 // Index this webpage
                 indexing(stemmedWords, wordsToDocs, wordAndDocToIndicies, webpagesIds.get(i));
+                if(this.type==0) {
+                    pagesRepository.setWebPagesIndexed(webpagesIds.get(i));
+                }
+                else
+                {
+                    imagesRepository.setImagesIndexed(webpagesIds.get(i));
+                }
             }
 
         /*System.out.println(wordsToDocs);
@@ -235,13 +295,20 @@ public class IndexerService {
         }
     }
     public void main() {
-        wordsRepository.deleteAll();
+
+        //wordsRepository.deleteAll();
+
+
         //ArrayList<String> webpages= new ArrayList<String>();
 
         // Get Webpages content
         ArrayList<String> webpages= pagesRepository.getWebPages();
         // Get Webpages Ids
         ArrayList<Integer> webpagesIds= pagesRepository.getWebPagesIds();
+        // Get images content
+        ArrayList<String> imagepages= imagesRepository.getImageContent();
+        // Get images Ids
+        ArrayList<Integer> imagepagesIds= imagesRepository.getImagesIds();
 
 
         //String html = "<html><head><title>First parse</title></head>"
@@ -251,11 +318,12 @@ public class IndexerService {
         //        + "<body><p>Parsed? ,,HTML.!? into a doc.   ?  ? /</p></body></html>";
         //webpages.add(html);
         //webpages.add(html2);
-        (new Thread(new IndexerService.IndexerThreaded(0,webpages.size()/5,webpages,webpagesIds))).start();
-        (new Thread(new IndexerService.IndexerThreaded(webpages.size()/5,2*(webpages.size()/5),webpages,webpagesIds))).start();
-        (new Thread(new IndexerService.IndexerThreaded(2*(webpages.size()/5),3*(webpages.size()/5),webpages,webpagesIds))).start();
-        (new Thread(new IndexerService.IndexerThreaded(3*(webpages.size()/5),4*(webpages.size()/5),webpages,webpagesIds))).start();
-        (new Thread(new IndexerService.IndexerThreaded(4*(webpages.size()/5),webpages.size(),webpages,webpagesIds))).start();
+        (new Thread(new IndexerService.IndexerThreaded(0,webpages.size()/5,webpages,webpagesIds,0))).start();
+        (new Thread(new IndexerService.IndexerThreaded(webpages.size()/5,2*(webpages.size()/5),webpages,webpagesIds,0))).start();
+        (new Thread(new IndexerService.IndexerThreaded(2*(webpages.size()/5),3*(webpages.size()/5),webpages,webpagesIds,0))).start();
+        (new Thread(new IndexerService.IndexerThreaded(3*(webpages.size()/5),4*(webpages.size()/5),webpages,webpagesIds,0))).start();
+        (new Thread(new IndexerService.IndexerThreaded(4*(webpages.size()/5),webpages.size(),webpages,webpagesIds,0))).start();
+        (new Thread(new IndexerService.IndexerThreaded(0,imagepages.size(),imagepages,imagepagesIds,1))).start();
 
     }
 
