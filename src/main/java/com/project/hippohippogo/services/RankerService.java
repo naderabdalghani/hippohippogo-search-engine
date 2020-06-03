@@ -232,6 +232,53 @@ public class RankerService {
 
     // Function to return the Images IDs to be used as a search result
     public List<Integer> getImageIDS(String query, String location, String userIP) {
+        long numberOfDocs = imageRepository.count();
+        List<String> words = Arrays.asList(query.split(" "));
+        // Key is the doc id and value is the TF-IDF value
+        HashMap<Integer,Double> pagesHashMap = new HashMap<Integer,Double>();
+        for (String s : words) {
+            List<Integer> docs = imagesWordsRepository.getDocIdContainingWord(s);
+            double IDF = Math.log((double)numberOfDocs/docs.size())>0?Math.log((double)numberOfDocs/docs.size()):0.01;
+            if (docs.isEmpty())
+                continue;
+            else {
+                double TF;
+                for (int i : docs) {
+                    // Getting page rank element of the page
+                    int docLength = imageRepository.getImageDescriptionLength(i);
+                    int wordCount = imagesWordsRepository.getWordCountInDoc(s,i);
+                    TF = (double)wordCount/docLength;
+                    // Handling spam if TF is higher then 0.5 then it's spam and make it equals to 0
+                    TF = TF < 0.5 ? TF : 0;
+                    // Weighted function from TF-IDF
+                    double TF_IDF = TF*IDF;
+                    // If this page used before then add the TF-IDF of the other word to the page
+                    pagesHashMap.put(i,pagesHashMap.getOrDefault(i,(double)0)+TF_IDF);
+                }
+            }
+        }
+        // Getting an iterator
+        Iterator hmIterator = pagesHashMap.entrySet().iterator();
+        // Iterate through the hashmap
+        while (hmIterator.hasNext()) {
+            Map.Entry mapElement = (Map.Entry)hmIterator.next();
+            Optional<PageRank> pageRank = pageRankRepository.findById(getBaseURL(imageRepository.getImageLink((int)mapElement.getKey())));
+            // Getting publication date of page
+            Date date = imageRepository.getImageDate((int)mapElement.getKey()) != null ? pagesRepository.getPageDate((int)mapElement.getKey()) : defualtPubDate;
+            Date currentDate = new Date();
+            // Getting location of the page
+            double loc = (location != null && location.equalsIgnoreCase(imageRepository.getImageRegion((int)mapElement.getKey()))) ? 0.15 : 0;
+            // Weighted function from TF-IDF, Page Rank, Time, Location, and personalized search
+            double weightedRankFunction = (double)mapElement.getValue()+ 0.5*pageRank.get().getRank() + 0.15*((double)date.getTime()/currentDate.getTime()) + loc;
+            pagesHashMap.put((int)mapElement.getKey(),(double)mapElement.getValue()+ weightedRankFunction);
+        }
 
+        List<Map.Entry<Integer,Double>> sortedPageMap = sortByValue(pagesHashMap);
+        List<Integer> URLids = new ArrayList<>();
+        // Filling pages Ids
+        for (int i = sortedPageMap.size()-1; i >= 0; i--) {
+            URLids.add(sortedPageMap.get(i).getKey());
+        }
+        return URLids;
     }
 }
