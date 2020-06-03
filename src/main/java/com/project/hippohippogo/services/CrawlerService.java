@@ -102,11 +102,11 @@ public class CrawlerService {
 //            imageRepository.deleteAll();
 //        }
 
-        Thread t0 = new Thread(new CrawlerThreaded("https://www.geeksforgeeks.org/", status));
+        Thread t0 = new Thread(new CrawlerThreaded("https://www.geeksforgeeks.org/category/algorithm/", status));
         Thread t1 = new Thread(new CrawlerThreaded("https://www.who.int/", status));
         Thread t2 = new Thread(new CrawlerThreaded("https://www.bbc.com/", status));
         Thread t3 = new Thread(new CrawlerThreaded("https://www.nationalgeographic.com/", status));
-        Thread t4 = new Thread(new CrawlerThreaded("https://www.stackoverflow.com", status));
+        Thread t4 = new Thread(new CrawlerThreaded("https://www.kingfut.com/", status));
 
         t0.setName("thread_0");
         t1.setName("thread_1");
@@ -143,7 +143,7 @@ public class CrawlerService {
 
         public CrawlerThreaded(String seed, int status) {
             count = 0;
-            till = 100;
+            till = 10;
             MainSeed = seed;
             this.status = status;
         }
@@ -273,7 +273,7 @@ public class CrawlerService {
             String title = doc.title();
             String description = doc.select("meta[name=\"description\"]").attr("content");
             if(description == "" || description == null) {
-                description = doc.body().text();
+                description = doc.select("p").first().text();
             }
             if(description.length() > 397) {
                 description = description.substring(0,396);
