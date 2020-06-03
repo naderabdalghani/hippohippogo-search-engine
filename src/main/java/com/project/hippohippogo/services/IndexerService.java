@@ -1,5 +1,6 @@
 package com.project.hippohippogo.services;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -120,7 +121,9 @@ public class IndexerService {
             /*--------------------Removing nonalphanumeric characters--------------------*/
             document = document.replaceAll("[^a-zA-Z0-9]", " ");
             /*----------------------------Removing stop words----------------------------*/
-            List<String> stopwords = Files.readAllLines(Paths.get("C:\\Users\\Mahmood\\Music\\English_stopwords.txt"));
+            URL url = getClass().getResource("/English_stopwords.txt");
+            List<String> stopwords = Files.readAllLines(Paths.get(url.getPath().substring(1)));
+            //List<String> stopwords = Files.readAllLines(Paths.get("C:\\Users\\Mahmood\\Music\\English_stopwords.txt"));
             ArrayList<String> allWords =
                     Stream.of(document.toLowerCase().split(" +"))
                             .collect(Collectors.toCollection(ArrayList<String>::new));
@@ -306,9 +309,9 @@ public class IndexerService {
         // Get Webpages Ids
         ArrayList<Integer> webpagesIds= pagesRepository.getWebPagesIds();
         // Get images content
-        ArrayList<String> imagepages= imagesRepository.getImageContent();
+        //ArrayList<String> imagepages= imagesRepository.getImageContent();
         // Get images Ids
-        ArrayList<Integer> imagepagesIds= imagesRepository.getImagesIds();
+        //ArrayList<Integer> imagepagesIds= imagesRepository.getImagesIds();
 
 
         //String html = "<html><head><title>First parse</title></head>"
@@ -323,7 +326,7 @@ public class IndexerService {
         (new Thread(new IndexerService.IndexerThreaded(2*(webpages.size()/5),3*(webpages.size()/5),webpages,webpagesIds,0))).start();
         (new Thread(new IndexerService.IndexerThreaded(3*(webpages.size()/5),4*(webpages.size()/5),webpages,webpagesIds,0))).start();
         (new Thread(new IndexerService.IndexerThreaded(4*(webpages.size()/5),webpages.size(),webpages,webpagesIds,0))).start();
-        (new Thread(new IndexerService.IndexerThreaded(0,imagepages.size(),imagepages,imagepagesIds,1))).start();
+        //(new Thread(new IndexerService.IndexerThreaded(0,imagepages.size(),imagepages,imagepagesIds,1))).start();
 
     }
 
