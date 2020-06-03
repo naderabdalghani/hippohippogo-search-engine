@@ -20,12 +20,13 @@ create table hippohippogo_db.images
 
 create table hippohippogo_db.images_words
 (
-    id            int auto_increment
-        primary key,
-    word          varchar(255) not null,
-    doc_id        int          not null,
-    index_of_word int          not null
+	word varchar(255) not null,
+	doc_id int not null,
+	index_of_word int not null,
+	primary key (word, doc_id, index_of_word)
 );
+
+
 
 create table hippohippogo_db.page_rank
 (
@@ -61,12 +62,13 @@ create table hippohippogo_db.users_frequent_domains
 
 create table hippohippogo_db.words
 (
-    id            int          not null
-        primary key,
-    word          varchar(255) null,
-    doc_id        int          null,
-    index_of_word int          null
+	word varchar(255) not null,
+	doc_id int not null,
+	index_of_word int not null,
+	primary key (word, doc_id, index_of_word)
 );
+
+
 
 create table hippohippogo_db.pages
 (
