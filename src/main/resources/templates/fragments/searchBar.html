@@ -5,14 +5,15 @@
     <title>Search Bar Fragment</title>
 </head>
 <body>
-<div th:fragment="searchBar(query)">
+<div th:fragment="searchBar(query, imageSearch)">
     <link rel="stylesheet" th:href="@{/css/searchBar.css}"/>
     <link rel="stylesheet" th:href="@{/css/icons.css}"/>
+
     <form
             name="x"
             id="search_form_homepage"
             class="search"
-            action="/search"
+            th:action="${imageSearch} ? '/img' : '/search'"
             method="get"
     >
         <div style="margin-right: 2em">

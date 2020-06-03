@@ -32,17 +32,17 @@ $(function () {
     const limit = parseInt(urlParams.get('limit'));
     const region = urlParams.get('region');
     let limitReached = false;
-    const resultTitle1 = $(".result__a");
-    const resultTitle2 = $(".result__check");
-    const resultHyperlink = $(".result__url");
+    const image = $(".tile--img__img");
+    const imageTitle = $(".tile--img__title");
+    const imageHyperlink = $(".tile--img__domain");
     const webResultsTab = $("#link--web");
     const imagesResultsTab = $("#link--images");
     const trendsResultsTab = $("#link--trends");
     const inputRegion = $('#region');
 
     inputRegion.val(region);
-    webResultsTab.attr("href", url);
-    imagesResultsTab.attr("href", url.replace("search", "img"));
+    webResultsTab.attr("href", url.replace("img", "search"));
+    imagesResultsTab.attr("href", url);
 
     // Infinite scrolling (pagination)
     $(window).on("scroll", function () {
@@ -67,14 +67,14 @@ $(function () {
     });
 
     // Listen to users' clicks to record their most frequent domains
-    resultTitle1.on('click', function () {
-        registerClick(this.href);
+    image.on('click', function () {
+        registerClick(this.title);
     });
-    resultTitle2.on('click', function () {
-        registerClick(this.href);
+    imageTitle.on('click', function () {
+        registerClick(this.title);
     });
-    resultHyperlink.on('click', function () {
-        registerClick(this.href);
+    imageHyperlink.on('click', function () {
+        registerClick(this.title);
     });
 
 });
