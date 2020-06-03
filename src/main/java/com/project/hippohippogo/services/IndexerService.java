@@ -120,7 +120,7 @@ public class IndexerService {
             document = document.replaceAll("[^a-zA-Z0-9]", " ");
             /*----------------------------Removing stop words----------------------------*/
             URL url = getClass().getResource("/English_stopwords.txt");
-            List<String> stopwords = Files.readAllLines(Paths.get(url.getPath().substring(1)));
+            List<String> stopwords = Files.readAllLines(Paths.get("E:\\Muhanad\\CUFE\\Third year\\2nd Semester\\Advanced programming\\Project\\hippohippogo-search-engine\\src\\main\\resources\\English_stopwords.txt"));
             //List<String> stopwords = Files.readAllLines(Paths.get("C:\\Users\\Mahmood\\Music\\English_stopwords.txt"));
             ArrayList<String> allWords =
                     Stream.of(document.toLowerCase().split(" +"))
