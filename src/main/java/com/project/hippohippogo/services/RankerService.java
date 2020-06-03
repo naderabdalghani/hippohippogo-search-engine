@@ -191,7 +191,7 @@ public class RankerService {
                     // Handling spam if TF is higher then 0.5 then it's spam and make it equals to 0
                     TF = TF < 0.5 ? TF : 0;
                     // Weighted function from TF-IDF
-                    double TF_IDF = 0.7*TF*IDF;
+                    double TF_IDF = TF*IDF;
                     // If this page used before then add the TF-IDF of the other word to the page
                     pagesHashMap.put(i,pagesHashMap.getOrDefault(i,(double)0)+TF_IDF);
                 }
