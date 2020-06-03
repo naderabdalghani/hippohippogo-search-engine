@@ -7,7 +7,7 @@ import com.maxmind.geoip2.model.CityResponse;
 import com.maxmind.geoip2.record.Country;
 import com.project.hippohippogo.entities.Page;
 import com.project.hippohippogo.entities.PagesConnection;
-import com.project.hippohippogo.entities.image;
+import com.project.hippohippogo.entities.Image;
 import com.project.hippohippogo.repositories.ImageRepository;
 import com.project.hippohippogo.repositories.PagesConnectionRepository;
 import com.project.hippohippogo.repositories.PagesRepository;
@@ -373,14 +373,14 @@ public class CrawlerService {
         }
 
         private void insertImage(String image_link, String source_link, String title, int length, String region, String date) {
-            image i;
+            Image i;
             if(date == "" || date == null) {
-                i = new image(image_link, source_link, title, length, region, false);
+                i = new Image(image_link, source_link, title, length, region, false);
             } else {
-                i = new image(image_link, source_link, title, length, region, date, false);
+                i = new Image(image_link, source_link, title, length, region, date, false);
             }
             ExampleMatcher modelMatcher = ExampleMatcher.matching().withIgnorePaths("id", "indexed");
-            Example<image> imageExample = Example.of(i, modelMatcher);
+            Example<Image> imageExample = Example.of(i, modelMatcher);
             synchronized (imageRepository) {
                 if (!imageRepository.exists(imageExample)) {
                     imageRepository.save(i);

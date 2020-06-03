@@ -3,15 +3,15 @@ package com.project.hippohippogo.ids;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class QueryId implements Serializable {
+public class UserFrequentDomainId implements Serializable {
     private String userIp;
-    private String query;
+    private String domain;
 
-    public QueryId() {}
+    public UserFrequentDomainId() {}
 
-    public QueryId(String userIp, String query) {
+    public UserFrequentDomainId(String userIp, String domain) {
         this.userIp = userIp;
-        this.query = query;
+        this.domain = domain;
     }
 
     public String getUserIp() {
@@ -22,17 +22,17 @@ public class QueryId implements Serializable {
         this.userIp = ip;
     }
 
-    public String getQuery() {
-        return query;
+    public String getDomain() {
+        return domain;
     }
 
-    public void setQuery(String query) {
-        this.query = query;
+    public void setDomain(String query) {
+        this.domain = domain;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userIp, query);
+        return Objects.hash(userIp, domain);
     }
 
     @Override
@@ -46,8 +46,8 @@ public class QueryId implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final QueryId other = (QueryId) obj;
-        if (!Objects.equals(this.query, other.getQuery())) {
+        final UserFrequentDomainId other = (UserFrequentDomainId) obj;
+        if (!Objects.equals(this.domain, other.getDomain())) {
             return false;
         }
         return Objects.equals(this.userIp, other.getUserIp());

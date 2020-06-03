@@ -1,7 +1,6 @@
 package com.project.hippohippogo.repositories;
 
-import com.project.hippohippogo.entities.images_words;
-import com.project.hippohippogo.ids.WordId;
+import com.project.hippohippogo.entities.ImageWord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface imagesWordsRepository extends JpaRepository<images_words, WordId> {
+public interface ImagesWordsRepository extends JpaRepository<ImageWord,Long> {
 
     // Delete all entries of this doc_id from this indexer
     @Query(value = "DELETE FROM images_words WHERE doc_id=?1", nativeQuery = true)

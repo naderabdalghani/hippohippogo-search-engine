@@ -8,15 +8,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.project.hippohippogo.entities.Words;
-import com.project.hippohippogo.entities.images_words;
-import com.project.hippohippogo.repositories.ImagesRepository;
+import com.project.hippohippogo.entities.ImageWord;
+import com.project.hippohippogo.repositories.ImageRepository;
 import com.project.hippohippogo.repositories.PagesRepository;
 import com.project.hippohippogo.repositories.WordsRepository;
-import com.project.hippohippogo.repositories.imagesWordsRepository;
+import com.project.hippohippogo.repositories.ImagesWordsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.tartarus.snowball.ext.englishStemmer;
 
 @Service
@@ -36,17 +34,17 @@ public class IndexerService {
         this.wordsRepository = wordsRepository;
     }
 
-    private ImagesRepository imagesRepository;
+    private ImageRepository imagesRepository;
 
     @Autowired
-    public void setImagesRepository(ImagesRepository imagesRepository) {
+    public void setImagesRepository(ImageRepository imagesRepository) {
         this.imagesRepository = imagesRepository;
     }
 
-    private imagesWordsRepository imageswordsRepository;
+    private ImagesWordsRepository imageswordsRepository;
 
     @Autowired
-    public void setImageswordsRepository(imagesWordsRepository imageswordsRepository) {
+    public void setImageswordsRepository(ImagesWordsRepository imageswordsRepository) {
         this.imageswordsRepository = imageswordsRepository;
     }
 
@@ -215,7 +213,7 @@ public class IndexerService {
                         }
                         else {
                             // Assign to the Database Table "imageswords"
-                            images_words word = new images_words(words.get(i), docs.get(j), indicies.get(k));
+                            ImageWord word = new ImageWord(words.get(i), docs.get(j), indicies.get(k));
                             imagesToSave.add(word);
                             //synchronized (imageswordsRepository) {
                                 //imageswordsRepository.save(word);

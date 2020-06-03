@@ -37,7 +37,7 @@ public interface PagesRepository extends JpaRepository<Page, Integer> {
     @Query(value = "SELECT region FROM pages WHERE id = ?1", nativeQuery = true)
     String getPageRegion(int id);
 
-    // Return page region
+    // Return page date
     @Query(value = "SELECT date_published FROM pages WHERE id = ?1", nativeQuery = true)
     Date getPageDate(int id);
 }
