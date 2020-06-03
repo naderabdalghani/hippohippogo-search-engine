@@ -76,9 +76,11 @@ public class SearchController {
 
     @RequestMapping(value = "/search", produces = "application/json", method = RequestMethod.GET)
     @ResponseBody
-    public List<Page> getWebResultsAsJSON(@RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region) {
-        // List<Integer> resultsIds = queryProcessorService.getPageResults(queryString);
-        List<Integer> resultsIds = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+    public List<Page> getWebResultsAsJSON(@RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
+        region = region.length() == 0 ? null : region;
+        String userIp = request.getRemoteAddr();
+        List<Integer> resultsIds = queryProcessorService.getPageResults(queryString,region,userIp);
+        //List<Integer> resultsIds = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
         Pageable pageable = PageRequest.of(offset, limit);
         List<Page> results = pagesRepository.findAllByIdIn(resultsIds, pageable);
         System.out.print(results);
@@ -95,19 +97,19 @@ public class SearchController {
         // Add query for suggestions if new or increment its hits if it already exists
         region = region.length() == 0 ? null : region;
         String userIp = request.getRemoteAddr();
-        QueryId queryId = new QueryId(userIp, queryString.toLowerCase(), region);
+        QueryId queryId = new QueryId(userIp, queryString.toLowerCase());
         Optional<Query> query = queriesRepository.findById(queryId);
         if (query.isPresent()) {
             query.get().incrementHits();
             queriesRepository.save(query.get());
         } else {
-            Query newQuery = new Query(userIp, queryString.toLowerCase(), region);
+            Query newQuery = new Query(userIp, queryString.toLowerCase());
             queriesRepository.save(newQuery);
         }
 
         // Fetch Results
-        // List<Integer> resultsIds = queryProcessorService.getPageResults(queryString);
-        List<Integer> resultsIds = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+        List<Integer> resultsIds = queryProcessorService.getPageResults(queryString,region,userIp);
+        //List<Integer> resultsIds = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
         Pageable pageable = PageRequest.of(offset, limit);
         List<Page> results = pagesRepository.findAllByIdIn(resultsIds, pageable);
         model.addAttribute("query", queryString);

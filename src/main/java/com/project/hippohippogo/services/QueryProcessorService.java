@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.tartarus.snowball.ext.englishStemmer;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -25,7 +26,8 @@ public class QueryProcessorService {
         //Removing nonalphanumeric characters
         document = document.replaceAll("[^a-zA-Z0-9]", " ");
         //Removing stop words
-        List<String> stopwords = Files.readAllLines(Paths.get("E:\\Muhanad\\CUFE\\Third year\\2nd Semester\\Advanced programming\\Project\\hippohippogo-search-engine\\English_stopwords.txt"));
+        URL url = getClass().getResource("E:\\Muhanad\\CUFE\\Third year\\2nd Semester\\Advanced programming\\Project\\hippohippogo-search-engine\\src\\main\\resources\\English_stopwords.txt");
+        List<String> stopwords = Files.readAllLines(Paths.get("E:\\Muhanad\\CUFE\\Third year\\2nd Semester\\Advanced programming\\Project\\hippohippogo-search-engine\\src\\main\\resources\\English_stopwords.txt"));
         ArrayList<String> allWords =
                 Stream.of(document.toLowerCase().split(" +"))
                         .collect(Collectors.toCollection(ArrayList<String>::new));
@@ -47,7 +49,17 @@ public class QueryProcessorService {
     public List<Integer> getPageResults(String query, String location, String userIP) {
         try {
             String processedQuery = preprocessing(query);
-            return rankerService.getPageURLs(processedQuery,location,userIP);
+            return rankerService.getPageIDs(processedQuery,location,userIP);
+        } catch (IOException e) {
+            return new ArrayList<Integer>();
+        }
+    }
+
+    // Function to get search image results
+    public List<Integer> getImageResults(String query, String location, String userIP) {
+        try {
+            String processedQuery = preprocessing(query);
+            return rankerService.getImageIDS(processedQuery,location,userIP);
         } catch (IOException e) {
             return new ArrayList<Integer>();
         }

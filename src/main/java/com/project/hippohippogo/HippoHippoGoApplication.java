@@ -21,8 +21,9 @@ public class HippoHippoGoApplication {
         //List<Integer> pagesIDs = rankerService.getURLs("football soccer");
     }
 
-    private void initialize(CrawlerService crawlerService,RankerService rankerService) {
-        crawlerService.Crawl();
+    private static void initialize(CrawlerService crawlerService,RankerService rankerService, IndexerService indexer) {
+        //crawlerService.Crawl();
+        //indexer.main();
         rankerService.rankPages();
     }
 }

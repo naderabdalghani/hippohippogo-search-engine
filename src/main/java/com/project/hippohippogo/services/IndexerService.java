@@ -8,15 +8,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.project.hippohippogo.entities.Words;
-import com.project.hippohippogo.entities.images_words;
-import com.project.hippohippogo.repositories.ImagesRepository;
+import com.project.hippohippogo.entities.ImageWord;
+import com.project.hippohippogo.repositories.ImageRepository;
 import com.project.hippohippogo.repositories.PagesRepository;
 import com.project.hippohippogo.repositories.WordsRepository;
-import com.project.hippohippogo.repositories.imagesWordsRepository;
+import com.project.hippohippogo.repositories.ImagesWordsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.tartarus.snowball.ext.englishStemmer;
 
 @Service
@@ -36,23 +34,23 @@ public class IndexerService {
         this.wordsRepository = wordsRepository;
     }
 
-    private ImagesRepository imagesRepository;
+    private ImageRepository imageRepository;
 
     @Autowired
-    public void setImagesRepository(ImagesRepository imagesRepository) {
-        this.imagesRepository = imagesRepository;
+    public void setImagesRepository(ImageRepository imagesRepository) {
+        this.imageRepository = imagesRepository;
     }
 
-    private imagesWordsRepository imageswordsRepository;
+    private ImagesWordsRepository imageswordsRepository;
 
     @Autowired
-    public void setImageswordsRepository(imagesWordsRepository imageswordsRepository) {
+    public void setImageswordsRepository(ImagesWordsRepository imageswordsRepository) {
         this.imageswordsRepository = imageswordsRepository;
     }
 
 
 
-    public final class Pair<String,Integer> {
+    public final class Pair{
         private final String l;
         private final Integer r;
         private Pair(String l, Integer r){
@@ -169,7 +167,7 @@ public class IndexerService {
                     // add current document to the list
                     wordsToDocs.get(wordToSearch).add(pageID);
                     // get indices
-                    Pair x = new Pair<String, Integer>(wordToSearch, pageID);
+                    Pair x = new Pair(wordToSearch, pageID);
                     wordAndDocToIndicies.put(x, new Vector<Integer>());
                     for (int i = k; i < stemmedWords.size(); i++) {
                         if (wordToSearch.equals(stemmedWords.get(i))) {
@@ -189,6 +187,8 @@ public class IndexerService {
             // Get list of words
             ArrayList<String> words = new ArrayList<String>(wordsToDocs.keySet());
             System.out.println(words);
+            ArrayList<Words> wordsToSave=new ArrayList<>();
+            ArrayList<ImageWord> imagesToSave=new ArrayList<>();
             for (int i = 0; i < words.size(); i++) {
                 // Get list of docIds the word appeared in them
                 ArrayList<Integer> docs = new ArrayList<Integer>(wordsToDocs.get(words.get(i)));
@@ -196,7 +196,7 @@ public class IndexerService {
                 System.out.println(docs);
                 for (int j = 0; j < docs.size(); j++) {
                     // Pair of the word in that docID Return with list of indicies where the word occur
-                    Pair<String, Integer> x = new Pair<>(words.get(i), docs.get(j));
+                    Pair x = new Pair(words.get(i), docs.get(j));
                     System.out.println(x.print());
                     System.out.println(wordAndDocToIndicies.get(x));
                     Vector<Integer> indicies;
@@ -206,21 +206,32 @@ public class IndexerService {
                         if (this.type==0) {
                             // Assign to the Database Table "words"
                             Words word = new Words(words.get(i), docs.get(j), indicies.get(k));
-                            synchronized (wordsRepository) {
-                                wordsRepository.save(word);
-                            }
+                            wordsToSave.add(word);
+                            //synchronized (wordsRepository) {
+                              //  wordsRepository.save(word);
+                            //}
                         }
                         else {
                             // Assign to the Database Table "imageswords"
-                            images_words word = new images_words(words.get(i), docs.get(j), indicies.get(k));
-                            synchronized (imageswordsRepository) {
-                                imageswordsRepository.save(word);
-                            }
+                            ImageWord word = new ImageWord(words.get(i), docs.get(j), indicies.get(k));
+                            imagesToSave.add(word);
+                            //synchronized (imageswordsRepository) {
+                                //imageswordsRepository.save(word);
+                            //}
                         }
                     }
-                }
-            }
 
+                }
+
+            }
+            if (this.type==0)
+            {
+                wordsRepository.saveAll(wordsToSave);
+            }
+            else
+            {
+                imageswordsRepository.saveAll(imagesToSave);
+            }
         }
 
         public void index (){
@@ -272,7 +283,7 @@ public class IndexerService {
                 }
                 else
                 {
-                    imagesRepository.setImagesIndexed(webpagesIds.get(i));
+                    imageRepository.setImagesIndexed(webpagesIds.get(i));
                 }
             }
 
@@ -309,9 +320,9 @@ public class IndexerService {
         // Get Webpages Ids
         ArrayList<Integer> webpagesIds= pagesRepository.getWebPagesIds();
         // Get images content
-        ArrayList<String> imagepages= imagesRepository.getImageContent();
+        //ArrayList<String> imagepages= imagesRepository.getImageContent();
         // Get images Ids
-        ArrayList<Integer> imagepagesIds= imagesRepository.getImagesIds();
+        //ArrayList<Integer> imagepagesIds= imagesRepository.getImagesIds();
 
 
         //String html = "<html><head><title>First parse</title></head>"
@@ -321,13 +332,27 @@ public class IndexerService {
         //        + "<body><p>Parsed? ,,HTML.!? into a doc.   ?  ? /</p></body></html>";
         //webpages.add(html);
         //webpages.add(html2);
-        (new Thread(new IndexerService.IndexerThreaded(0,webpages.size()/5,webpages,webpagesIds,0))).start();
-        (new Thread(new IndexerService.IndexerThreaded(webpages.size()/5,2*(webpages.size()/5),webpages,webpagesIds,0))).start();
-        (new Thread(new IndexerService.IndexerThreaded(2*(webpages.size()/5),3*(webpages.size()/5),webpages,webpagesIds,0))).start();
-        (new Thread(new IndexerService.IndexerThreaded(3*(webpages.size()/5),4*(webpages.size()/5),webpages,webpagesIds,0))).start();
-        (new Thread(new IndexerService.IndexerThreaded(4*(webpages.size()/5),webpages.size(),webpages,webpagesIds,0))).start();
-        (new Thread(new IndexerService.IndexerThreaded(0,imagepages.size(),imagepages,imagepagesIds,1))).start();
-
+        Thread t1 =new Thread(new IndexerService.IndexerThreaded(0,webpages.size()/5,webpages,webpagesIds,0));
+        Thread t2 =new Thread(new IndexerService.IndexerThreaded(webpages.size()/5,2*(webpages.size()/5),webpages,webpagesIds,0));
+        Thread t3 =new Thread(new IndexerService.IndexerThreaded(2*(webpages.size()/5),3*(webpages.size()/5),webpages,webpagesIds,0));
+        Thread t4 =new Thread(new IndexerService.IndexerThreaded(3*(webpages.size()/5),4*(webpages.size()/5),webpages,webpagesIds,0));
+        Thread t5 =new Thread(new IndexerService.IndexerThreaded(4*(webpages.size()/5),webpages.size(),webpages,webpagesIds,0));
+        //(new Thread(new IndexerService.IndexerThreaded(0,imagepages.size(),imagepages,imagepagesIds,1))).start();
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+        t5.start();
+        try {
+            t1.join();
+            t2.join();
+            t3.join();
+            t4.join();
+            t5.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Indexer has finished");
     }
 
 
