@@ -11,8 +11,11 @@ import java.util.List;
 @Repository
 public interface UsersFrequentDomainsRepository extends JpaRepository<UserFrequentDomain, UserFrequentDomainId> {
 
-    // Getting top 20 pages the user went to
-    @Query(value = "SELECT * FROM users_frequent_domains WHERE user_ip=?1 ORDER BY rank DESC LIMIT 20", nativeQuery = true)
-    List<UserFrequentDomain> getUserBestDomains(int user_id);
+    // Getting number of hits of a domain
+    @Query(value = "SELECT hits FROM users_frequent_domains WHERE user_ip = ?1 and domain = ?2", nativeQuery = true)
+    int getDomainHits(int user_id, String domain);
 
+    // Getting domain hits
+    @Query(value = "SELECT SUM(hits) FROM users_frequent_domains WHERE user_ip = ?1", nativeQuery = true)
+    int getUserDomainSum(int user_id, String domain);
 }

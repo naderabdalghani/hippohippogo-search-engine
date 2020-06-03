@@ -272,6 +272,8 @@ public class RankerService {
             // Getting publication date of page
             Date date = imageRepository.getImageDate((int)mapElement.getKey()) != null ? pagesRepository.getPageDate((int)mapElement.getKey()) : defaultPubDate;
             Date currentDate = new Date();
+            // Frequent domains sum
+
             // Getting location of the page
             double loc = (location != null && location.equalsIgnoreCase(imageRepository.getImageRegion((int)mapElement.getKey()))) ? 0.15 : 0;
             // Weighted function from TF-IDF, Page Rank, Time, Location, and personalized search
