@@ -3,7 +3,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "images_words")
-public class images_words {
+public class ImageWord {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="\"id\"")
@@ -15,10 +15,10 @@ public class images_words {
     @Column(name="\"index_of_word\"")
     private int index_of_word;
 
-    public images_words() {
+    public ImageWord() {
     }
 
-    public images_words( String word, int doc_id, int index_of_word) {
+    public ImageWord(String word, int doc_id, int index_of_word) {
         this.id = id;
         this.word = word;
         this.doc_id = doc_id;
