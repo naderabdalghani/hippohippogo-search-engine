@@ -122,12 +122,12 @@
                     </div>
                 </div>
                 <div class="tile-wrap">
-                    <div id="img_results" class="zci__main  zci__main--tiles  js-tiles   has-nav tileview__images has-tiles--grid"
+                    <div class="zci__main  zci__main--tiles  js-tiles   has-nav tileview__images has-tiles--grid"
                     >
                         <div th:if="${results.empty}">
                             <h5>No images found for <b th:text="${query}"></b>.</h5>
                         </div>
-                        <div th:unless="${results.empty}">
+                        <div th:unless="${results.empty}" id="img_results">
                             <div class="tile tile--img has-detail" th:each="result : ${results}" style="max-width: 25em">
                                 <div th:replace="fragments/result :: imageResult(${result.getTitle()}, ${result.getImage_link()}, ${result.getSource_link()})">
                                 </div>
