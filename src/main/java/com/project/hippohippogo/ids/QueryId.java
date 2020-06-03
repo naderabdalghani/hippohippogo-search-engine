@@ -6,14 +6,12 @@ import java.util.Objects;
 public class QueryId implements Serializable {
     private String userIp;
     private String query;
-    private String region;
 
     public QueryId() {}
 
-    public QueryId(String userIp, String query, String region) {
+    public QueryId(String userIp, String query) {
         this.userIp = userIp;
         this.query = query;
-        this.region = region;
     }
 
     public String getUserIp() {
@@ -32,17 +30,9 @@ public class QueryId implements Serializable {
         this.query = query;
     }
 
-    public String getRegion() {
-        return region;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
-    }
-
     @Override
     public int hashCode() {
-        return Objects.hash(userIp, query, region);
+        return Objects.hash(userIp, query);
     }
 
     @Override
@@ -58,9 +48,6 @@ public class QueryId implements Serializable {
         }
         final QueryId other = (QueryId) obj;
         if (!Objects.equals(this.query, other.getQuery())) {
-            return false;
-        }
-        if (!Objects.equals(this.region, other.getRegion())) {
             return false;
         }
         return Objects.equals(this.userIp, other.getUserIp());
