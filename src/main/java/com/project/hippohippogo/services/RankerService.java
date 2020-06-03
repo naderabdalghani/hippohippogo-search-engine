@@ -229,8 +229,9 @@ public class RankerService {
             Date currentDate = new Date();
             // Personalize search weight for rank function
             double personalizedSearch;
-            if (usersFrequentDomainsRepository.isUserDomainExists(userIP,getBaseURL(pagesRepository.getPageLink((int)mapElement.getKey()))) == 1) {
-                personalizedSearch = (double)usersFrequentDomainsRepository.getDomainHits(userIP,getBaseURL(pagesRepository.getPageLink((int)mapElement.getKey()))) / usersFrequentDomainsRepository.getUserDomainSum(userIP);
+            String domain = getBaseURL(pagesRepository.getPageLink((int)mapElement.getKey()));
+            if (usersFrequentDomainsRepository.isUserDomainExists(userIP,domain) == 1) {
+                personalizedSearch = (double)usersFrequentDomainsRepository.getDomainHits(userIP,domain) / usersFrequentDomainsRepository.getUserDomainSum(userIP);
             }
             else {
                 personalizedSearch = 0;
@@ -289,8 +290,9 @@ public class RankerService {
             Date currentDate = new Date();
             // Personalize search weight for rank function
             double personalizedSearch;
-            if (usersFrequentDomainsRepository.isUserDomainExists(userIP,getBaseURL(imageRepository.getImageLink((int)mapElement.getKey()))) == 1) {
-                personalizedSearch = (double)usersFrequentDomainsRepository.getDomainHits(userIP,getBaseURL(imageRepository.getImageLink((int)mapElement.getKey()))) / usersFrequentDomainsRepository.getUserDomainSum(userIP);
+            String domain = getBaseURL(imageRepository.getImageLink((int)mapElement.getKey()));
+            if (usersFrequentDomainsRepository.isUserDomainExists(userIP,domain) == 1) {
+                personalizedSearch = (double)usersFrequentDomainsRepository.getDomainHits(userIP,domain) / usersFrequentDomainsRepository.getUserDomainSum(userIP);
             }
             else {
                 personalizedSearch = 0;
