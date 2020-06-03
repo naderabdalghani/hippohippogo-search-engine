@@ -1,6 +1,6 @@
 create schema hippohippogo_db collate utf8mb4_0900_ai_ci;
 
-create table hibernate_sequences
+create table hippohippogo_db.hibernate_sequences
 (
     sequence_name VARCHAR(1000) NOT NULL,
     next_val      INTEGER       NOT NULL
@@ -20,11 +20,13 @@ create table hippohippogo_db.images
 
 create table hippohippogo_db.images_words
 (
-    word          varchar(255) not null,
-    doc_id        int          not null,
-    index_of_word int          not null,
-    primary key (word, doc_id, index_of_word)
+	word varchar(255) not null,
+	doc_id int not null,
+	index_of_word int not null,
+	primary key (word, doc_id, index_of_word)
 );
+
+
 
 create table hippohippogo_db.page_rank
 (
@@ -60,11 +62,13 @@ create table hippohippogo_db.users_frequent_domains
 
 create table hippohippogo_db.words
 (
-    word          varchar(255) not null,
-    doc_id        int          not null,
-    index_of_word int          not null,
-    primary key (word, doc_id, index_of_word)
+	word varchar(255) not null,
+	doc_id int not null,
+	index_of_word int not null,
+	primary key (word, doc_id, index_of_word)
 );
+
+
 
 create table hippohippogo_db.pages
 (

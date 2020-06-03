@@ -50,7 +50,7 @@ public class IndexerService {
 
 
 
-    public final class Pair<String,Integer> {
+    public final class Pair{
         private final String l;
         private final Integer r;
         private Pair(String l, Integer r){
@@ -120,8 +120,8 @@ public class IndexerService {
             document = document.replaceAll("[^a-zA-Z0-9]", " ");
             /*----------------------------Removing stop words----------------------------*/
             URL url = getClass().getResource("/English_stopwords.txt");
-            List<String> stopwords = Files.readAllLines(Paths.get(url.getPath().substring(1)));
-            //List<String> stopwords = Files.readAllLines(Paths.get("C:\\Users\\Mahmood\\Music\\English_stopwords.txt"));
+            //System.out.println(url.getPath());
+            List<String> stopwords = Files.readAllLines(Paths.get("D:\\third year\\APT\\final assessment\\hippohippogo-search-engine\\src\\main\\resources\\English_stopwords.txt"));
             ArrayList<String> allWords =
                     Stream.of(document.toLowerCase().split(" +"))
                             .collect(Collectors.toCollection(ArrayList<String>::new));
@@ -167,7 +167,7 @@ public class IndexerService {
                     // add current document to the list
                     wordsToDocs.get(wordToSearch).add(pageID);
                     // get indices
-                    Pair x = new Pair<String, Integer>(wordToSearch, pageID);
+                    Pair x = new Pair(wordToSearch, pageID);
                     wordAndDocToIndicies.put(x, new Vector<Integer>());
                     for (int i = k; i < stemmedWords.size(); i++) {
                         if (wordToSearch.equals(stemmedWords.get(i))) {
@@ -196,7 +196,7 @@ public class IndexerService {
                 System.out.println(docs);
                 for (int j = 0; j < docs.size(); j++) {
                     // Pair of the word in that docID Return with list of indicies where the word occur
-                    Pair<String, Integer> x = new Pair<>(words.get(i), docs.get(j));
+                    Pair x = new Pair(words.get(i), docs.get(j));
                     System.out.println(x.print());
                     System.out.println(wordAndDocToIndicies.get(x));
                     Vector<Integer> indicies;
