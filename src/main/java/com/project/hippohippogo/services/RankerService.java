@@ -138,7 +138,7 @@ public class RankerService {
         return getString(link);
     }
 
-    static String getString(String link) {
+    public static String getString(String link) {
         Matcher httpsMatcher = Pattern.compile("^https://www.(.*?)/").matcher(link);
         Matcher httpsMatcher1 = Pattern.compile("^https://www.(.*?)").matcher(link);
         Matcher httpsMatcher2 = Pattern.compile("^https://(.*?)/").matcher(link);
