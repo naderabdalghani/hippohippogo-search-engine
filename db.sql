@@ -80,3 +80,11 @@ create table hippohippogo_db.pages
     date_published date       null,
     indexed        tinyint(1) default 0 null
 );
+
+create table search_queries
+(
+	query varchar(255) not null
+		primary key,
+	hits int not null
+);
+
