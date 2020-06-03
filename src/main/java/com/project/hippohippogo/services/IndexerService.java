@@ -1,5 +1,6 @@
 package com.project.hippohippogo.services;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -118,7 +119,8 @@ public class IndexerService {
             /*--------------------Removing nonalphanumeric characters--------------------*/
             document = document.replaceAll("[^a-zA-Z0-9]", " ");
             /*----------------------------Removing stop words----------------------------*/
-            List<String> stopwords = Files.readAllLines(Paths.get("C:\\Users\\Mahmood\\Music\\English_stopwords.txt"));
+            URL url = getClass().getResource("/English_stopwords.txt");
+            List<String> stopwords = Files.readAllLines(Paths.get(url.getPath().substring(1)));
             ArrayList<String> allWords =
                     Stream.of(document.toLowerCase().split(" +"))
                             .collect(Collectors.toCollection(ArrayList<String>::new));
