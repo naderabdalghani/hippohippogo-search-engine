@@ -202,7 +202,10 @@ public class IndexerService {
                 String url = pagesRepository.getPageLink(this.webpagesIds.get(i));
                 Document doc = null;
                 try {
-                    doc = Jsoup.connect(url).get();
+                    if (url != null)
+                        doc = Jsoup.connect(url).get();
+                    else
+                        continue;
                 } catch (IOException e) {
                     continue;
                 }
