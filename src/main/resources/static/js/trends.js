@@ -270,8 +270,13 @@ $(function () {
     const inputField = $('#search_form_input');
     const searchButton = $('#search_button');
     const trendsContainer = $('.results--main');
+    const regionField = $('#regionValue');
 
     inputRegion.val(region);
+
+    regionField.on('change', function () {
+        window.location = window.location.origin + '/' + 'trends?' + 'region=' + regionField.val();
+    });
 
     $.getJSON("http://localhost:8080/trends", {
         region: region
