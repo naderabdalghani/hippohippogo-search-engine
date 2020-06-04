@@ -168,6 +168,22 @@ public class SearchController {
         return "imageResults";
     }
 
+    @RequestMapping(value = "/trends", produces = "text/html", method = RequestMethod.GET)
+    public String getImgResultsAsHTML(Model model, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
+        Locale locale  = new Locale("", region.toUpperCase());
+        List<Trends> results;
+        if (region.length() != 0) {
+            results = trendsRepository.findTopTenByRegion(region);
+        }
+        else {
+            results = trendsRepository.findTopTenOverall();
+        }
+        model.addAttribute("results", results);
+        model.addAttribute("region", region);
+        model.addAttribute("regionName", locale.getDisplayCountry());
+        return "trends";
+    }
+
     public void checkIfPerson(String query)
     {
         boolean prevPerson=false;
