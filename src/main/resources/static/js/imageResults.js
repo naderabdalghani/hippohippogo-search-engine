@@ -40,10 +40,11 @@ $(function () {
     const imagesResultsTab = $("#link--images");
     const trendsResultsTab = $("#link--trends");
     const inputRegion = $('#region');
-
+    const trendsURL = window.location.origin + '/' + 'trends?' + 'region=' + region;
     inputRegion.val(region);
     webResultsTab.attr("href", url.replace("img", "search"));
     imagesResultsTab.attr("href", url);
+    trendsResultsTab.attr("href", trendsURL);
 
     // Infinite scrolling (pagination)
     $(window).on("scroll", function () {
