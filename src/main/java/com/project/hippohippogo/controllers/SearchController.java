@@ -169,7 +169,16 @@ public class SearchController {
     }
 
     @RequestMapping(value = "/trends", produces = "text/html", method = RequestMethod.GET)
-    public String getImgResultsAsHTML(Model model, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
+    public String getTrendsAsHTML(Model model, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
+        Locale locale  = new Locale("", region.toUpperCase());
+        model.addAttribute("region", region);
+        model.addAttribute("regionName", locale.getDisplayCountry());
+        return "trends";
+    }
+
+    @RequestMapping(value = "/trends", produces = "application/json", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Trends> getTrendsAsJSON(Model model, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
         Locale locale  = new Locale("", region.toUpperCase());
         List<Trends> results;
         if (region.length() != 0) {
@@ -178,10 +187,7 @@ public class SearchController {
         else {
             results = trendsRepository.findTopTenOverall();
         }
-        model.addAttribute("results", results);
-        model.addAttribute("region", region);
-        model.addAttribute("regionName", locale.getDisplayCountry());
-        return "trends";
+        return results;
     }
 
     public void checkIfPerson(String query)
