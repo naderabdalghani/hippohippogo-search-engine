@@ -90,3 +90,12 @@ create table hippohippogo_db.trends
     region varchar(2)    not null,
     primary key (person, region)
 );
+
+create table hippohippogo_db.words_occurrences
+(
+    word        varchar(255) not null,
+    doc_id      int          not null,
+    titlecount  int          not null,
+    headercount int          not null,
+    primary key (word, doc_id, titlecount, headercount)
+);

@@ -22,6 +22,7 @@ public class RankerService {
     private ImageRepository imageRepository;
     private ImagesWordsRepository imagesWordsRepository;
     private UsersFrequentDomainsRepository usersFrequentDomainsRepository;
+    private WordsOccurrencesRepository wordsOccurrencesRepository;
 
 
     @Autowired
@@ -56,6 +57,11 @@ public class RankerService {
     @Autowired
     public void setUsersFrequentDomainsRepository (UsersFrequentDomainsRepository usersFrequentDomainsRepository) {
         this.usersFrequentDomainsRepository = usersFrequentDomainsRepository;
+    }
+
+    @Autowired
+    public void setWordsOccurrencesRepository (WordsOccurrencesRepository wordsOccurrencesRepository) {
+        this.wordsOccurrencesRepository = wordsOccurrencesRepository;
     }
 
     // This function is used to set pages rank in its table
@@ -207,6 +213,9 @@ public class RankerService {
                     // Getting page rank element of the page
                     int docLength = pagesRepository.getPageLength(i);
                     int wordCount = wordsRepository.getWordCountInDoc(s,i);
+                    if (wordsOccurrencesRepository.isWordExists(i,s) == 1) {
+                        wordCount += wordsOccurrencesRepository.getTitleCount(i,s)*2 + wordsOccurrencesRepository.getHeaderCount(i,s);
+                    }
                     TF = (double)wordCount/docLength;
                     // Handling spam if TF is higher then 0.5 then it's spam and make it equals to 0
                     TF = TF < 0.5 ? TF : 0;
