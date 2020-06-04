@@ -20,6 +20,7 @@ import opennlp.tools.tokenize.SimpleTokenizer;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
 import opennlp.tools.util.Span;
+import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -251,6 +252,7 @@ public class SearchController {
         {
             Region="";
         }
+        query = WordUtils.capitalizeFully(query);
             //InputStream inputStream = new FileInputStream("C:/OpenNLP_models/en-ner-person.bin");
         ArrayList<String> names=new ArrayList<String>();
         InputStream inputStream = getClass().getResourceAsStream("/en-ner-person.zip");
