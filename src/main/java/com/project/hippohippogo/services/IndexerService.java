@@ -150,6 +150,7 @@ public class IndexerService {
                 stemmer.stem();
                 stemmedWords.add(stemmer.getCurrent());
             }
+            stemmedWords.removeAll(Collections.singleton(""));
             //System.out.println(stemmedWords);
             //String resultafterstemming = stemmedWords.stream().collect(Collectors.joining(" "));
             //System.out.println(resultafterstemming);
