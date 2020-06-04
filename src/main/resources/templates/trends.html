@@ -7,6 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title th:text="${region == ''} ? 'HippoHippoGo Global Trends' : 'HippoHippoGo ' + ${regionName} + ' Trends'"></title>
     <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css}">
+    <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css}">
     <link
             rel="stylesheet"
             media="handheld, all"
@@ -87,9 +88,9 @@
     </div>
     <div id="web_content_wrapper" class="content-wrap">
         <div class="serp__top-right js-serp-top-right"></div>
-        <div class="cw">
-            <div id="links_wrapper" class="serp__results js-serp-results">
-                <div class="results--main">
+        <div class="cw" style="max-width: none">
+            <div id="links_wrapper" class="serp__results js-serp-results" style="max-width: none; padding-right: 100px">
+                <div class="results--main" style="max-width: none">
                     <div class="search-filters-wrap" style="overflow: visible">
                         <div class="js-search-filters search-filters" style="overflow: visible">
                             <div class="dropdown dropdown--region">
@@ -97,13 +98,16 @@
                             </div>
                         </div>
                     </div>
-                    <h1>Trends</h1>
+                </div>
+                <div>
+                    <canvas id="bar-chart" style="padding-bottom: 50px"></canvas>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js}"></script>
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js}"></script>
 <script>
     $('.ui.dropdown').dropdown();
 </script>
