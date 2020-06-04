@@ -20,6 +20,6 @@ public interface UsersFrequentDomainsRepository extends JpaRepository<UserFreque
     int getUserDomainSum(String userIP);
 
     // Check if the domain is exist
-    @Query(value = "SELECT EXISTS(SELECT * FROM users_frequent_domains WHERE user_ip = ?1) ", nativeQuery = true)
+    @Query(value = "SELECT EXISTS(SELECT * FROM users_frequent_domains WHERE user_ip = ?1 and domain = ?2) ", nativeQuery = true)
     int isUserDomainExists(String userIP, String domain);
 }
