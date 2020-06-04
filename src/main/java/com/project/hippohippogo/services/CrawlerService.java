@@ -102,7 +102,7 @@ public class CrawlerService {
 //            imageRepository.deleteAll();
 //        }
 
-        Thread t0 = new Thread(new CrawlerThreaded("https://www.geeksforgeeks.org/category/algorithm/", status));
+        Thread t0 = new Thread(new CrawlerThreaded("https://www.imdb.com/", status));
         Thread t1 = new Thread(new CrawlerThreaded("https://www.who.int/", status));
         Thread t2 = new Thread(new CrawlerThreaded("https://www.bbc.com/", status));
         Thread t3 = new Thread(new CrawlerThreaded("https://www.nationalgeographic.com/", status));
@@ -114,11 +114,11 @@ public class CrawlerService {
         t3.setName("thread_3");
         t4.setName("thread_4");
 
-        t0.start();
+//        t0.start();
 //        t1.start();
 //        t2.start();
 //        t3.start();
-//        t4.start();
+        t4.start();
 
         try {
             t0.join();
@@ -143,7 +143,7 @@ public class CrawlerService {
 
         public CrawlerThreaded(String seed, int status) {
             count = 0;
-            till = 1000;
+            till = 2000;
             MainSeed = seed;
             this.status = status;
         }
@@ -432,10 +432,14 @@ public class CrawlerService {
             ReadQueue();
             try {
                 File myObj = new File("state/count" + Thread.currentThread().getName() + ".txt");
-                Scanner myReader = new Scanner(myObj);
-                String data = myReader.nextLine();
-                count = Integer.parseInt(data);
-                myReader.close();
+                if(myObj.length() > 0) {
+                    Scanner myReader = new Scanner(myObj);
+                    String data = myReader.nextLine();
+                    count = Integer.parseInt(data);
+                    myReader.close();
+                } else {
+                    count = till;
+                }
             } catch (FileNotFoundException e) {
                 System.out.println("An error occurred.");
                 e.printStackTrace();
@@ -461,7 +465,7 @@ public class CrawlerService {
             //I could not use the database because of each thread has its own queue and tha database stores the visited for all threads
             try {
                 File myObj = new File("state/visited" + Thread.currentThread().getName() + ".txt");
-                Scanner myReader = new Scanner(myObj);
+                Scanner myReader = new  Scanner(myObj);
                 while (myReader.hasNextLine()) {
                     String data = myReader.nextLine();
                     VisitedQueue.add(data);
