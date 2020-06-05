@@ -177,6 +177,9 @@ public class SearchController {
         } else {
             results = trendsRepository.findTopTenOverall();
         }
+        for (Trends result : results) {
+            result.setPerson(WordUtils.capitalizeFully(result.getPerson()));
+        }
         return results;
     }
 
