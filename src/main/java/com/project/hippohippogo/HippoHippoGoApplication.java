@@ -18,10 +18,11 @@ public class HippoHippoGoApplication {
         CrawlerService crawlerService = applicationContext.getBean(CrawlerService.class);
         crawlerService.Crawl();
         System.out.print("the indexer begins######################################################################################################################3");
-        IndexerService indexer = applicationContext.getBean(IndexerService.class);
-        //indexer.main();
+//        IndexerService indexer = applicationContext.getBean(IndexerService.class);
+//        indexer.main();
 
-        //RankerService rankerService = applicationContext.getBean(RankerService.class);
+//        RankerService rankerService = applicationContext.getBean(RankerService.class);
+//        rankerService.rankPages();
         //List<Integer> pagesIDs = rankerService.getURLs("football soccer");
     }
 
