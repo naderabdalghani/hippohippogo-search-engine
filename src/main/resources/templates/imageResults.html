@@ -120,7 +120,7 @@
                     <div class="zci__main  zci__main--tiles  js-tiles   has-nav tileview__images has-tiles--grid"
                     >
                         <div th:if="${results.empty}">
-                            <h5>No images found for <b th:text="${query}"></b>.</h5>
+                            <h5 style="font-size: 20px; color: black">No images found for <b style="font-weight: bold" th:text="${query}"></b>.</h5>
                         </div>
                         <div th:unless="${results.empty}" id="img_results">
                             <div class="tile tile--img has-detail" th:each="result : ${results}" style="max-width: 25em">
