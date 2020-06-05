@@ -3,7 +3,6 @@ package com.project.hippohippogo.controllers;
 import com.project.hippohippogo.entities.*;
 import com.project.hippohippogo.ids.QueryId;
 import com.project.hippohippogo.ids.TrendsId;
-import com.project.hippohippogo.repositories.DummyRepository;
 import com.project.hippohippogo.repositories.PagesRepository;
 import com.project.hippohippogo.repositories.QueriesRepository;
 import com.project.hippohippogo.repositories.TrendsRepository;
@@ -43,17 +42,11 @@ import java.util.stream.Stream;
 @Controller
 public class SearchController {
 
-    private DummyRepository dummyRepository;
     private QueriesRepository queriesRepository;
     private PagesRepository pagesRepository;
     private QueryProcessorService queryProcessorService;
     private TrendsRepository trendsRepository;
     private ImageRepository imageRepository;
-
-    @Autowired
-    public void setDummyRepository(DummyRepository dummyRepository) {
-        this.dummyRepository = dummyRepository;
-    }
 
     @Autowired
     public void setImageRepository(ImageRepository imageRepository) {
