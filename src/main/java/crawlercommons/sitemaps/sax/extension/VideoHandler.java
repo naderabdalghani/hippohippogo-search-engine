@@ -16,19 +16,18 @@
 
 package crawlercommons.sitemaps.sax.extension;
 
-import static crawlercommons.sitemaps.SiteMapParser.LOG;
-
-import java.util.Map;
-import java.util.TreeMap;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
 import crawlercommons.sitemaps.extension.ExtensionMetadata;
 import crawlercommons.sitemaps.extension.VideoAttributes;
 import crawlercommons.sitemaps.extension.VideoAttributes.VideoPrice;
 import crawlercommons.sitemaps.extension.VideoAttributes.VideoPriceResolution;
 import crawlercommons.sitemaps.extension.VideoAttributes.VideoPriceType;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
+import java.util.Map;
+import java.util.TreeMap;
+
+import static crawlercommons.sitemaps.SiteMapParser.LOG;
 
 /** Handle SAX events in the Google Video sitemap extension namespace. */
 public class VideoHandler extends ExtensionHandler {

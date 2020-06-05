@@ -16,11 +16,11 @@
 
 package crawlercommons.domains;
 
-import java.net.URL;
-import java.util.regex.Pattern;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.URL;
+import java.util.regex.Pattern;
 
 /**
  * Routines to extract the PLD (paid-level domain, as per the IRLbot paper) from

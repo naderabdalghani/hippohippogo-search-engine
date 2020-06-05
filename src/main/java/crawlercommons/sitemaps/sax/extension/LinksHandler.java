@@ -16,14 +16,13 @@
 
 package crawlercommons.sitemaps.sax.extension;
 
-import java.net.URL;
-import java.util.Map;
-import java.util.TreeMap;
-
+import crawlercommons.sitemaps.extension.LinkAttributes;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import crawlercommons.sitemaps.extension.LinkAttributes;
+import java.net.URL;
+import java.util.Map;
+import java.util.TreeMap;
 
 /** Handle SAX events in the Google Image sitemap extension namespace. */
 public class LinksHandler extends ExtensionHandler {

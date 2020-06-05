@@ -1,7 +1,6 @@
 package com.project.hippohippogo.entities;
-import com.project.hippohippogo.ids.QueryId;
+
 import com.project.hippohippogo.ids.WordId;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 

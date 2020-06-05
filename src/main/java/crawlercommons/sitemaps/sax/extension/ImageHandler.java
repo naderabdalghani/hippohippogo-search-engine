@@ -16,11 +16,10 @@
 
 package crawlercommons.sitemaps.sax.extension;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
 import crawlercommons.sitemaps.extension.ExtensionMetadata;
 import crawlercommons.sitemaps.extension.ImageAttributes;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 /** Handle SAX events in the Google Image sitemap extension namespace. */
 public class ImageHandler extends ExtensionHandler {

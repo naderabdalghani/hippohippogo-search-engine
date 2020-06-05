@@ -2,6 +2,7 @@ package com.project.hippohippogo.entities;
 
 
 import com.project.hippohippogo.ids.UserFrequentDomainId;
+
 import javax.persistence.*;
 
 @Entity

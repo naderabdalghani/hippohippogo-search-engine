@@ -1,14 +1,7 @@
 package com.project.hippohippogo.services;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import com.project.hippohippogo.entities.Words;
 import com.project.hippohippogo.entities.ImageWord;
+import com.project.hippohippogo.entities.Words;
 import com.project.hippohippogo.entities.WordsOccurrences;
 import com.project.hippohippogo.repositories.*;
 import org.jsoup.Jsoup;
@@ -16,6 +9,14 @@ import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tartarus.snowball.ext.englishStemmer;
+
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class IndexerService {

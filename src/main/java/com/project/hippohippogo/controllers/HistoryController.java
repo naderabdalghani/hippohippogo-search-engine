@@ -1,20 +1,17 @@
 package com.project.hippohippogo.controllers;
 
-import com.project.hippohippogo.entities.Query;
 import com.project.hippohippogo.entities.UserFrequentDomain;
-import com.project.hippohippogo.ids.QueryId;
 import com.project.hippohippogo.ids.UserFrequentDomainId;
 import com.project.hippohippogo.repositories.UsersFrequentDomainsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 import static com.project.hippohippogo.services.RankerService.getString;
 
 @RestController
