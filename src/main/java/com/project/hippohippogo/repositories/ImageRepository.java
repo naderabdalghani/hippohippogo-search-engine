@@ -41,4 +41,6 @@ public interface ImageRepository extends JpaRepository<Image, Integer> {
     // Return image date
     @Query(value = "SELECT date_published FROM images WHERE id = ?1", nativeQuery = true)
     Date getImageDate(int id);
+
+    List<Image> findImageByImageLinkAndSourceLink(String imageLink, String SourceLink);
 }

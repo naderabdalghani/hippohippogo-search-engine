@@ -10,9 +10,9 @@ public class Image {
     @Column(name="\"id\"")
     private Integer id;
     @Column(name="\"image_link\"")
-    private String image_link;
+    private String imageLink;
     @Column(name="\"source_link\"")
-    private String source_link;
+    private String sourceLink;
     @Column(name="\"title\"")
     private String title;
     @Column(name="\"length\"")
@@ -27,9 +27,9 @@ public class Image {
 
     public Image() { }
 
-    public Image(String image_link, String source_link, String title, int length, String region, String date_published, Boolean indexed) {
-        setImage_link(image_link);
-        setSource_link(source_link);
+    public Image(String imageLink, String sourceLink, String title, int length, String region, String date_published, Boolean indexed) {
+        setImageLink(imageLink);
+        setSourceLink(sourceLink);
         setTitle(title);
         setLength(length);
         setRegion(region);
@@ -37,21 +37,25 @@ public class Image {
         setIndex(indexed);
     }
 
-    public Image(String image_link, String source_link, String title, int length, String region, Boolean indexed) {
-        setImage_link(image_link);
-        setSource_link(source_link);
+    public Image(String imageLink, String sourceLink, String title, int length, String region, Boolean indexed) {
+        setImageLink(imageLink);
+        setSourceLink(sourceLink);
         setTitle(title);
         setLength(length);
         setRegion(region);
         setIndex(indexed);
     }
 
-    public void setImage_link(String image_link) {
-        this.image_link = image_link;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public void setSource_link(String source_link) {
-        this.source_link = source_link;
+    public void setImageLink(String image_link) {
+        this.imageLink = image_link;
+    }
+
+    public void setSourceLink(String source_link) {
+        this.sourceLink = source_link;
     }
 
     public void setTitle(String title) {
@@ -78,12 +82,12 @@ public class Image {
         return id;
     }
 
-    public String getImage_link() {
-        return image_link;
+    public String getImageLink() {
+        return imageLink;
     }
 
-    public String getSource_link() {
-        return source_link;
+    public String getSourceLink() {
+        return sourceLink;
     }
 
     public String getTitle() {

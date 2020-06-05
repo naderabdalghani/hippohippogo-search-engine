@@ -15,13 +15,14 @@ import java.util.List;
 public class HippoHippoGoApplication {
     public static void main(String[] args) {
         ApplicationContext applicationContext = SpringApplication.run(HippoHippoGoApplication.class, args);
-//        CrawlerService crawlerService = applicationContext.getBean(CrawlerService.class);
-//        crawlerService.Crawl();
+        CrawlerService crawlerService = applicationContext.getBean(CrawlerService.class);
+        crawlerService.Crawl();
         System.out.print("the indexer begins######################################################################################################################3");
-        IndexerService indexer = applicationContext.getBean(IndexerService.class);
-        //indexer.main();
+//        IndexerService indexer = applicationContext.getBean(IndexerService.class);
+//        indexer.main();
 
-        //RankerService rankerService = applicationContext.getBean(RankerService.class);
+//        RankerService rankerService = applicationContext.getBean(RankerService.class);
+//        rankerService.rankPages();
         //List<Integer> pagesIDs = rankerService.getURLs("football soccer");
     }
 

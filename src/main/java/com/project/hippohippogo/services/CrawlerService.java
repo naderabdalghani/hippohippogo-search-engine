@@ -1,10 +1,13 @@
 package com.project.hippohippogo.services;
 
+import java.io.File;
+import java.io.IOException;
 
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
-import com.maxmind.geoip2.model.CityResponse;
+import com.maxmind.geoip2.model.CountryResponse;
 import com.maxmind.geoip2.record.Country;
+
 import com.project.hippohippogo.entities.Image;
 import com.project.hippohippogo.entities.Page;
 import com.project.hippohippogo.entities.PagesConnection;
@@ -21,16 +24,14 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static com.project.hippohippogo.services.RankerService.getString;
@@ -107,30 +108,42 @@ public class CrawlerService {
         Thread t2 = new Thread(new CrawlerThreaded("https://www.bbc.com/", status));
         Thread t3 = new Thread(new CrawlerThreaded("https://www.nationalgeographic.com/", status));
         Thread t4 = new Thread(new CrawlerThreaded("https://www.kingfut.com/", status));
+        Thread t5 = new Thread(new CrawlerThreaded("https://www.geeksforgeeks.org/", status));
+        Thread t6 = new Thread(new CrawlerThreaded("https://en.wikipedia.org/wiki/Main_Page", status));
 
         t0.setName("thread_0");
         t1.setName("thread_1");
         t2.setName("thread_2");
         t3.setName("thread_3");
         t4.setName("thread_4");
+        t5.setName("thread_5");
+        t6.setName("thread_6");
 
 //        t0.start();
 //        t1.start();
 //        t2.start();
 //        t3.start();
-        t4.start();
+//        t4.start();
+//        t5.start();
+//        t6.start();
 
         try {
             t0.join();
             t1.join();
-            t2.join();
-            t3.join();
-            t4.join();
+//            t2.join();
+//            t3.join();
+//            t4.join();
+//            t5.join();
+//            t6.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         SaveStatusZero();
+
+        System.out.println("/*****************************************************************************************************/");
+        System.out.println("/*                                       the Crawler is done                                         */");
+        System.out.println("/*****************************************************************************************************/");
     }
 
     public class CrawlerThreaded extends Thread {
@@ -140,12 +153,22 @@ public class CrawlerService {
         Integer till;
         private String MainSeed;
         int status;
+        File database;
+        DatabaseReader reader;
+
 
         public CrawlerThreaded(String seed, int status) {
             count = 0;
-            till = 2000;
+            till = 200;
             MainSeed = seed;
             this.status = status;
+            database = new File("D:\\third year\\APT\\final assessment\\hippohippogo-search-engine\\database\\GeoLite2-Country_20200526\\GeoLite2-Country.mmdb");
+            try {
+                reader = new DatabaseReader.Builder(database).build();
+            } catch (IOException e) {
+                System.out.println("problem in building the database for regions#################################################");
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -165,21 +188,20 @@ public class CrawlerService {
             } else {
                 ReadState();
             }
+
             Integer i = 0;
             while (!LinksQueue.isEmpty()) {
                 SaveState();
                 String link = LinksQueue.remove();
-                i++;
                 try {
                     VisitedQueue.add(link);
                     CrawlPage(link);
-                    //getLinks(link);
-
+                    i++;
                     AppendVisited(link);
                     System.out.println(Thread.currentThread().getName() + " " +i);
                 } catch (Exception e) {
                     count--;
-                    System.out.println(i.toString() + link);
+                    System.out.println(count.toString()+ "-" + link);
                     System.out.println(e);
                     System.out.println("i am here");
                 }
@@ -188,6 +210,9 @@ public class CrawlerService {
         }
 
         private void CrawlPage(String seed) throws IOException {
+            if (isSocial(seed)) {
+                throw new IOException("this link is social media link");
+            }
             //delete / at the end of the link if there is one
             if (Pattern.compile("/$").matcher(seed).find()) {
                 seed = seed.substring(0, seed.length() - 1);
@@ -195,13 +220,20 @@ public class CrawlerService {
 
             //connecting to the website and getting the html page
             String html = getHtmlPage(seed);
-
-            //parsing the html page and process it
+//
+//            //parsing the html page and process it
             Document doc = Jsoup.parse(html);
+//            Document doc = Jsoup.connect(seed).get();
 
-            getLinks(doc, html, seed);
+
+            getLinks(doc, seed);
             getImages(doc, seed);
-            CleanAndSetPage(html, doc, seed);
+            CleanAndSetPage(doc, seed);
+        }
+
+        private boolean isSocial(String seed) {
+            String base = getBaseURL(seed);
+            return (base == "facebook.com" || base == "instagram.com" || base == "twitter.com");
         }
 
         private String getHtmlPage(String seed) throws IOException {
@@ -221,7 +253,7 @@ public class CrawlerService {
             return getString(link);
         }
 
-        private void getLinks(Document doc, String html, String seed) {
+        private void getLinks(Document doc, String seed) {
             Elements links = doc.select("a[href]");     //selecting the links in the page to get them and recrawl them
             //start looping on the links and add them to  the queue
             for (Element link : links) {
@@ -241,11 +273,25 @@ public class CrawlerService {
             }
         }
 
+        private String getRegion(String link) throws IOException, GeoIp2Exception {
+            InetAddress ipAddress = InetAddress.getByName(InetAddress.getByName(getBaseURL(link)).getHostAddress());
+            CountryResponse response = reader.country(ipAddress);
+            Country country = response.getCountry();
+            return country.getIsoCode();
+        }
+
         private void getImages(Document doc, String seed) {
             Elements imgs = doc.getElementsByTag("img");
             String title = doc.title();
             int length = countWords(title);
             String region = "eg";
+            try {
+                region = getRegion(seed);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (GeoIp2Exception e) {
+                e.printStackTrace();
+            }
             String date = doc.select("time").attr("date");
             // Loop through img tags
             for (Element img : imgs) {
@@ -257,18 +303,8 @@ public class CrawlerService {
             }
         }
 
-        private void getRegion(String ip) throws IOException, GeoIp2Exception {
-            File database = new File("D:\\third year\\APT\\final assessment\\hippohippogo-search-engine\\database\\GeoLite2-Country_20200526\\GeoLite2-Country.mmdb");
-            DatabaseReader reader = new DatabaseReader.Builder(database).build();
-            InetAddress ipAddress = InetAddress.getByName("128.101.101.101");
-            CityResponse response = reader.city(ipAddress);
-            Country country = response.getCountry();
-            System.out.println(country.getIsoCode());
-        }
-
-        private void CleanAndSetPage(String html, Document doc, String seed) {
+        private void CleanAndSetPage(Document doc, String seed) {
             String content = doc.text();
-            //System.out.println("content is " + content);
             int length = countWords(content);
             String title = doc.title();
             String description = doc.select("meta[name=\"description\"]").attr("content");
@@ -279,16 +315,16 @@ public class CrawlerService {
                 description = description.substring(0,396);
             }
             description = description + "...";
-            //System.out.println("description is " + description);
             String date = doc.select("time").attr("date");
-//            try {
-//                getRegion("128.101.101.101");
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            } catch (GeoIp2Exception e) {
-//                e.printStackTrace();
-//            }
             String region = "eg";
+            try {
+                region = getRegion(seed);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (GeoIp2Exception e) {
+                e.printStackTrace();
+            }
+
             insertPageAndContent(content, seed, length, title, description, region, date);
         }
 
@@ -345,17 +381,22 @@ public class CrawlerService {
             } else {
                 P = new Page(content, link, length, title, description, region, date, false);
             }
-            //todo: ask mahmoud what should i ignore when get the page from the database... thanks.
-            ExampleMatcher modelMatcher = ExampleMatcher.matching().withIgnorePaths("id", "content", "length", "title", "description", "region", "date", "indexed");
-            Example<Page> pageExample = Example.of(P, modelMatcher);
+
+//            ExampleMatcher modelMatcher = ExampleMatcher.matching().withIgnorePaths("id", "content", "length", "title", "description", "date", "indexed");
+//            Example<Page> pageExample = Example.of(P, modelMatcher);
+
             synchronized (PageRepo) {
-                if(!PageRepo.exists(pageExample)) {
+                List<Page> pageList = PageRepo.findByLink(link);
+                if(pageList.size() == 0) {
                     PageRepo.save(P);
                 } else {
-                    Page p2 = PageRepo.findOne(pageExample).get();
-                    if(!p2.getContent().equalsIgnoreCase(P.getContent())) {
-                        P.setId(p2.getId());
-                        PageRepo.save(P);
+                    count--;
+                    while(pageList.size() > 0) {
+                        Page p2 = pageList.remove(pageList.size()-1);
+                        if(!p2.getContent().equals(P.getContent())) {
+                            P.setId(p2.getId());
+                            PageRepo.save(P);
+                        }
                     }
                 }
             }
@@ -363,10 +404,12 @@ public class CrawlerService {
 
         private void insertInnerlink(String Base, String Inner) {
             PagesConnection I = new PagesConnection(Base, Inner);
-            ExampleMatcher modelMatcher = ExampleMatcher.matching().withIgnorePaths("id");
-            Example<PagesConnection> pageExample = Example.of(I, modelMatcher);
+//            ExampleMatcher modelMatcher = ExampleMatcher.matching().withIgnorePaths("id");
+//            Example<PagesConnection> pageExample = Example.of(I, modelMatcher);
+
             synchronized (pagesConnectionRepository) {
-                if(!pagesConnectionRepository.exists(pageExample)) {
+                List<PagesConnection> pagesConnectionsList = pagesConnectionRepository.findByReferringAndReferred(Base, Inner);
+                if(pagesConnectionsList.size() == 0) {
                     pagesConnectionRepository.save(I);
                 }
             }
@@ -379,11 +422,20 @@ public class CrawlerService {
             } else {
                 i = new Image(image_link, source_link, title, length, region, date, false);
             }
-            ExampleMatcher modelMatcher = ExampleMatcher.matching().withIgnorePaths("id", "indexed");
-            Example<Image> imageExample = Example.of(i, modelMatcher);
+//            ExampleMatcher modelMatcher = ExampleMatcher.matching().withIgnorePaths("id", "indexed");
+//            Example<Image> imageExample = Example.of(i, modelMatcher);
             synchronized (imageRepository) {
-                if (!imageRepository.exists(imageExample)) {
+                List<Image> imageList = imageRepository.findImageByImageLinkAndSourceLink(image_link, source_link);
+                if (imageList.size() == 0) {
                     imageRepository.save(i);
+                } else {
+                    while (imageList.size() > 0) {
+                        Image i2 = imageList.remove(imageList.size()-1);
+                        if (!i2.getTitle().equals(i.getTitle())) {
+                            i.setId(i2.getId());
+                            imageRepository.save(i);
+                        }
+                    }
                 }
             }
         }

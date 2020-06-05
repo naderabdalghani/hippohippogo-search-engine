@@ -40,4 +40,6 @@ public interface PagesRepository extends JpaRepository<Page, Integer> {
     // Return page date
     @Query(value = "SELECT date_published FROM pages WHERE id = ?1", nativeQuery = true)
     Date getPageDate(int id);
+
+    List<Page> findByLink(String link);
 }
