@@ -136,7 +136,7 @@ public class IndexerService {
             /*----------------------------Removing stop words----------------------------*/
             URL url = getClass().getResource("/English_stopwords.txt");
             //System.out.println(url.getPath());
-            List<String> stopwords = Files.readAllLines(Paths.get(url.getPath().substring(1)));
+            List<String> stopwords = Files.readAllLines(Paths.get("D:\\third year\\APT\\final assessment\\hippohippogo-search-engine\\src\\main\\resources\\English_stopwords.txt"));
             ArrayList<String> allWords =
                     Stream.of(document.toLowerCase().split(" +"))
                             .collect(Collectors.toCollection(ArrayList<String>::new));
@@ -204,11 +204,13 @@ public class IndexerService {
                 String url = pagesRepository.getPageLink(this.webpagesIds.get(i));
                 Document doc = null;
                 try {
-                    if (url != null)
+                    if(url != null) {
                         doc = Jsoup.connect(url).get();
-                    else
+                    } else {
                         continue;
+                    }
                 } catch (IOException e) {
+
                     continue;
                 }
                 String title = doc.title();
