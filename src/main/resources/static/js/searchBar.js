@@ -55,8 +55,8 @@ $(function () {
         lookupLimit: 8,
         onSelect: function (suggestion) {
             inputField.trigger("focus");
-            inputField.autocomplete().hide();
             searchButton.trigger('click');
+            inputField.autocomplete().disable();
         },
         triggerSelectOnValidInput: false,
         appendTo: searchForm
