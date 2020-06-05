@@ -109,7 +109,6 @@ public class CrawlerService {
         Thread t3 = new Thread(new CrawlerThreaded("https://www.nationalgeographic.com/", status));
         Thread t4 = new Thread(new CrawlerThreaded("https://www.kingfut.com/", status));
         Thread t5 = new Thread(new CrawlerThreaded("https://www.geeksforgeeks.org/", status));
-        Thread t6 = new Thread(new CrawlerThreaded("https://en.wikipedia.org/wiki/Main_Page", status));
 
         t0.setName("thread_0");
         t1.setName("thread_1");
@@ -117,24 +116,21 @@ public class CrawlerService {
         t3.setName("thread_3");
         t4.setName("thread_4");
         t5.setName("thread_5");
-        t6.setName("thread_6");
 
-//        t0.start();
+        t0.start();
 //        t1.start();
 //        t2.start();
 //        t3.start();
 //        t4.start();
 //        t5.start();
-//        t6.start();
 
         try {
             t0.join();
-            t1.join();
+//            t1.join();
 //            t2.join();
 //            t3.join();
 //            t4.join();
 //            t5.join();
-//            t6.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -159,7 +155,7 @@ public class CrawlerService {
 
         public CrawlerThreaded(String seed, int status) {
             count = 0;
-            till = 200;
+            till = 1000;
             MainSeed = seed;
             this.status = status;
             database = new File("D:\\third year\\APT\\final assessment\\hippohippogo-search-engine\\database\\GeoLite2-Country_20200526\\GeoLite2-Country.mmdb");
