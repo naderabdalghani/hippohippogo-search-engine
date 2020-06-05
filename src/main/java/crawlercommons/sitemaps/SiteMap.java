@@ -18,7 +18,10 @@ package crawlercommons.sitemaps;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 public class SiteMap extends AbstractSiteMap {
 

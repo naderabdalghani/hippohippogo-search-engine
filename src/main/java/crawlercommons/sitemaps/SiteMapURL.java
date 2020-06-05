@@ -16,6 +16,8 @@
 
 package crawlercommons.sitemaps;
 
+import crawlercommons.sitemaps.extension.Extension;
+import crawlercommons.sitemaps.extension.ExtensionMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,9 +29,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-
-import crawlercommons.sitemaps.extension.Extension;
-import crawlercommons.sitemaps.extension.ExtensionMetadata;
 
 /**
  * The SitemapUrl class represents a URL found in a Sitemap.

@@ -16,30 +16,10 @@
 
 package crawlercommons.sitemaps;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.zip.GZIPInputStream;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
+import crawlercommons.mimetypes.MimeTypeDetector;
+import crawlercommons.sitemaps.AbstractSiteMap.SitemapType;
+import crawlercommons.sitemaps.extension.Extension;
+import crawlercommons.sitemaps.sax.DelegatorHandler;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BOMInputStream;
 import org.slf4j.Logger;
@@ -48,10 +28,17 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import crawlercommons.mimetypes.MimeTypeDetector;
-import crawlercommons.sitemaps.AbstractSiteMap.SitemapType;
-import crawlercommons.sitemaps.extension.Extension;
-import crawlercommons.sitemaps.sax.DelegatorHandler;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.zip.GZIPInputStream;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class SiteMapParser {
     public static final Logger LOG = LoggerFactory.getLogger(SiteMapParser.class);

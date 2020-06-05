@@ -16,28 +16,23 @@
 
 package crawlercommons.sitemaps.sax;
 
-import static crawlercommons.sitemaps.SiteMapParser.LOG;
-import static crawlercommons.sitemaps.SiteMapParser.urlIsValid;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
 import crawlercommons.sitemaps.AbstractSiteMap;
 import crawlercommons.sitemaps.AbstractSiteMap.SitemapType;
 import crawlercommons.sitemaps.SiteMap;
 import crawlercommons.sitemaps.SiteMapURL;
 import crawlercommons.sitemaps.extension.Extension;
 import crawlercommons.sitemaps.sax.extension.ExtensionHandler;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static crawlercommons.sitemaps.SiteMapParser.LOG;
+import static crawlercommons.sitemaps.SiteMapParser.urlIsValid;
 
 /**
  * Parse XML that contains a valid Sitemap. Example of a Sitemap:

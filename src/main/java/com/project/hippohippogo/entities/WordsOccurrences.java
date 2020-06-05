@@ -1,6 +1,5 @@
 package com.project.hippohippogo.entities;
 
-import com.project.hippohippogo.ids.WordId;
 import com.project.hippohippogo.ids.WordOccId;
 
 import javax.persistence.*;

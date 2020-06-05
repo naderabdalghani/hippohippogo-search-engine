@@ -2,6 +2,7 @@ package com.project.hippohippogo.entities;
 
 
 import com.project.hippohippogo.ids.QueryId;
+
 import javax.persistence.*;
 
 @Entity

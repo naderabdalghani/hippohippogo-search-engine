@@ -16,7 +16,9 @@
 
 package crawlercommons.filters.basic;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import crawlercommons.filters.URLFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,10 +30,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import crawlercommons.filters.URLFilter;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Code borrowed from Apache Nutch. Converts URLs to a normal form:
