@@ -20,6 +20,7 @@ import opennlp.tools.tokenize.SimpleTokenizer;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
 import opennlp.tools.util.Span;
+import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -82,19 +83,18 @@ public class SearchController {
 
     @RequestMapping(value = "/search", produces = "application/json", method = RequestMethod.GET)
     @ResponseBody
-    public List<Page> getWebResultsAsJSON(@RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
+    public List<Page> getWebResultsAsJSON(@RequestParam(value = "q", required = false, defaultValue = "") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
         region = region.length() == 0 ? null : region;
         String userIp = request.getRemoteAddr();
         List<Integer> resultsIds = queryProcessorService.getPageResults(queryString,region,userIp);
         //List<Integer> resultsIds = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
         Pageable pageable = PageRequest.of(offset, limit);
         List<Page> results = pagesRepository.findAllByIdIn(resultsIds, pageable);
-        System.out.print(results);
         return results;
     }
 
     @RequestMapping(value = "/search", produces = "text/html", method = RequestMethod.GET)
-    public String getWebResultsAsHTML(Model model, @RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) throws IOException {
+    public String getWebResultsAsHTML(Model model, @RequestParam(value = "q", required = false, defaultValue = "") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) throws IOException {
         // Return to landing page if query is empty
         if (queryString.equals("")) {
             return "index";
@@ -127,7 +127,7 @@ public class SearchController {
 
     @RequestMapping(value = "/img", produces = "application/json", method = RequestMethod.GET)
     @ResponseBody
-    public List<Image> getImgResultsAsJSON(@RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
+    public List<Image> getImgResultsAsJSON(@RequestParam(value = "q", required = false, defaultValue = "") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
         region = region.length() == 0 ? null : region;
         String userIp = request.getRemoteAddr();
         // List<Integer> resultsIds = queryProcessorService.getPageResults(queryString,region,userIp);
@@ -138,7 +138,7 @@ public class SearchController {
     }
 
     @RequestMapping(value = "/img", produces = "text/html", method = RequestMethod.GET)
-    public String getImgResultsAsHTML(Model model, @RequestParam("q") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
+    public String getImgResultsAsHTML(Model model, @RequestParam(value = "q", required = false, defaultValue = "") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) throws IOException {
         // Return to landing page if query is empty
         if (queryString.equals("")) {
             return "index";
@@ -165,7 +165,30 @@ public class SearchController {
         model.addAttribute("query", queryString);
         model.addAttribute("results", results);
         model.addAttribute("region", region);
+        checkIfPersonUsingOpenNLP(queryString,region);
         return "imageResults";
+    }
+
+    @RequestMapping(value = "/trends", produces = "text/html", method = RequestMethod.GET)
+    public String getTrendsAsHTML(Model model, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
+        Locale locale  = new Locale("", region.toUpperCase());
+        model.addAttribute("region", region);
+        model.addAttribute("regionName", locale.getDisplayCountry());
+        return "trends";
+    }
+
+    @RequestMapping(value = "/trends", produces = "application/json", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Trends> getTrendsAsJSON(Model model, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
+        Locale locale  = new Locale("", region.toUpperCase());
+        List<Trends> results;
+        if (region.length() != 0) {
+            results = trendsRepository.findTopTenByRegion(region);
+        }
+        else {
+            results = trendsRepository.findTopTenOverall();
+        }
+        return results;
     }
 
     public void checkIfPerson(String query)
@@ -229,6 +252,7 @@ public class SearchController {
         {
             Region="";
         }
+        query = WordUtils.capitalizeFully(query);
             //InputStream inputStream = new FileInputStream("C:/OpenNLP_models/en-ner-person.bin");
         ArrayList<String> names=new ArrayList<String>();
         InputStream inputStream = getClass().getResourceAsStream("/en-ner-person.zip");
@@ -255,17 +279,16 @@ public class SearchController {
         System.out.println(names);
         for (int i=0;i<names.size();i++)
         {
-            TrendsId a = new TrendsId(names.get(i),Region);
+            String name = names.get(i).toLowerCase();
+            name = name.substring(0, name.length() - 1);
+            TrendsId a = new TrendsId(name, Region);
             Optional<Trends> searchPerson = trendsRepository.findById(a);
             if (!searchPerson.isPresent()) {
-                Trends newSearchPerson = new Trends(names.get(i).toLowerCase(),Region);
+                Trends newSearchPerson = new Trends(name, Region);
                 trendsRepository.save(newSearchPerson);
             } else {
-                //searchPerson.get().setPerson(searchPerson.get().getPerson().toLowerCase());
-                //searchPerson.get().setRegion(Region);
-                //searchPerson.get().incrementHits();
-                //trendsRepository.save(searchPerson.get());
-                trendsRepository.updateHits(searchPerson.get().getPerson(),searchPerson.get().getRegion(),searchPerson.get().getHits()+1);
+                searchPerson.get().incrementHits();
+                trendsRepository.save(searchPerson.get());
             }
 
         }
