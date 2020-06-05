@@ -118,19 +118,19 @@ public class CrawlerService {
         t5.setName("thread_5");
 
         t0.start();
-//        t1.start();
-//        t2.start();
-//        t3.start();
-//        t4.start();
-//        t5.start();
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+        t5.start();
 
         try {
             t0.join();
-//            t1.join();
-//            t2.join();
-//            t3.join();
-//            t4.join();
-//            t5.join();
+            t1.join();
+            t2.join();
+            t3.join();
+            t4.join();
+            t5.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
