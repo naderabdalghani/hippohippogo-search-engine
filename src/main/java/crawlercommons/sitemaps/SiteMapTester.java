@@ -16,13 +16,13 @@
 
 package crawlercommons.sitemaps;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Collection;
-
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collection;
 
 /**
  * Sitemap Tool for recursively fetching all URL's from a sitemap (and all of

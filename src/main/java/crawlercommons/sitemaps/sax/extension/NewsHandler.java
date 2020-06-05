@@ -16,17 +16,16 @@
 
 package crawlercommons.sitemaps.sax.extension;
 
-import static crawlercommons.sitemaps.SiteMapParser.LOG;
+import crawlercommons.sitemaps.extension.ExtensionMetadata;
+import crawlercommons.sitemaps.extension.NewsAttributes;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
-import crawlercommons.sitemaps.extension.ExtensionMetadata;
-import crawlercommons.sitemaps.extension.NewsAttributes;
+import static crawlercommons.sitemaps.SiteMapParser.LOG;
 
 /** Handle SAX events in the Google News sitemap extension namespace. */
 public class NewsHandler extends ExtensionHandler {

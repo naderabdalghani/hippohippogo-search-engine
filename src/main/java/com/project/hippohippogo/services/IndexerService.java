@@ -1,4 +1,15 @@
 package com.project.hippohippogo.services;
+
+import com.project.hippohippogo.entities.ImageWord;
+import com.project.hippohippogo.entities.Words;
+import com.project.hippohippogo.entities.WordsOccurrences;
+import com.project.hippohippogo.repositories.*;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.tartarus.snowball.ext.englishStemmer;
+
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -6,16 +17,6 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import com.project.hippohippogo.entities.Words;
-import com.project.hippohippogo.entities.ImageWord;
-import com.project.hippohippogo.repositories.ImageRepository;
-import com.project.hippohippogo.repositories.PagesRepository;
-import com.project.hippohippogo.repositories.WordsRepository;
-import com.project.hippohippogo.repositories.ImagesWordsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.tartarus.snowball.ext.englishStemmer;
 
 @Service
 public class IndexerService {
@@ -48,6 +49,12 @@ public class IndexerService {
         this.imageswordsRepository = imageswordsRepository;
     }
 
+    private WordsOccurrencesRepository wordsOccurrencesRepository;
+
+    @Autowired
+    public void setWordsOccurrencesRepository(WordsOccurrencesRepository wordsOccurrencesRepository) {
+        this.wordsOccurrencesRepository = wordsOccurrencesRepository;
+    }
 
 
     public final class Pair{
@@ -56,6 +63,14 @@ public class IndexerService {
         private Pair(String l, Integer r){
             this.l = l;
             this.r = r;
+        }
+
+        public String getWord() {
+            return l;
+        }
+
+        public Integer getDocId() {
+            return r;
         }
 
         public String print(){String x= (String) ("("+this.l+","+this.r+")");
@@ -121,7 +136,7 @@ public class IndexerService {
             /*----------------------------Removing stop words----------------------------*/
             URL url = getClass().getResource("/English_stopwords.txt");
             //System.out.println(url.getPath());
-            List<String> stopwords = Files.readAllLines(Paths.get("D:\\third year\\APT\\final assessment\\hippohippogo-search-engine\\src\\main\\resources\\English_stopwords.txt"));
+            List<String> stopwords = Files.readAllLines(Paths.get(url.getPath().substring(1)));
             ArrayList<String> allWords =
                     Stream.of(document.toLowerCase().split(" +"))
                             .collect(Collectors.toCollection(ArrayList<String>::new));
@@ -136,6 +151,7 @@ public class IndexerService {
                 stemmer.stem();
                 stemmedWords.add(stemmer.getCurrent());
             }
+            stemmedWords.removeAll(Collections.singleton(""));
             //System.out.println(stemmedWords);
             //String resultafterstemming = stemmedWords.stream().collect(Collectors.joining(" "));
             //System.out.println(resultafterstemming);
@@ -181,6 +197,76 @@ public class IndexerService {
 
         }
 
+        public void getNumberOfOccurrences(Map<Pair, ArrayList<Integer>> wordAndDocToOccurences) {
+            for (int i=this.startingWebPage;i<this.endingWebPage;i++) {
+                ArrayList<String> finishedWordsTitle = new ArrayList<String>();
+                ArrayList<String> finishedWordsHeader = new ArrayList<String>();
+                String url = pagesRepository.getPageLink(this.webpagesIds.get(i));
+                Document doc = null;
+                try {
+                    if (url != null)
+                        doc = Jsoup.connect(url).get();
+                    else
+                        continue;
+                } catch (IOException e) {
+                    continue;
+                }
+                String title = doc.title();
+                String header = doc.body().getElementsByTag("h1").text();
+                ArrayList<String> stemmedWordsTitle = null;
+                try {
+                    stemmedWordsTitle = preprocessing(title);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ArrayList<String> stemmedWordsHeader = null;
+                try {
+                    stemmedWordsHeader = preprocessing(header);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(stemmedWordsTitle!= null) {
+                    for (int j = 0; j < stemmedWordsTitle.size(); j++) {
+                        if (!finishedWordsTitle.contains(stemmedWordsTitle.get(j))) {
+
+                            Pair x = new Pair(stemmedWordsTitle.get(j), this.webpagesIds.get(i));
+                            wordAndDocToOccurences.put(x, new ArrayList<Integer>());
+                            int titleOccurences = Collections.frequency(stemmedWordsTitle, stemmedWordsTitle.get(j));
+                            wordAndDocToOccurences.get(x).add(titleOccurences);
+                            wordAndDocToOccurences.get(x).add(0);
+                            finishedWordsTitle.add(stemmedWordsTitle.get(j));
+                        }
+                    }
+                }
+                if (stemmedWordsHeader!=null) {
+                    for (int j = 0; j < stemmedWordsHeader.size(); j++) {
+                        if (!finishedWordsHeader.contains(stemmedWordsHeader.get(j))) {
+                            Pair x = new Pair(stemmedWordsHeader.get(j), this.webpagesIds.get(i));
+                            int headerOccurences = Collections.frequency(stemmedWordsHeader, stemmedWordsHeader.get(j));
+                            if (wordAndDocToOccurences.containsKey(x)) {
+                                wordAndDocToOccurences.get(x).set(1, headerOccurences);
+                            } else {
+                                wordAndDocToOccurences.put(x, new ArrayList<Integer>());
+                                wordAndDocToOccurences.get(x).add(0);
+                                wordAndDocToOccurences.get(x).add(headerOccurences);
+                            }
+                            finishedWordsHeader.add(stemmedWordsHeader.get(j));
+                        }
+                    }
+                }
+            }
+            //Assign to DB
+            ArrayList<WordsOccurrences> occurrences=new ArrayList<WordsOccurrences>();
+            ArrayList<Pair> wordsAndDocId = new ArrayList<Pair>(wordAndDocToOccurences.keySet());
+            for (int i=0;i<wordsAndDocId.size();i++){
+                Pair x = wordsAndDocId.get(i);
+                int titlecount= wordAndDocToOccurences.get(x).get(0);
+                int headercount= wordAndDocToOccurences.get(x).get(1);
+                WordsOccurrences word = new WordsOccurrences(x.getWord(),x.getDocId(),titlecount,headercount);
+                occurrences.add(word);
+            }
+            wordsOccurrencesRepository.saveAll(occurrences);
+        }
 
         public void assignDb(Map<String, ArrayList<Integer>> wordsToDocs, Map<Pair, Vector<Integer>> wordAndDocToIndicies) {
             /*---------------------------------Assigning to DB---------------------------------*/
@@ -239,6 +325,8 @@ public class IndexerService {
             Map<String, ArrayList<Integer>> wordsToDocs = new HashMap<String, ArrayList<Integer>>();
             // Map each pair of  (word,docId) to list of indicies "the place of occurence of the word"
             Map<Pair, Vector<Integer>> wordAndDocToIndicies = new HashMap<Pair, Vector<Integer>>();
+            // Map each pair of (word,docId) to two numbers countInTitle and countInHeader
+            Map<Pair, ArrayList<Integer>> wordAndDocToOccurences = new HashMap<Pair, ArrayList<Integer>>();
 
             ArrayList<String> stemmedWords = new ArrayList<String>();
             // Document doc = Jsoup.parse(html);
@@ -248,6 +336,8 @@ public class IndexerService {
             // if there is no documents to index
             if (this.endingWebPage==0)
                 return;
+            // Get Number of Occurence of each word in title and header
+            getNumberOfOccurrences(wordAndDocToOccurences);
             // For loop on all the webpages
             for (int i = this.startingWebPage; i <this.endingWebPage ; i++)
             {
@@ -312,9 +402,6 @@ public class IndexerService {
 
         //wordsRepository.deleteAll();
 
-
-        //ArrayList<String> webpages= new ArrayList<String>();
-
         // Get Webpages content
         ArrayList<String> webpages= pagesRepository.getWebPages();
         // Get Webpages Ids
@@ -324,14 +411,7 @@ public class IndexerService {
         // Get images Ids
         ArrayList<Integer> imagepagesIds= imageRepository.getImagesIds();
 
-
-        //String html = "<html><head><title>First parse</title></head>"
-        //      + "<body><p>Parsed? ,,HTML.!? into a doc.   ?  ? /</p></body></html>";
-
-        //String html2 = "<html><head><title>First parse</title></head>"
-        //        + "<body><p>Parsed? ,,HTML.!? into a doc.   ?  ? /</p></body></html>";
-        //webpages.add(html);
-        //webpages.add(html2);
+        
         Thread t1 =new Thread(new IndexerService.IndexerThreaded(0,webpages.size()/5,webpages,webpagesIds,0));
         Thread t2 =new Thread(new IndexerService.IndexerThreaded(webpages.size()/5,2*(webpages.size()/5),webpages,webpagesIds,0));
         Thread t3 =new Thread(new IndexerService.IndexerThreaded(2*(webpages.size()/5),3*(webpages.size()/5),webpages,webpagesIds,0));

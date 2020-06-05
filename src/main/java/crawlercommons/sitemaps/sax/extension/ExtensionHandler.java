@@ -16,7 +16,11 @@
 
 package crawlercommons.sitemaps.sax.extension;
 
-import static crawlercommons.sitemaps.SiteMapParser.LOG;
+import crawlercommons.sitemaps.SiteMap;
+import crawlercommons.sitemaps.SiteMapURL;
+import crawlercommons.sitemaps.extension.Extension;
+import crawlercommons.sitemaps.extension.ExtensionMetadata;
+import org.xml.sax.helpers.DefaultHandler;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -25,12 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.xml.sax.helpers.DefaultHandler;
-
-import crawlercommons.sitemaps.SiteMap;
-import crawlercommons.sitemaps.SiteMapURL;
-import crawlercommons.sitemaps.extension.Extension;
-import crawlercommons.sitemaps.extension.ExtensionMetadata;
+import static crawlercommons.sitemaps.SiteMapParser.LOG;
 
 /**
  * Handler to be called for elements in the namespace of a sitemap extension.

@@ -22,6 +22,7 @@ public class RankerService {
     private ImageRepository imageRepository;
     private ImagesWordsRepository imagesWordsRepository;
     private UsersFrequentDomainsRepository usersFrequentDomainsRepository;
+    private WordsOccurrencesRepository wordsOccurrencesRepository;
 
 
     @Autowired
@@ -58,10 +59,15 @@ public class RankerService {
         this.usersFrequentDomainsRepository = usersFrequentDomainsRepository;
     }
 
+    @Autowired
+    public void setWordsOccurrencesRepository (WordsOccurrencesRepository wordsOccurrencesRepository) {
+        this.wordsOccurrencesRepository = wordsOccurrencesRepository;
+    }
+
     // This function is used to set pages rank in its table
     public void rankPages() {
         System.out.println("////////////////////////////////////////////////////////////");
-        System.out.println("/////////////////// Page Rank Started //////////////////////");
+        System.out.println("//////////////////// Page Rank Started /////////////////////");
         System.out.println("////////////////////////////////////////////////////////////");
         // Empty table before beginning
         pageRankRepository.deleteAll();
@@ -123,7 +129,7 @@ public class RankerService {
         }
 
         System.out.println("////////////////////////////////////////////////////////////");
-        System.out.println("/////////////////// Page Rank Finished /////////////////////");
+        System.out.println("///////////////// Page Rank has Finished ///////////////////");
         System.out.println("////////////////////////////////////////////////////////////");
     }
 
@@ -186,7 +192,10 @@ public class RankerService {
         if (httpMatcher3.find()) {
             return link.substring(7, link.length());
         }
-
+        // Removing spaces from link
+        link = link.replaceAll("\\s+","");
+        // Truncate first 255 char of the link
+        link = link.substring(0, Math.min(link.length(), 255));
         return link;
     }
 
@@ -207,6 +216,9 @@ public class RankerService {
                     // Getting page rank element of the page
                     int docLength = pagesRepository.getPageLength(i);
                     int wordCount = wordsRepository.getWordCountInDoc(s,i);
+                    if (wordsOccurrencesRepository.isWordExists(i,s) == 1) {
+                        wordCount += wordsOccurrencesRepository.getTitleCount(i,s)*2 + wordsOccurrencesRepository.getHeaderCount(i,s);
+                    }
                     TF = (double)wordCount/docLength;
                     // Handling spam if TF is higher then 0.5 then it's spam and make it equals to 0
                     TF = TF < 0.5 ? TF : 0;

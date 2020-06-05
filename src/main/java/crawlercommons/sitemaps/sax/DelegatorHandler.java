@@ -16,7 +16,14 @@
 
 package crawlercommons.sitemaps.sax;
 
-import static crawlercommons.sitemaps.SiteMapParser.LOG;
+import crawlercommons.sitemaps.AbstractSiteMap;
+import crawlercommons.sitemaps.Namespace;
+import crawlercommons.sitemaps.UnknownFormatException;
+import crawlercommons.sitemaps.extension.Extension;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.DefaultHandler;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,15 +31,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.DefaultHandler;
-
-import crawlercommons.sitemaps.AbstractSiteMap;
-import crawlercommons.sitemaps.Namespace;
-import crawlercommons.sitemaps.UnknownFormatException;
-import crawlercommons.sitemaps.extension.Extension;
+import static crawlercommons.sitemaps.SiteMapParser.LOG;
 
 /**
  * Provides a base SAX handler for parsing of XML documents representing
