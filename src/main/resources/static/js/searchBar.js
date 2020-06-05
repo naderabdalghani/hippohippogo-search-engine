@@ -56,7 +56,9 @@ $(function () {
         onSelect: function (suggestion) {
             inputField.trigger("focus");
             inputField.autocomplete().hide();
+            searchButton.trigger('click');
         },
+        triggerSelectOnValidInput: false,
         appendTo: searchForm
     });
 

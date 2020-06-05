@@ -39,10 +39,18 @@ $(function () {
     const imagesResultsTab = $("#link--images");
     const trendsResultsTab = $("#link--trends");
     const inputRegion = $('#region');
-
+    const regionField = $('#regionValue');
+    const trendsURL = window.location.origin + '/' + 'trends?' + 'region=' + region;
     inputRegion.val(region);
     webResultsTab.attr("href", url);
     imagesResultsTab.attr("href", url.replace("search", "img"));
+    trendsResultsTab.attr("href", trendsURL);
+
+    regionField.on('change', function () {
+        const newURL = new URL(url);
+        newURL.searchParams.set("region", regionField.val().toString());
+        window.location = newURL.href;
+    });
 
     // Infinite scrolling (pagination)
     $(window).on("scroll", function () {

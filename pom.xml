@@ -117,7 +117,11 @@
             <artifactId>opennlp-tokenize-models</artifactId>
             <version>1.5</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.8</version>
+        </dependency>
     </dependencies>
 
 
