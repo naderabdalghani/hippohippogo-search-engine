@@ -337,7 +337,7 @@ $(function () {
         }
         else {
             trendsContainer.append("<div id=\"links\" class=\"results js-results\">\n" +
-                "    <h5>Currently, there isn't enough data to display trends for <b>"+ getCountryName(region.toUpperCase()) +"</b></h5>\n" +
+                "    <h5 style=\"font-size: 20px\">Currently, there isn't enough data to display trends for <b style=\"font-weight: bold\">"+ getCountryName(region.toUpperCase()) +"</b></h5>\n" +
                 "</div>")
         }
     });
