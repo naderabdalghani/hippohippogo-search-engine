@@ -130,8 +130,8 @@ public class SearchController {
     public List<Image> getImgResultsAsJSON(@RequestParam(value = "q", required = false, defaultValue = "") String queryString, @RequestParam(value = "offset", required = false, defaultValue = "0") int offset, @RequestParam(value = "limit", required = false, defaultValue = "20") int limit, @RequestParam(value = "region", required = false, defaultValue = "") String region, HttpServletRequest request) {
         region = region.length() == 0 ? null : region;
         String userIp = request.getRemoteAddr();
-        // List<Integer> resultsIds = queryProcessorService.getPageResults(queryString,region,userIp);
-        List<Integer> resultsIds = Arrays.asList(225, 245, 312, 314, 214, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 24, 21, 22, 23, 28, 20, 26, 111, 123,122, 345, 345, 212, 214, 213, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 226);
+        List<Integer> resultsIds = queryProcessorService.getImageResults(queryString,region,userIp);
+        // List<Integer> resultsIds = Arrays.asList(225, 245, 312, 314, 214, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 24, 21, 22, 23, 28, 20, 26, 111, 123,122, 345, 345, 212, 214, 213, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 226);
         Pageable pageable = PageRequest.of(offset, limit);
         List<Image> results = imageRepository.findAllByIdIn(resultsIds, pageable);
         return results;
@@ -158,8 +158,8 @@ public class SearchController {
         }
 
         // Fetch Results
-        // List<Integer> resultsIds = queryProcessorService.getPageResults(queryString,region,userIp);
-        List<Integer> resultsIds = Arrays.asList(225, 245, 312, 314, 214, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 24, 21, 22, 23, 28, 20, 26, 111, 123,122, 345, 345, 212, 214, 213, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 226);
+        List<Integer> resultsIds = queryProcessorService.getImageResults(queryString,region,userIp);
+        // List<Integer> resultsIds = Arrays.asList(225, 245, 312, 314, 214, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 24, 21, 22, 23, 28, 20, 26, 111, 123,122, 345, 345, 212, 214, 213, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 226);
         Pageable pageable = PageRequest.of(offset, limit);
         List<Image> results = imageRepository.findAllByIdIn(resultsIds, pageable);
         model.addAttribute("query", queryString);
