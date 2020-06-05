@@ -16,10 +16,10 @@
 
 package crawlercommons.sitemaps;
 
+import org.apache.commons.io.input.ProxyInputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
-
-import org.apache.commons.io.input.ProxyInputStream;
 
 /**
  * Wraps a stream and skips over leading whitespace (at beginning of file) in

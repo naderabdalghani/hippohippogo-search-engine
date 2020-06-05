@@ -16,7 +16,8 @@
 
 package crawlercommons.domains;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,16 +25,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.IDN;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Locale;
 import java.nio.charset.StandardCharsets;
+import java.util.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * To determine the actual domain name of a host name or URL requires knowledge
