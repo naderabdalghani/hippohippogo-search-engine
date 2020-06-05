@@ -10,12 +10,13 @@ create table hippohippogo_db.images
 (
     id             int auto_increment
         primary key,
-    image_link     longtext   not null,
-    source_link    longtext   not null,
-    title          longtext   not null,
-    length         int        not null,
-    region         varchar(2) null,
-    date_published date       null
+    image_link     longtext             not null,
+    source_link    longtext             not null,
+    title          longtext             not null,
+    length         int                  not null,
+    region         varchar(2)           null,
+    date_published date                 null,
+    indexed        tinyint(1) default 0 null
 );
 
 create table hippohippogo_db.images_words
