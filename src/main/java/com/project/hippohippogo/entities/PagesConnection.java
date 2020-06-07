@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Table(name = "pages_connection")
 public class PagesConnection {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "pages_connection_gen")
     private int id;
     private String referred;
     private String referring;
