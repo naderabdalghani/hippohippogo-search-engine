@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class Page {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "pages_gen")
     @Column(name="\"id\"")
     private Integer id;
     @Column(name="\"content\"")

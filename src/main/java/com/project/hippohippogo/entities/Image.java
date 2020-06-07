@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "images")
 public class Image {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "image_gen")
     @Column(name="\"id\"")
     private Integer id;
     @Column(name="\"image_link\"")

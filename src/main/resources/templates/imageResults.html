@@ -125,7 +125,7 @@
                         </div>
                         <div th:unless="${results.empty}" id="img_results">
                             <div class="tile tile--img has-detail" th:each="result : ${results}" style="max-width: 25em">
-                                <div th:replace="fragments/result :: imageResult(${result.getTitle()}, ${result.getImage_link()}, ${result.getSource_link()})">
+                                <div th:replace="fragments/result :: imageResult(${result.getTitle()}, ${result.getImageLink()}, ${result.getSourceLink()})">
                                 </div>
                             </div>
                         </div>
