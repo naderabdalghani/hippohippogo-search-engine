@@ -96,6 +96,11 @@ public class CrawlerService {
     }
 
     public void Crawl() {
+        System.out.println("/*****************************************************************************************************/");
+        System.out.println("/*                                         CRAWLER STARTED                                           */");
+        System.out.println("/*****************************************************************************************************/");
+        System.out.println();
+
         Integer status = ReadStatus();
 //        if (status == 0) {
 //            PageRepo.deleteAll();
@@ -117,19 +122,19 @@ public class CrawlerService {
         t4.setName("thread_4");
         t5.setName("thread_5");
 
-        t0.start();
-        t1.start();
-        t2.start();
-        t3.start();
-        t4.start();
+        // t0.start();
+        // t1.start();
+        // t2.start();
+        // t3.start();
+        // t4.start();
         t5.start();
 
         try {
-            t0.join();
-            t1.join();
-            t2.join();
-            t3.join();
-            t4.join();
+            // t0.join();
+            // t1.join();
+            // t2.join();
+            // t3.join();
+            // t4.join();
             t5.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -138,8 +143,9 @@ public class CrawlerService {
         SaveStatusZero();
 
         System.out.println("/*****************************************************************************************************/");
-        System.out.println("/*                                       the Crawler is done                                         */");
+        System.out.println("/*                                         CRAWLER FINISHED                                          */");
         System.out.println("/*****************************************************************************************************/");
+        System.out.println();
     }
 
     public class CrawlerThreaded extends Thread {
@@ -155,10 +161,10 @@ public class CrawlerService {
 
         public CrawlerThreaded(String seed, int status) {
             count = 0;
-            till = 1000;
+            till = 1500;
             MainSeed = seed;
             this.status = status;
-            database = new File("D:\\third year\\APT\\final assessment\\hippohippogo-search-engine\\database\\GeoLite2-Country_20200526\\GeoLite2-Country.mmdb");
+            database = new File("C:\\Users\\nader\\Desktop\\hippohippogo-search-engine\\database\\GeoLite2-Country_20200526\\GeoLite2-Country.mmdb");
             try {
                 reader = new DatabaseReader.Builder(database).build();
             } catch (IOException e) {

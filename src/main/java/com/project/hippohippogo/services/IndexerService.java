@@ -136,7 +136,7 @@ public class IndexerService {
             /*----------------------------Removing stop words----------------------------*/
             URL url = getClass().getResource("/English_stopwords.txt");
             //System.out.println(url.getPath());
-            List<String> stopwords = Files.readAllLines(Paths.get("D:\\third year\\APT\\final assessment\\hippohippogo-search-engine\\src\\main\\resources\\English_stopwords.txt"));
+            List<String> stopwords = Files.readAllLines(Paths.get("C:\\Users\\nader\\Desktop\\hippohippogo-search-engine\\src\\main\\resources\\English_stopwords.txt"));
             ArrayList<String> allWords =
                     Stream.of(document.toLowerCase().split(" +"))
                             .collect(Collectors.toCollection(ArrayList<String>::new));
@@ -401,6 +401,10 @@ public class IndexerService {
         }
     }
     public void main() {
+        System.out.println("/*****************************************************************************************************/");
+        System.out.println("/*                                          INDEXER STARTED                                          */");
+        System.out.println("/*****************************************************************************************************/");
+        System.out.println();
 
         //wordsRepository.deleteAll();
 
@@ -450,7 +454,11 @@ public class IndexerService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Indexer has finished");
+
+        System.out.println("/*****************************************************************************************************/");
+        System.out.println("/*                                        INDEXER FINISHED                                           */");
+        System.out.println("/*****************************************************************************************************/");
+        System.out.println();
     }
 
 
