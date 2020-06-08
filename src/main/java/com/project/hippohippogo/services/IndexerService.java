@@ -141,7 +141,6 @@ public class IndexerService {
                             .collect(Collectors.toCollection(ArrayList<String>::new));
             allWords.removeAll(stopwords);
             String result = allWords.stream().collect(Collectors.joining(" "));
-            //System.out.println(result);
             /*---------------------------------Stemming---------------------------------*/
             englishStemmer stemmer = new englishStemmer();
             ArrayList<String> stemmedWords = new ArrayList<String>();
@@ -151,21 +150,12 @@ public class IndexerService {
                 stemmedWords.add(stemmer.getCurrent());
             }
             stemmedWords.removeAll(Collections.singleton(""));
-            //System.out.println(stemmedWords);
-            //String resultafterstemming = stemmedWords.stream().collect(Collectors.joining(" "));
-            //System.out.println(resultafterstemming);
             return stemmedWords;
         }
 
         public void indexing(ArrayList<String> stemmedWords, Map<String, ArrayList<Integer>> wordsToDocs, Map<Pair, Vector<Integer>> wordAndDocToIndicies, Integer pageID) {
             /*---------------------------------Indexing---------------------------------*/
 
-            //don't forget to clear finished words after a document is finished
-
-            // if word msh mwgoda fel hashmapp hn3ml arraylist<vector>   if (!words.containsKey(word))
-            //ArrayList<Vector> word=new ArrayList<Vector>();
-            //words.put("game", word);
-            //lw mwgoda 5alas
             ArrayList<String> finishedwords = new ArrayList<String>();
             //Vector v = new Vector();
             Vector<Integer> indices = new Vector<Integer>();
@@ -294,17 +284,12 @@ public class IndexerService {
                             // Assign to the Database Table "words"
                             Words word = new Words(words.get(i), docs.get(j), indicies.get(k));
                             wordsToSave.add(word);
-                            //synchronized (wordsRepository) {
-                            //  wordsRepository.save(word);
-                            //}
+
                         }
                         else {
                             // Assign to the Database Table "imageswords"
                             ImageWord word = new ImageWord(words.get(i), docs.get(j), indicies.get(k));
                             imagesToSave.add(word);
-                            //synchronized (imageswordsRepository) {
-                            //imageswordsRepository.save(word);
-                            //}
                         }
                     }
 
@@ -330,9 +315,6 @@ public class IndexerService {
             Map<Pair, ArrayList<Integer>> wordAndDocToOccurences = new HashMap<Pair, ArrayList<Integer>>();
 
             ArrayList<String> stemmedWords = new ArrayList<String>();
-            // Document doc = Jsoup.parse(html);
-            //System.out.println(doc.text());
-            //String original =doc.text() ;
 
             // if there is no documents to index
             if (this.endingWebPage==0)
@@ -378,20 +360,8 @@ public class IndexerService {
                 }
             }
 
-        /*System.out.println(wordsToDocs);
-        Iterator iterator = wordAndDocToIndicies.entrySet().iterator();
-        while (iterator.hasNext())
-        {
-            Map.Entry me2 = (Map.Entry) iterator.next();
-            Pair y= (Pair) me2.getKey();
-            Vector z= (Vector) me2.getValue();
-            System.out.println("Key: " + y.print()+ " & Value: " + z);
-        }*/
-
             // Assign to the DB
             assignDb(wordsToDocs,wordAndDocToIndicies);
-
-
         }
 
         @Override
