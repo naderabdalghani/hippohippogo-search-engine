@@ -164,7 +164,7 @@ public class CrawlerService {
             till = 1500;
             MainSeed = seed;
             this.status = status;
-            database = new File("C:\\Users\\nader\\Desktop\\hippohippogo-search-engine\\database\\GeoLite2-Country_20200526\\GeoLite2-Country.mmdb");
+            database = new File("C:\\Users\\Mahmood\\Documents\\GitHub\\hippohippogo-search-engine\\database\\GeoLite2-Country_20200526\\GeoLite2-Country.mmdb");
             try {
                 reader = new DatabaseReader.Builder(database).build();
             } catch (IOException e) {
