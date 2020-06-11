@@ -31,6 +31,8 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -164,7 +166,8 @@ public class CrawlerService {
             till = 1500;
             MainSeed = seed;
             this.status = status;
-            database = new File("C:\\Users\\Mahmood\\Documents\\GitHub\\hippohippogo-search-engine\\database\\GeoLite2-Country_20200526\\GeoLite2-Country.mmdb");
+            URL url = getClass().getResource("/GeoLite2-Country.mmdb");
+            database = new File(String.valueOf(Paths.get(url.getPath().substring(1))));
             try {
                 reader = new DatabaseReader.Builder(database).build();
             } catch (IOException e) {
