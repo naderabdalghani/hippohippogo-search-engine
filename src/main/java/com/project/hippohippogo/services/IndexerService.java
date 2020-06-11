@@ -134,15 +134,13 @@ public class IndexerService {
             /*--------------------Removing nonalphanumeric characters--------------------*/
             document = document.replaceAll("[^a-zA-Z0-9]", " ");
             /*----------------------------Removing stop words----------------------------*/
-            URL url = getClass().getResource("/English_stopwords.txt");
-            //System.out.println(url.getPath());
-            List<String> stopwords = Files.readAllLines(Paths.get("C:\\Users\\nader\\Desktop\\hippohippogo-search-engine\\src\\main\\resources\\English_stopwords.txt"));
+            URL url = getClass().getResource("/english-stopwords.txt");
+            List<String> stopwords = Files.readAllLines(Paths.get(url.getPath().substring(1)));
             ArrayList<String> allWords =
                     Stream.of(document.toLowerCase().split(" +"))
                             .collect(Collectors.toCollection(ArrayList<String>::new));
             allWords.removeAll(stopwords);
             String result = allWords.stream().collect(Collectors.joining(" "));
-            //System.out.println(result);
             /*---------------------------------Stemming---------------------------------*/
             englishStemmer stemmer = new englishStemmer();
             ArrayList<String> stemmedWords = new ArrayList<String>();
@@ -152,21 +150,12 @@ public class IndexerService {
                 stemmedWords.add(stemmer.getCurrent());
             }
             stemmedWords.removeAll(Collections.singleton(""));
-            //System.out.println(stemmedWords);
-            //String resultafterstemming = stemmedWords.stream().collect(Collectors.joining(" "));
-            //System.out.println(resultafterstemming);
             return stemmedWords;
         }
 
         public void indexing(ArrayList<String> stemmedWords, Map<String, ArrayList<Integer>> wordsToDocs, Map<Pair, Vector<Integer>> wordAndDocToIndicies, Integer pageID) {
             /*---------------------------------Indexing---------------------------------*/
 
-            //don't forget to clear finished words after a document is finished
-
-            // if word msh mwgoda fel hashmapp hn3ml arraylist<vector>   if (!words.containsKey(word))
-            //ArrayList<Vector> word=new ArrayList<Vector>();
-            //words.put("game", word);
-            //lw mwgoda 5alas
             ArrayList<String> finishedwords = new ArrayList<String>();
             //Vector v = new Vector();
             Vector<Integer> indices = new Vector<Integer>();
@@ -295,17 +284,12 @@ public class IndexerService {
                             // Assign to the Database Table "words"
                             Words word = new Words(words.get(i), docs.get(j), indicies.get(k));
                             wordsToSave.add(word);
-                            //synchronized (wordsRepository) {
-                              //  wordsRepository.save(word);
-                            //}
+
                         }
                         else {
                             // Assign to the Database Table "imageswords"
                             ImageWord word = new ImageWord(words.get(i), docs.get(j), indicies.get(k));
                             imagesToSave.add(word);
-                            //synchronized (imageswordsRepository) {
-                                //imageswordsRepository.save(word);
-                            //}
                         }
                     }
 
@@ -331,9 +315,6 @@ public class IndexerService {
             Map<Pair, ArrayList<Integer>> wordAndDocToOccurences = new HashMap<Pair, ArrayList<Integer>>();
 
             ArrayList<String> stemmedWords = new ArrayList<String>();
-            // Document doc = Jsoup.parse(html);
-            //System.out.println(doc.text());
-            //String original =doc.text() ;
 
             // if there is no documents to index
             if (this.endingWebPage==0)
@@ -379,20 +360,8 @@ public class IndexerService {
                 }
             }
 
-        /*System.out.println(wordsToDocs);
-        Iterator iterator = wordAndDocToIndicies.entrySet().iterator();
-        while (iterator.hasNext())
-        {
-            Map.Entry me2 = (Map.Entry) iterator.next();
-            Pair y= (Pair) me2.getKey();
-            Vector z= (Vector) me2.getValue();
-            System.out.println("Key: " + y.print()+ " & Value: " + z);
-        }*/
-
             // Assign to the DB
             assignDb(wordsToDocs,wordAndDocToIndicies);
-
-
         }
 
         @Override
@@ -417,7 +386,7 @@ public class IndexerService {
         // Get images Ids
         ArrayList<Integer> imagepagesIds= imageRepository.getImagesIds();
 
-        
+
         Thread t1 =new Thread(new IndexerService.IndexerThreaded(0,webpages.size()/5,webpages,webpagesIds,0));
         Thread t2 =new Thread(new IndexerService.IndexerThreaded(webpages.size()/5,2*(webpages.size()/5),webpages,webpagesIds,0));
         Thread t3 =new Thread(new IndexerService.IndexerThreaded(2*(webpages.size()/5),3*(webpages.size()/5),webpages,webpagesIds,0));
@@ -429,7 +398,7 @@ public class IndexerService {
         Thread t8 =new Thread(new IndexerService.IndexerThreaded(2*(imagepages.size()/5),3*(imagepages.size()/5),imagepages,imagepagesIds,1));
         Thread t9 =new Thread(new IndexerService.IndexerThreaded(3*(imagepages.size()/5),4*(imagepages.size()/5),imagepages,imagepagesIds,1));
         Thread t10 =new Thread(new IndexerService.IndexerThreaded(4*(imagepages.size()/5),imagepages.size(),imagepages,imagepagesIds,1));
-        
+
         t1.start();
         t2.start();
         t3.start();
@@ -466,4 +435,3 @@ public class IndexerService {
 
 
 }
-
