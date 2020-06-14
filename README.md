@@ -72,7 +72,7 @@ The output of the crawling process is a set of downloaded HTML documents. To res
 
 The [ranker module](src/main/java/com/project/hippohippogo/services/RankerService.java) sorts documents based on their popularity and relevance to the search query.
 
-1. Relevance:
+1. Word Relevance:
 Relevance is a relation between the query words and the result page. It is calculated in several ways such as tf-idf of the query word in the result page and whether the query word appeared in the title, heading or body and then the score is aggregated from all query words to produce the final page relevance score.
 2. Popularity:
 Popularity is a measure for the importance of any web page regardless of the requested query. PageRank algorithm is used to calculate page popularity.
@@ -97,7 +97,7 @@ Popularity is a measure for the importance of any web page regardless of the req
 
 ### Running
 
-0. [Optional] Setup the database by:  
+0. **[Optional]** Setup the database by:  
 0.1 Executing [database_schema.sql](database_schema.sql)  
 0.2 Importing database data from [database_dump_csv.rar](database_dump_csv.rar)
 
