@@ -93,8 +93,13 @@ Popularity is a measure for the importance of any web page regardless of the req
 ### Prerequisites
 
 * Download and install Maven using this [link](https://maven.apache.org/download.cgi)
+* Download and install MySQL using this [link](https://dev.mysql.com/downloads/file/?id=495321)
 
 ### Running
+
+0. [Optional] Setup the database by:  
+0.1 Executing [database_schema.sql](database_schema.sql)  
+0.2 Importing database data from [database_dump_csv.rar](database_dump_csv.rar)
 
 1. Run using your favorite Java IDE. In our case, we used [IntelliJ IDEA](https://www.jetbrains.com/idea/).  
 1.1 To run the _Crawler Service_, uncomment the following lines in [HippoHippoGoApplication.java](src/main/java/com/project/hippohippogo/HippoHippoGoApplication.java)
