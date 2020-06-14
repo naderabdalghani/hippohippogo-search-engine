@@ -28,6 +28,7 @@
   * [Prerequisites](#prerequisites)
   * [Running](#running)
 * [Acknowledgements](#acknowledgements)
+* [Contributors](#contributors)
 
 ## About The Project
 
@@ -136,3 +137,10 @@ Popularity is a measure for the importance of any web page regardless of the req
 [web-search]: src/main/resources/static/assets/web_search.gif
 [image-search]: src/main/resources/static/assets/image_search.png
 [trends]: src/main/resources/static/assets/trends.gif
+
+## Contributors
+
+* [Muhammad Khier](https://github.com/MouhammadKhier)
+* [Mahmoud Mohamad](https://github.com/mmmacmp)
+* [Muhanad Atef](https://github.com/Muhanad23)
+* [Nader AbdAlGhai](https://github.com/naderabdalghani)
