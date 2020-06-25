@@ -4,15 +4,15 @@ function imgResult(result) {
         "    <div>\n" +
         "        <a href=\"${image_link}\" target=\"_blank\"><div class=\"tile--img__media\" style=\"display: flex; align-items: center\"><span class=\"tile--img__media__i\"><img\n" +
         "                class=\"tile--img__img  js-lazyload\"\n" +
-        "                src="+ result.image_link +"\n" +
-        "                title="+ result.source_link +"\n" +
-        "                data-src="+ result.image_link +"\n" +
+        "                src="+ result.imageLink +"\n" +
+        "                title="+ result.sourceLink +"\n" +
+        "                data-src="+ result.imageLink +"\n" +
         "                alt="+ result.title +"\n" +
         "                style=\"object-fit: contain\"\n" +
         "        ></span></div></a>\n" +
-        "        <a class=\"tile--img__sub\" href="+ result.source_link +" style=\"contain: size\"><span\n" +
-        "                class=\"tile--img__title\" title="+ result.source_link +" style=\"height: auto\">"+ result.title +"</span><span\n" +
-        "                class=\"tile--img__domain\" title="+ result.source_link +">"+ result.source_link +"</span></a>\n" +
+        "        <a class=\"tile--img__sub\" href="+ result.sourceLink +" style=\"contain: size\"><span\n" +
+        "                class=\"tile--img__title\" title="+ result.sourceLink +" style=\"height: auto\">"+ result.title +"</span><span\n" +
+        "                class=\"tile--img__domain\" title="+ result.sourceLink +">"+ result.sourceLink +"</span></a>\n" +
         "    </div>\n" +
         "</div>";
 }

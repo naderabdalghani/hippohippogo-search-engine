@@ -216,18 +216,20 @@ public class RankerService {
                 double TF;
                 for (int i : docs) {
                     // Getting page rank element of the page
-                    int docLength = pagesRepository.getPageLength(i);
-                    int wordCount = wordsRepository.getWordCountInDoc(s,i);
-                    if (wordsOccurrencesRepository.isWordExists(i,s) == 1) {
-                        wordCount += wordsOccurrencesRepository.getTitleCount(i,s)*2 + wordsOccurrencesRepository.getHeaderCount(i,s);
+                    if(pagesRepository.findById(i).isPresent()){
+                        int docLength = pagesRepository.getPageLength(i);
+                        int wordCount = wordsRepository.getWordCountInDoc(s,i);
+                        if (wordsOccurrencesRepository.isWordExists(i,s) == 1) {
+                            wordCount += wordsOccurrencesRepository.getTitleCount(i,s)*2 + wordsOccurrencesRepository.getHeaderCount(i,s);
+                        }
+                        TF = ((double)wordCount/docLength);
+                        // Handling spam if TF is higher then 0.5 then it's spam and make it equals to 0
+                        TF = TF < 0.5 ? TF : 0;
+                        // Weighted function from TF-IDF
+                        double TF_IDF = TF * IDF;
+                        // If this page used before then add the TF-IDF of the other word to the page
+                        pagesHashMap.put(i, pagesHashMap.getOrDefault(i, (double) 0) + TF_IDF);
                     }
-                    TF = (double)wordCount/docLength;
-                    // Handling spam if TF is higher then 0.5 then it's spam and make it equals to 0
-                    TF = TF < 0.5 ? TF : 0;
-                    // Weighted function from TF-IDF
-                    double TF_IDF = TF * IDF;
-                    // If this page used before then add the TF-IDF of the other word to the page
-                    pagesHashMap.put(i, pagesHashMap.getOrDefault(i, (double) 0) + TF_IDF);
                 }
             }
         }
@@ -329,6 +331,4 @@ public class RankerService {
         }
         return URLids;
     }
-
-
 }

@@ -14,7 +14,6 @@ import java.util.List;
 
 @Repository
 public interface PagesRepository extends JpaRepository<Page, Integer> {
-    public List<Page> findAllByIdIn(List<Integer> id, Pageable pageable);
 
     @Query(value = "UPDATE pages SET indexed=TRUE  WHERE id =?1", nativeQuery = true)
     @Modifying

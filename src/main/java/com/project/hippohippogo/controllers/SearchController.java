@@ -20,10 +20,8 @@ import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.tokenize.SimpleTokenizer;
 import opennlp.tools.util.Span;
-import org.apache.commons.text.WordUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,8 +76,14 @@ public class SearchController {
         String userIp = request.getRemoteAddr();
         List<Integer> resultsIds = queryProcessorService.getPageResults(queryString,region,userIp);
         //List<Integer> resultsIds = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
-        Pageable pageable = PageRequest.of(offset, limit);
-        List<Page> results = pagesRepository.findAllByIdIn(resultsIds, pageable);
+        int startIndex = offset * limit;
+        int endingIndex = Math.min(startIndex + limit, resultsIds.size());
+        List<Integer> paginatedResultIds = resultsIds.subList(startIndex, endingIndex);
+        List<Page> results = new ArrayList<Page>();
+        for (Integer paginatedResultId : paginatedResultIds) {
+            Optional<Page> p = pagesRepository.findById(paginatedResultId);
+            p.ifPresent(page -> results.add((Page) page));
+        }
         return results;
     }
 
@@ -106,8 +110,15 @@ public class SearchController {
         // Fetch Results
         List<Integer> resultsIds = queryProcessorService.getPageResults(queryString,region,userIp);
         //List<Integer> resultsIds = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
-        Pageable pageable = PageRequest.of(offset, limit);
-        List<Page> results = pagesRepository.findAllByIdIn(resultsIds, pageable);
+        int startIndex = offset * limit;
+        int endingIndex = Math.min(startIndex + limit, resultsIds.size());
+        List<Integer> paginatedResultIds = resultsIds.subList(startIndex, endingIndex);
+        List<Page> results = new ArrayList<Page>();
+        for (Integer paginatedResultId : paginatedResultIds) {
+            Optional<Page> p = pagesRepository.findById(paginatedResultId);
+            p.ifPresent(page -> results.add((Page) page));
+        }
+        //List<Page> results = pagesRepository.findAllById(paginatedResultIds);
         model.addAttribute("query", queryString);
         model.addAttribute("results", results);
         model.addAttribute("region", region);
@@ -122,8 +133,14 @@ public class SearchController {
         String userIp = request.getRemoteAddr();
         List<Integer> resultsIds = queryProcessorService.getImageResults(queryString,region,userIp);
         // List<Integer> resultsIds = Arrays.asList(225, 245, 312, 314, 214, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 24, 21, 22, 23, 28, 20, 26, 111, 123,122, 345, 345, 212, 214, 213, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 226);
-        Pageable pageable = PageRequest.of(offset, limit);
-        List<Image> results = imageRepository.findAllByIdIn(resultsIds, pageable);
+        int startIndex = offset * limit;
+        int endingIndex = Math.min(startIndex + limit, resultsIds.size());
+        List<Integer> paginatedResultIds = resultsIds.subList(startIndex, endingIndex);
+        List<Image> results = new ArrayList<Image>();
+        for (Integer paginatedResultId : paginatedResultIds) {
+            Optional<Image> p = imageRepository.findById(paginatedResultId);
+            p.ifPresent(image -> results.add((Image) image));
+        }
         return results;
     }
 
@@ -150,8 +167,14 @@ public class SearchController {
         // Fetch Results
         List<Integer> resultsIds = queryProcessorService.getImageResults(queryString,region,userIp);
         // List<Integer> resultsIds = Arrays.asList(225, 245, 312, 314, 214, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 24, 21, 22, 23, 28, 20, 26, 111, 123,122, 345, 345, 212, 214, 213, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 226);
-        Pageable pageable = PageRequest.of(offset, limit);
-        List<Image> results = imageRepository.findAllByIdIn(resultsIds, pageable);
+        int startIndex = offset * limit;
+        int endingIndex = Math.min(startIndex + limit, resultsIds.size());
+        List<Integer> paginatedResultIds = resultsIds.subList(startIndex, endingIndex);
+        List<Image> results = new ArrayList<Image>();
+        for (Integer paginatedResultId : paginatedResultIds) {
+            Optional<Image> p = imageRepository.findById(paginatedResultId);
+            p.ifPresent(image -> results.add((Image) image));
+        }
         model.addAttribute("query", queryString);
         model.addAttribute("results", results);
         model.addAttribute("region", region);
