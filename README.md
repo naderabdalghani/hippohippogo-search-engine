@@ -142,5 +142,5 @@ Popularity is a measure for the importance of any web page regardless of the req
 
 * [Muhammad Khier](https://github.com/MouhammadKhier)
 * [Mahmoud Mohamad](https://github.com/mmmacmp)
-* [Muhanad Atef](https://github.com/Muhanad23)
+* [Muhanad Atef](https://github.com/MuhanadAtef)
 * [Nader AbdAlGhani](https://github.com/naderabdalghani)
